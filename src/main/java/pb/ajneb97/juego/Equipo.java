@@ -8,9 +8,9 @@ import org.bukkit.Location;
 
 public class Equipo {
 
-	private ArrayList<JugadorPaintball> jugadores;
+	private final ArrayList<JugadorPaintball> jugadores;
 	private String tipoEquipo;
-	//Tipos: blue,red,yellow,green,orange,purple,black,white
+	//Types: blue,red,yellow,green,orange,purple,black,white
 	//brown,magenta,light_blue,lime,pink,gray,light_gray,cyan
 	private Location spawn;
 	private int vidasActuales;
@@ -18,7 +18,7 @@ public class Equipo {
 	
 	
 	public Equipo(String tipoEquipo) {
-		this.jugadores = new ArrayList<JugadorPaintball>();
+		this.jugadores = new ArrayList<>();
 		this.tipoEquipo = tipoEquipo;
 		this.vidasActuales = 0;
 	}
@@ -56,11 +56,11 @@ public class Equipo {
 	}
 	
 	public boolean contieneJugador(String jugador) {
-		for(int i=0;i<jugadores.size();i++) {
-			if(jugadores.get(i).getJugador().getName().equals(jugador)) {
-				return true;
-			}
-		}
+        for (JugadorPaintball jugadore : jugadores) {
+            if (jugadore.getJugador().getName().equals(jugador)) {
+                return true;
+            }
+        }
 		return false;
 	}
 	
