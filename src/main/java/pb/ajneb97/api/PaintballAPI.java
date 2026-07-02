@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import pb.ajneb97.PaintballBattle;
 import pb.ajneb97.database.JugadorDatos;
@@ -11,28 +13,16 @@ import pb.ajneb97.database.MySQL;
 import pb.ajneb97.juego.EstadoPartida;
 import pb.ajneb97.juego.Partida;
 
+@SuppressWarnings("unused")
 public class PaintballAPI {
 
 	private static PaintballBattle plugin;
-	
+
 	public PaintballAPI(PaintballBattle plugin) {
-		this.plugin = plugin;
+		PaintballAPI.plugin = plugin;
 	}
-	
-//	public static JugadorDatos getPaintballDatos(Player player) {
-//		if(!MySQL.isEnabled(plugin.getConfig())) {
-//			JugadorDatos j = plugin.getJugador(player.getName());
-//			if(j != null) {
-//				return new JugadorPaintballDatos(j.getWins(),j.getLoses(),j.getTies(),j.getKills(),j.getHats(),j.getPerks());
-//			}else {
-//				return new JugadorPaintballDatos(0,0,0,0,new ArrayList<Hat>(),new ArrayList<Perk>());
-//			}
-//		}else {
-//			return MySQL.getStatsTotales(plugin, player.getName(),"Coins");
-//		}
-//	}
-	
-	public static int getCoins(Player player) {
+
+	public static int getCoins(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -44,8 +34,8 @@ public class PaintballAPI {
 			return MySQL.getStatsTotales(plugin, player.getName(),"Coins");
 		}
 	}
-	
-	public static void addCoins(Player player,int coins) {
+
+	public static void addCoins(@NotNull Player player, int coins) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -55,8 +45,8 @@ public class PaintballAPI {
 			MySQL.agregarCoinsJugadorAsync(plugin, player.getName(), coins);
 		}
 	}
-	
-	public static void removeCoins(Player player,int coins) {
+
+	public static void removeCoins(@NotNull Player player, int coins) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -66,8 +56,8 @@ public class PaintballAPI {
 			MySQL.removerCoinsJugadorAsync(plugin, player.getName(), coins);
 		}
 	}
-	
-	public static int getWins(Player player) {
+
+	public static int getWins(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -78,10 +68,9 @@ public class PaintballAPI {
 		}else {
 			return MySQL.getStatsTotales(plugin, player.getName(),"Win");
 		}
-		
 	}
-	
-	public static int getLoses(Player player) {
+
+	public static int getLoses(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -92,10 +81,9 @@ public class PaintballAPI {
 		}else {
 			return MySQL.getStatsTotales(plugin, player.getName(),"Lose");
 		}
-		
 	}
-	
-	public static int getTies(Player player) {
+
+	public static int getTies(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -107,8 +95,8 @@ public class PaintballAPI {
 			return MySQL.getStatsTotales(plugin, player.getName(),"Tie");
 		}
 	}
-	
-	public static int getKills(Player player) {
+
+	public static int getKills(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -119,10 +107,9 @@ public class PaintballAPI {
 		}else {
 			return MySQL.getStatsTotales(plugin, player.getName(),"Kills");
 		}
-		
 	}
-	
-	public static int getPerkLevel(Player player,String perk) {
+
+	public static int getPerkLevel(@NotNull Player player, @NotNull String perk) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -134,8 +121,8 @@ public class PaintballAPI {
 			return MySQL.getNivelPerk(plugin, player.getName(), perk);
 		}
 	}
-	
-	public static boolean hasHat(Player player,String hat) {
+
+	public static boolean hasHat(@NotNull Player player, @NotNull String hat) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -147,8 +134,8 @@ public class PaintballAPI {
 			return MySQL.jugadorTieneHat(plugin, player.getName(), hat);
 		}
 	}
-	
-	public static boolean hasHatSelected(Player player,String hat) {
+
+	public static boolean hasHatSelected(@NotNull Player player, @NotNull String hat) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -160,34 +147,34 @@ public class PaintballAPI {
 			return MySQL.jugadorTieneHatSeleccionado(plugin, player.getName(), hat);
 		}
 	}
-	
-	public static ArrayList<Perk> getPerks(Player player) {
+
+	public static ArrayList<Perk> getPerks(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
 				return j.getPerks();
 			}else {
-				return new ArrayList<Perk>();
+				return new ArrayList<>();
 			}
 		}else {
 			return MySQL.getPerksJugador(plugin, player.getName());
 		}
 	}
-	
-	public static ArrayList<Hat> getHats(Player player) {
+
+	public static ArrayList<Hat> getHats(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null && j.getHats() != null) {
 				return j.getHats();
 			}else {
-				return new ArrayList<Hat>();
+				return new ArrayList<>();
 			}
 		}else {
 			return MySQL.getHatsJugador(plugin, player.getName());
 		}
 	}
-	
-	public static int getPlayersArena(String arena) {
+
+	public static int getPlayersArena(@NotNull String arena) {
 		Partida partida = plugin.getPartida(arena);
 		if(partida != null) {
 			return partida.getCantidadActualJugadores();
@@ -195,8 +182,8 @@ public class PaintballAPI {
 			return 0;
 		}
 	}
-	
-	public static String getStatusArena(String arena) {
+
+	public static @Nullable String getStatusArena(@NotNull String arena) {
 		Partida partida = plugin.getPartida(arena);
 		FileConfiguration messages = plugin.getMessages();
 		if(partida != null) {
