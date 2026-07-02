@@ -1,21 +1,23 @@
 package pb.ajneb97.juego;
 
+import org.jetbrains.annotations.NotNull;
 
 public class Killstreak {
 
 	private String tipo;
 	private int tiempo;
-	
-	public Killstreak(String tipo, int tiempo) {
+
+	public Killstreak(@NotNull String tipo, int tiempo) {
 		this.tipo = tipo;
 		this.tiempo = tiempo;
 	}
 
-	public String getTipo() {
+	public @NotNull String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	@SuppressWarnings("unused")
+	public void setTipo(@NotNull String tipo) {
 		this.tipo = tipo;
 	}
 
@@ -26,5 +28,4 @@ public class Killstreak {
 	public void setTiempo(int tiempo) {
 		this.tiempo = tiempo;
 	}
-	
 }
