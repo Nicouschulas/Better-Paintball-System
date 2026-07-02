@@ -11,9 +11,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class Partida {
 
-	private Equipo team1;
-	private Equipo team2;
-	private String nombre;
+	private final Equipo team1;
+	private final Equipo team2;
+	private final String nombre;
 	private int cantidadMaximaJugadores;
 	private int cantidadMinimaJugadores;
 	private int cantidadActualJugadores;
