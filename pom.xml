@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pb.ajneb97</groupId>
-    <artifactId>PaintballBattle</artifactId>
-    <version>1.12.1</version>
+    <artifactId>Paintball</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>PaintballBattle</name>
