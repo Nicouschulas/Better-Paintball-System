@@ -230,7 +230,7 @@ public class MySQL {
 		}
 		
 		public static ArrayList<Hat> getHatsJugador(PaintballBattle plugin,String name){
-			ArrayList<Hat> hats = new ArrayList<s>();
+			ArrayList<Hat> hats = new ArrayList<>();
 			try {
 				PreparedStatement statement = plugin.getConexionDatabase().getConnection().prepareStatement("SELECT * FROM "+plugin.getConexionDatabase().getTableHats()+" WHERE (Name=?)");
 				statement.setString(1, name);

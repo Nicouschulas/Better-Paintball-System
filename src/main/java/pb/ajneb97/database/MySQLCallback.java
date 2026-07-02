@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public interface MySQLCallback {
 
-	public void alTerminar(ArrayList<String> playersList);
+	void alTerminar(ArrayList<String> playersList);
 }
