@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
+import org.jspecify.annotations.NonNull;
 import pb.ajneb97.api.Hat;
 import pb.ajneb97.api.Perk;
 import pb.ajneb97.database.JugadorDatos;
@@ -32,7 +33,7 @@ public class Comando implements CommandExecutor {
 		this.plugin = plugin;
 	}
 	
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+	public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NonNull [] args){
 		FileConfiguration messages = plugin.getMessages();
 		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix"))+" ";
 	   if (!(sender instanceof Player)){
