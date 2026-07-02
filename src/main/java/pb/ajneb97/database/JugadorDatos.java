@@ -12,10 +12,10 @@ public class JugadorDatos {
 	private int ties;
 	private int kills;
 	private int coins;
-	private String name;
-	private String uuid;
-	private ArrayList<Perk> perks;
-	private ArrayList<Hat> hats;
+	private final String name;
+	private final String uuid;
+	private final ArrayList<Perk> perks;
+	private final ArrayList<Hat> hats;
 	
 	public JugadorDatos(String name, String uuid, int wins, int loses, int ties, int kills, int coins, ArrayList<Perk> perks, ArrayList<Hat> hats) {
 		this.wins = wins;
@@ -38,36 +38,36 @@ public class JugadorDatos {
 	}
 	
 	public boolean tieneHat(String hat) {
-		for(int i=0;i<hats.size();i++) {
-			if(hats.get(i).getName().equals(hat)) {
-				return true;
-			}
-		}
+        for (Hat value : hats) {
+            if (value.getName().equals(hat)) {
+                return true;
+            }
+        }
 		return false;
 	}
 	
 	public boolean tieneHatSeleccionado(String hat) {
-		for(int i=0;i<hats.size();i++) {
-			if(hats.get(i).getName().equals(hat) && hats.get(i).isSelected()) {
-				return true;
-			}
-		}
+        for (Hat value : hats) {
+            if (value.getName().equals(hat) && value.isSelected()) {
+                return true;
+            }
+        }
 		return false;
 	}
 	
 	public void deseleccionarHats() {
-		for(int i=0;i<hats.size();i++) {
-			hats.get(i).setSelected(false);
-		}
+        for (Hat hat : hats) {
+            hat.setSelected(false);
+        }
 	}
 	
 	public void seleccionarHat(String hat) {
-		for(int i=0;i<hats.size();i++) {
-			hats.get(i).setSelected(false);
-			if(hats.get(i).getName().equals(hat)) {
-				hats.get(i).setSelected(true);
-			}
-		}
+        for (Hat value : hats) {
+            value.setSelected(false);
+            if (value.getName().equals(hat)) {
+                value.setSelected(true);
+            }
+        }
 	}
 	
 	public ArrayList<Perk> getPerks(){
@@ -75,21 +75,21 @@ public class JugadorDatos {
 	}
 	
 	public void setPerk(String perk,int level) {
-		for(int i=0;i<perks.size();i++) {
-			if(perks.get(i).getName().equals(perk)) {
-				perks.get(i).setLevel(level);
-				return;
-			}
-		}
+        for (Perk value : perks) {
+            if (value.getName().equals(perk)) {
+                value.setLevel(level);
+                return;
+            }
+        }
 		perks.add(new Perk(perk,level));
 	}
 	
 	public int getNivelPerk(String perk) {
-		for(int i=0;i<perks.size();i++) {
-			if(perks.get(i).getName().equals(perk)) {
-				return perks.get(i).getNivel();
-			}
-		}
+        for (Perk value : perks) {
+            if (value.getName().equals(perk)) {
+                return value.getNivel();
+            }
+        }
 		return 0;
 	}
 	
