@@ -120,16 +120,16 @@ public class Partida {
 	}
 	
 	public ArrayList<JugadorPaintball> getJugadores(){
-		ArrayList<JugadorPaintball> jugadores = new ArrayList<JugadorPaintball>();
+		ArrayList<JugadorPaintball> jugadores = new ArrayList<>();
 		
 		ArrayList<JugadorPaintball> jugadoresTeam1 = team1.getJugadores();
-		for(int i=0;i<jugadoresTeam1.size();i++) {
-			jugadores.add(jugadoresTeam1.get(i));
-		}
+        for (JugadorPaintball jugadorPaintball : jugadoresTeam1) {
+            jugadores.add(jugadorPaintball);
+        }
 		ArrayList<JugadorPaintball> jugadoresTeam2 = team2.getJugadores();
-		for(int i=0;i<jugadoresTeam2.size();i++) {
-			jugadores.add(jugadoresTeam2.get(i));
-		}
+        for (JugadorPaintball jugadorPaintball : jugadoresTeam2) {
+            jugadores.add(jugadorPaintball);
+        }
 		
 		return jugadores;
 	}
@@ -145,17 +145,17 @@ public class Partida {
 	
 	public Equipo getEquipoJugador(String jugador) {
 		ArrayList<JugadorPaintball> jugadoresTeam1 = team1.getJugadores();
-		for(int i=0;i<jugadoresTeam1.size();i++) {
-			if(jugadoresTeam1.get(i).getJugador().getName().equals(jugador)) {
-				return this.team1;
-			}
-		}
+        for (JugadorPaintball jugadorPaintball : jugadoresTeam1) {
+            if (jugadorPaintball.getJugador().getName().equals(jugador)) {
+                return this.team1;
+            }
+        }
 		ArrayList<JugadorPaintball> jugadoresTeam2 = team2.getJugadores();
-		for(int i=0;i<jugadoresTeam2.size();i++) {
-			if(jugadoresTeam2.get(i).getJugador().getName().equals(jugador)){
-				return this.team2;
-			}
-		}
+        for (JugadorPaintball jugadorPaintball : jugadoresTeam2) {
+            if (jugadorPaintball.getJugador().getName().equals(jugador)) {
+                return this.team2;
+            }
+        }
 		
 		return null;
 	}
@@ -197,27 +197,15 @@ public class Partida {
 	}
 	
 	public boolean estaIniciada() {
-		if(!this.estado.equals(EstadoPartida.ESPERANDO) && !this.estado.equals(EstadoPartida.COMENZANDO)) {
-			return true;
-		}else {
-			return false;
-		}
+        return !this.estado.equals(EstadoPartida.ESPERANDO) && !this.estado.equals(EstadoPartida.COMENZANDO);
 	}
 	
 	public boolean estaLlena() {
-		if(this.cantidadActualJugadores == this.cantidadMaximaJugadores) {
-			return true;
-		}else {
-			return false;
-		}
+        return this.cantidadActualJugadores == this.cantidadMaximaJugadores;
 	}
 	
 	public boolean estaActivada() {
-		if(this.estado.equals(EstadoPartida.DESACTIVADA)) {
-			return false;
-		}else {
-			return true;
-		}
+        return !this.estado.equals(EstadoPartida.DESACTIVADA);
 	}
 	
 	public void setLobby(Location l) {
@@ -248,7 +236,7 @@ public class Partida {
 	}
 	
 	public ArrayList<JugadorPaintball> getJugadoresKills() {
-		ArrayList<JugadorPaintball> nuevo = new ArrayList<JugadorPaintball>();
+		ArrayList<JugadorPaintball> nuevo = new ArrayList<>();
 		for(int i=0;i<getJugadores().size();i++) {
 			nuevo.add(getJugadores().get(i));
 		}
@@ -284,11 +272,9 @@ public class Partida {
 			if(this.cantidadActualJugadores == 1) {
 				return true;
 			}
-			
-			
-			if(cantidadPreferenciaTeam1 >= mitad) {
-				return false;
-			}
+
+
+            return cantidadPreferenciaTeam1 < mitad;
 		}else {
 			int cantidadPreferenciaTeam2 = 0;
 			for(JugadorPaintball j : this.getJugadores()) {
@@ -300,13 +286,9 @@ public class Partida {
 			if(this.cantidadActualJugadores == 1) {
 				return true;
 			}
-			if(cantidadPreferenciaTeam2 >= mitad) {
-				return false;
-			}
+            return cantidadPreferenciaTeam2 < mitad;
 		}
-		
-		return true;
-	}
+    }
 	
 	public void modificarTeams(FileConfiguration config) {
 		Equipo team1 = this.team1;
@@ -314,7 +296,7 @@ public class Partida {
 		String nTeam1 = team1.getTipo();
 		String nTeam2 = team2.getTipo();
 		Random r = new Random();
-		ArrayList<String> nombres = new ArrayList<String>();
+		ArrayList<String> nombres = new ArrayList<>();
 		for(String key : config.getConfigurationSection("teams").getKeys(false)) {
 			nombres.add(key);
 		}
