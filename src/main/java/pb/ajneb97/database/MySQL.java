@@ -17,11 +17,7 @@ import pb.ajneb97.api.Perk;
 public class MySQL {
 
 	public static boolean isEnabled(FileConfiguration config){
-		if(config.getString("mysql-database.enabled").equals("true")){
-			return true;
-		}else{
-			return false;
-		}
+        return config.getString("mysql-database.enabled").equals("true");
 	}
 	
 		//Cada usuario tendra un registro en donde se guardaran sus registros global, que se especifica con el INTEGER Global = 1
