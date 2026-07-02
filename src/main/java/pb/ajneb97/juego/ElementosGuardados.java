@@ -7,16 +7,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class ElementosGuardados {
 
-	private ItemStack[] inventarioGuardado;
-	private ItemStack[] equipamientoGuardado;
-	private GameMode gamemodeGuardado;
-	private float experienciaGuardada;
-	private int levelGuardado;
-	private int hambreGuardada;
-	private double vidaGuardada;
-	private double maxVidaGuardada;
-	private boolean allowFlight;
-	private boolean isFlying;
+	private final ItemStack[] inventarioGuardado;
+	private final ItemStack[] equipamientoGuardado;
+	private final GameMode gamemodeGuardado;
+	private final float experienciaGuardada;
+	private final int levelGuardado;
+	private final int hambreGuardada;
+	private final double vidaGuardada;
+	private final double maxVidaGuardada;
+	private final boolean allowFlight;
+	private final boolean isFlying;
 	
 	public ElementosGuardados(ItemStack[] inventarioGuardado,ItemStack[] equipamientoGuardado,GameMode gamemodeGuardado,float experienciaGuardada,int levelGuardado,int hambreGuardada,
 			double vidaGuardada,double maxVidaGuardada,boolean allowFlight,boolean isFlying) {
