@@ -1,6 +1,6 @@
 main: pb.ajneb97.PaintballBattle
-version: 1.12.1
-name: PaintballBattle
+version: '${project.version}'
+name: Paintball
 api-version: 1.13
 author: Ajneb97
 softdepend: [Multiverse-Core, Vault, PlaceholderAPI, DecentHolograms]
