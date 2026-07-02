@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
-
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Partida {
 
@@ -23,9 +23,8 @@ public class Partida {
 	private int tiempoMaximo;
 	private int vidasIniciales;
 	private boolean enNuke;
-	
-	public Partida(String nombre,int tiempoMaximo,String equipo1, String equipo2, int vidasIniciales) {
-		//por defecto
+
+	public Partida(@NotNull String nombre, int tiempoMaximo, @NotNull String equipo1, @NotNull String equipo2, int vidasIniciales) {
 		this.team1 = new Equipo(equipo1);
 		this.team2 = new Equipo(equipo2);
 		this.nombre = nombre;
@@ -39,24 +38,6 @@ public class Partida {
 		this.enNuke = false;
 	}
 
-//	// <<<<<< NEU: Scoreboards für alle Spieler erstellen
-//	public void createScoreboardsForAllPlayers(PaintballListener paintballListener) {
-//		for(JugadorPaintball spieler : getJugadores()) {
-//			Player player = spieler.getJugador();
-//			paintballListener.createGameBoard(
-//					player,
-//					"InGame", // ggf. dynamisch anpassen
-//					team1.getTipo(), team1.getVidas(),
-//					team2.getTipo(), team2.getVidas(),
-//					spieler.getAsesinatos(),
-//					getNombre(),
-//					getCantidadActualJugadores(),
-//					getCantidadMaximaJugadores()
-//			);
-//		}
-//	}
-
-
 	public boolean isEnNuke() {
 		return enNuke;
 	}
@@ -68,162 +49,153 @@ public class Partida {
 	public void setVidasIniciales(int cantidad) {
 		this.vidasIniciales = cantidad;
 	}
-	
+
 	public int getVidasIniciales() {
 		return this.vidasIniciales;
 	}
-	
+
 	public void setTiempoMaximo(int tiempo) {
 		this.tiempoMaximo = tiempo;
 	}
-	
+
 	public int getTiempoMaximo() {
 		return this.tiempoMaximo;
 	}
-	
+
 	public void disminuirTiempo() {
 		this.tiempo--;
 	}
-	
+
 	public void aumentarTiempo() {
 		this.tiempo++;
 	}
-	
+
 	public void setTiempo(int tiempo) {
 		this.tiempo = tiempo;
 	}
-	
+
 	public int getTiempo() {
 		return this.tiempo;
 	}
-	
-	public String getNombre() {
+
+	public @NotNull String getNombre() {
 		return this.nombre;
 	}
-	
-	public void agregarJugador(JugadorPaintball player) {
-		//ANTES DE INICIAR LA PARTIDA TODOS ESTAN EN EL TEAM 1 Y LUEGO SE REPARTEN LOS DEMAS AL TEAM 2
+
+	public void agregarJugador(@NotNull JugadorPaintball player) {
 		if(team1.agregarJugador(player)) {
 			this.cantidadActualJugadores++;
-		}	
+		}
 	}
-	
-	public void repartirJugadorTeam2(JugadorPaintball player) {
+
+	public void repartirJugadorTeam2(@NotNull JugadorPaintball player) {
 		this.team1.removerJugador(player.getJugador().getName());
 		this.team2.agregarJugador(player);
 	}
-	
-	public void removerJugador(String player) {
+
+	public void removerJugador(@NotNull String player) {
 		if(team1.removerJugador(player) || team2.removerJugador(player)) {
 			this.cantidadActualJugadores--;
-		}	
+		}
 	}
-	
-	public ArrayList<JugadorPaintball> getJugadores(){
+
+	public @NotNull ArrayList<JugadorPaintball> getJugadores(){
 		ArrayList<JugadorPaintball> jugadores = new ArrayList<>();
-		
-		ArrayList<JugadorPaintball> jugadoresTeam1 = team1.getJugadores();
-        for (JugadorPaintball jugadorPaintball : jugadoresTeam1) {
-            jugadores.add(jugadorPaintball);
-        }
-		ArrayList<JugadorPaintball> jugadoresTeam2 = team2.getJugadores();
-        for (JugadorPaintball jugadorPaintball : jugadoresTeam2) {
-            jugadores.add(jugadorPaintball);
-        }
-		
+
+		jugadores.addAll(team1.getJugadores());
+		jugadores.addAll(team2.getJugadores());
+
 		return jugadores;
 	}
-	
-	public JugadorPaintball getJugador(String jugador) {
-		for(int i=0;i<getJugadores().size();i++) {
-			if(getJugadores().get(i).getJugador().getName().equals(jugador)) {
-				return getJugadores().get(i);
+
+	public @Nullable JugadorPaintball getJugador(@NotNull String jugador) {
+		for (JugadorPaintball jp : getJugadores()) {
+			if (jp.getJugador().getName().equals(jugador)) {
+				return jp;
 			}
 		}
 		return null;
 	}
-	
-	public Equipo getEquipoJugador(String jugador) {
-		ArrayList<JugadorPaintball> jugadoresTeam1 = team1.getJugadores();
-        for (JugadorPaintball jugadorPaintball : jugadoresTeam1) {
-            if (jugadorPaintball.getJugador().getName().equals(jugador)) {
-                return this.team1;
-            }
-        }
-		ArrayList<JugadorPaintball> jugadoresTeam2 = team2.getJugadores();
-        for (JugadorPaintball jugadorPaintball : jugadoresTeam2) {
-            if (jugadorPaintball.getJugador().getName().equals(jugador)) {
-                return this.team2;
-            }
-        }
-		
+
+	public @Nullable Equipo getEquipoJugador(@NotNull String jugador) {
+		for (JugadorPaintball jugadorPaintball : team1.getJugadores()) {
+			if (jugadorPaintball.getJugador().getName().equals(jugador)) {
+				return this.team1;
+			}
+		}
+		for (JugadorPaintball jugadorPaintball : team2.getJugadores()) {
+			if (jugadorPaintball.getJugador().getName().equals(jugador)) {
+				return this.team2;
+			}
+		}
+
 		return null;
 	}
-	
-	public Equipo getTeam1() {
+
+	public @NotNull Equipo getTeam1() {
 		return this.team1;
 	}
-	
-	public Equipo getTeam2() {
+
+	public @NotNull Equipo getTeam2() {
 		return this.team2;
 	}
-	
+
 	public int getCantidadMaximaJugadores() {
 		return this.cantidadMaximaJugadores;
 	}
-	
+
 	public void setCantidadMaximaJugadores(int max) {
 		this.cantidadMaximaJugadores = max;
 	}
-	
+
 	public int getCantidadMinimaJugadores() {
 		return this.cantidadMinimaJugadores;
 	}
-	
+
 	public void setCantidadMinimaJugadores(int min) {
 		this.cantidadMinimaJugadores = min;
 	}
-	
+
 	public int getCantidadActualJugadores() {
 		return this.cantidadActualJugadores;
 	}
-	
-	public EstadoPartida getEstado() {
+
+	public @NotNull EstadoPartida getEstado() {
 		return this.estado;
 	}
-	
-	public void setEstado(EstadoPartida estado) {
+
+	public void setEstado(@NotNull EstadoPartida estado) {
 		this.estado = estado;
 	}
-	
+
 	public boolean estaIniciada() {
-        return !this.estado.equals(EstadoPartida.ESPERANDO) && !this.estado.equals(EstadoPartida.COMENZANDO);
+		return !this.estado.equals(EstadoPartida.ESPERANDO) && !this.estado.equals(EstadoPartida.COMENZANDO);
 	}
-	
+
 	public boolean estaLlena() {
-        return this.cantidadActualJugadores == this.cantidadMaximaJugadores;
+		return this.cantidadActualJugadores == this.cantidadMaximaJugadores;
 	}
-	
+
 	public boolean estaActivada() {
-        return !this.estado.equals(EstadoPartida.DESACTIVADA);
+		return !this.estado.equals(EstadoPartida.DESACTIVADA);
 	}
-	
-	public void setLobby(Location l) {
+
+	public void setLobby(@Nullable Location l) {
 		this.lobby = l;
 	}
-		
-	public Location getLobby() {
+
+	public @Nullable Location getLobby() {
 		return this.lobby;
 	}
-	
-	public Equipo getGanador() {
-		if(team1.getJugadores().size() == 0) {
+
+	public @Nullable Equipo getGanador() {
+		if(team1.getJugadores().isEmpty()) {
 			return team2;
 		}
-		if(team2.getJugadores().size() == 0) {
+		if(team2.getJugadores().isEmpty()) {
 			return team1;
 		}
-		
+
 		int vidasTeam1 = team1.getVidas();
 		int vidasTeam2 = team2.getVidas();
 		if(vidasTeam1 > vidasTeam2) {
@@ -231,16 +203,13 @@ public class Partida {
 		}else if(vidasTeam2 > vidasTeam1) {
 			return team2;
 		}else {
-			return null; //empate
-		}	
-	}
-	
-	public ArrayList<JugadorPaintball> getJugadoresKills() {
-		ArrayList<JugadorPaintball> nuevo = new ArrayList<>();
-		for(int i=0;i<getJugadores().size();i++) {
-			nuevo.add(getJugadores().get(i));
+			return null; //tie
 		}
-		
+	}
+
+	public @NotNull ArrayList<JugadorPaintball> getJugadoresKills() {
+		ArrayList<JugadorPaintball> nuevo = new ArrayList<>(getJugadores());
+
 		for(int i=0;i<nuevo.size();i++) {
 			for(int c=i+1;c<nuevo.size();c++) {
 				if(nuevo.get(i).getAsesinatos() < nuevo.get(c).getAsesinatos()) {
@@ -250,16 +219,16 @@ public class Partida {
 				}
 			}
 		}
-		
+
 		return nuevo;
 	}
-	
-	public boolean puedeSeleccionarEquipo(String equipo) {
-		int mitad = 0;
+
+	public boolean puedeSeleccionarEquipo(@NotNull String equipo) {
+		int mitad;
 		if(this.cantidadActualJugadores % 2 != 0) {
-			mitad = ((int)this.cantidadActualJugadores/2) + 1;
+			mitad = (this.cantidadActualJugadores / 2) + 1;
 		}else {
-			mitad = (int)this.cantidadActualJugadores/2;
+			mitad = this.cantidadActualJugadores / 2;
 		}
 		if(equipo.equals(this.team1.getTipo())) {
 			int cantidadPreferenciaTeam1 = 0;
@@ -273,8 +242,7 @@ public class Partida {
 				return true;
 			}
 
-
-            return cantidadPreferenciaTeam1 < mitad;
+			return cantidadPreferenciaTeam1 < mitad;
 		}else {
 			int cantidadPreferenciaTeam2 = 0;
 			for(JugadorPaintball j : this.getJugadores()) {
@@ -282,51 +250,45 @@ public class Partida {
 					cantidadPreferenciaTeam2++;
 				}
 			}
-			
+
 			if(this.cantidadActualJugadores == 1) {
 				return true;
 			}
-            return cantidadPreferenciaTeam2 < mitad;
+			return cantidadPreferenciaTeam2 < mitad;
 		}
-    }
-	
-	public void modificarTeams(FileConfiguration config) {
+	}
+
+	public void modificarTeams(@NotNull FileConfiguration config) {
 		Equipo team1 = this.team1;
 		Equipo team2 = this.team2;
 		String nTeam1 = team1.getTipo();
 		String nTeam2 = team2.getTipo();
 		Random r = new Random();
 		ArrayList<String> nombres = new ArrayList<>();
-		for(String key : config.getConfigurationSection("teams").getKeys(false)) {
-			nombres.add(key);
+
+		ConfigurationSection section = config.getConfigurationSection("teams");
+		if (section != null) {
+			nombres.addAll(section.getKeys(false));
 		}
-		
+
 		int max = nombres.size();
+		if (max == 0) return;
+
 		if(team1.esRandom() && !team2.esRandom()) {
-			int num = r.nextInt(max);
-			nTeam1 = nombres.get(num);
-			while(nTeam1.equals(nTeam2)) {
-				num = r.nextInt(max);
-				nTeam1 = nombres.get(num);
-			}
+			do {
+				nTeam1 = nombres.get(r.nextInt(max));
+			} while (nTeam1.equals(nTeam2));
 			team1.setTipo(nTeam1);
 		}else if(!team1.esRandom() && team2.esRandom()) {
-			int num = r.nextInt(max);
-			nTeam2 = nombres.get(num);
-			while(nTeam2.equals(nTeam1)) {
-				num = r.nextInt(max);
-				nTeam2 = nombres.get(num);
-			}
+			do {
+				nTeam2 = nombres.get(r.nextInt(max));
+			} while (nTeam2.equals(nTeam1));
 			team2.setTipo(nTeam2);
 		}else if(team1.esRandom() && team2.esRandom()) {
-			int num = r.nextInt(max);
-			nTeam1 = nombres.get(num);
-			num = r.nextInt(max);
-			nTeam2 = nombres.get(num);
-			while(nTeam2.equals(nTeam1)) {
-				num = r.nextInt(max);
-				nTeam2 = nombres.get(num);
-			}
+			nTeam1 = nombres.get(r.nextInt(max));
+			do {
+				nTeam2 = nombres.get(r.nextInt(max));
+			} while (nTeam2.equals(nTeam1));
 			team1.setTipo(nTeam1);
 			team2.setTipo(nTeam2);
 		}
