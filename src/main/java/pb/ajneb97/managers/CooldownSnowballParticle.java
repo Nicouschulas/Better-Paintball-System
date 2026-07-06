@@ -11,25 +11,23 @@ import pb.ajneb97.utils.UtilidadesOtros;
 public class CooldownSnowballParticle {
 
 	int taskID;
-	private PaintballBattle plugin;
-	private Projectile snowball;
-	private String particula;
-	public CooldownSnowballParticle(PaintballBattle plugin,Projectile snowball,String particula){		
-		this.plugin = plugin;		
+	private final PaintballBattle plugin;
+	private final Projectile snowball;
+	private final String particula;
+
+	public CooldownSnowballParticle(PaintballBattle plugin, Projectile snowball, String particula){
+		this.plugin = plugin;
 		this.snowball = snowball;
 		this.particula = particula;
 	}
-	
+
 	public void cooldown(){
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
- 	    taskID = scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
-		public void run(){
+		taskID = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
 			if(!ejecutar()){
 				Bukkit.getScheduler().cancelTask(taskID);
-				return;
-			}	
- 		   }
- 	   }, 0L, 3L);
+			}
+		}, 0L, 3L);
 	}
 
 	protected boolean ejecutar() {
@@ -40,6 +38,5 @@ public class CooldownSnowballParticle {
 		}else {
 			return false;
 		}
-		
 	}
 }
