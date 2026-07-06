@@ -2,11 +2,13 @@ package pb.ajneb97;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerConfig {
 
@@ -15,28 +17,34 @@ public class PlayerConfig {
 	private final String filePath;
 	private final PaintballBattle plugin;
 
-	public PlayerConfig(String filePath, PaintballBattle plugin){
+	public PlayerConfig(@NotNull String filePath, @NotNull PaintballBattle plugin) {
 		this.config = null;
 		this.configFile = null;
 		this.filePath = filePath;
 		this.plugin = plugin;
 	}
 
-	public String getPath(){
+	public @NotNull String getPath() {
 		return this.filePath;
 	}
 
-	public FileConfiguration getConfig(){
+	public @NotNull FileConfiguration getConfig() {
 		if (config == null) {
 			reloadPlayerConfig();
 		}
 		return this.config;
 	}
 
-	public void registerPlayerConfig(){
-		configFile = new File(plugin.getDataFolder() + File.separator + "players", filePath);
-		if(!configFile.exists()){
+	public void registerPlayerConfig() {
+		configFile = Path.of(plugin.getDataFolder().getAbsolutePath(), "players", filePath).toFile();
+		if (!configFile.exists()) {
 			try {
+				File parent = configFile.getParentFile();
+				if (parent != null && !parent.exists()) {
+					if (!parent.mkdirs()) {
+						plugin.getLogger().warning("Could not create 'players' directory!");
+					}
+				}
 				if (!configFile.createNewFile()) {
 					plugin.getLogger().warning("Could not create player file for: " + filePath);
 				}
@@ -53,6 +61,7 @@ public class PlayerConfig {
 	}
 
 	public void savePlayerConfig() {
+		if (config == null || configFile == null) return;
 		try {
 			config.save(configFile);
 		} catch (IOException e) {
@@ -61,14 +70,9 @@ public class PlayerConfig {
 	}
 
 	public void reloadPlayerConfig() {
-		if (config == null) {
-			configFile = new File(plugin.getDataFolder() + File.separator + "players", filePath);
+		if (configFile == null) {
+			configFile = Path.of(plugin.getDataFolder().getAbsolutePath(), "players", filePath).toFile();
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
-
-		if (configFile != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(configFile);
-			config.setDefaults(defConfig);
-		}
 	}
 }
