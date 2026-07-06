@@ -30,7 +30,7 @@ import pb.ajneb97.utils.ValueOfPatch;
 
 public class InventarioShop implements Listener{
 
-	private PaintballBattle plugin;
+	private final PaintballBattle plugin;
 	public InventarioShop(PaintballBattle plugin) {
 		this.plugin = plugin;
 	}
@@ -40,7 +40,7 @@ public class InventarioShop implements Listener{
 		Inventory inv = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', shop.getString("shopInventoryTitle")));
 		for(String key : shop.getConfigurationSection("shop_items").getKeys(false)) {
 			ItemStack item = UtilidadesItems.crearItem(shop, "shop_items."+key);
-			int slot = Integer.valueOf(shop.getString("shop_items."+key+".slot"));
+			int slot = Integer.parseInt(shop.getString("shop_items."+key+".slot"));
 			if(slot != - 1) {
 				inv.setItem(slot, item);
 			}	
@@ -54,34 +54,27 @@ public class InventarioShop implements Listener{
 		FileConfiguration shop = plugin.getShop();
 		String pathInventory = ChatColor.translateAlternateColorCodes('&', shop.getString("shopInventoryTitle"));
 		String pathInventoryM = ChatColor.stripColor(pathInventory);
-		//FileConfiguration messages = plugin.getMessages();
-		//String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix"))+" ";
 		if(ChatColor.stripColor(event.getView().getTitle()).equals(pathInventoryM)){
 			if(event.getCurrentItem() == null){
 				event.setCancelled(true);
 				return;
 			}
-			if((event.getSlotType() == null)){
-				event.setCancelled(true);
-				return;
-			}else{
-				Player jugador = (Player) event.getWhoClicked();
-				event.setCancelled(true);
-				if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-					int slot = event.getSlot();
-					for(String key : shop.getConfigurationSection("shop_items").getKeys(false)) {
-						if(slot == Integer.valueOf(shop.getString("shop_items."+key+".slot"))) {
-							if(key.equals("perks_items")) {
-								crearInventarioPerks(jugador,plugin);
-							}else if(key.equals("hats_items")) {
-								crearInventarioHats(jugador,plugin);
-							}
-							return;
-						}
-					}
-				}
-			}
-		}
+            Player jugador = (Player) event.getWhoClicked();
+            event.setCancelled(true);
+            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+                int slot = event.getSlot();
+                for(String key : shop.getConfigurationSection("shop_items").getKeys(false)) {
+                    if(slot == Integer.parseInt(shop.getString("shop_items."+key+".slot"))) {
+                        if(key.equals("perks_items")) {
+                            crearInventarioPerks(jugador,plugin);
+                        }else if(key.equals("hats_items")) {
+                            crearInventarioHats(jugador,plugin);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
 	}
 	
 	public static void crearInventarioPerks(Player jugador,PaintballBattle plugin) {
@@ -133,9 +126,7 @@ public class InventarioShop implements Listener{
 			String[] separados = lista.get(i).split(";");
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%name%", separados[2])));
 			List<String> lore = meta.getLore();
-			for(int c=0;c<lore.size();c++) {
-				lore.set(c, lore.get(c).replace("%amount%", separados[0]).replace("%cost%", separados[1]));
-			}
+            lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 			inv.setItem(9+i, item);
@@ -157,9 +148,7 @@ public class InventarioShop implements Listener{
 			String[] separados = lista.get(i).split(";");
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%name%", separados[2])));
 			List<String> lore = meta.getLore();
-			for(int c=0;c<lore.size();c++) {
-				lore.set(c, lore.get(c).replace("%amount%", separados[0]).replace("%cost%", separados[1]));
-			}
+            lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 			inv.setItem(18+i, item);
@@ -181,9 +170,7 @@ public class InventarioShop implements Listener{
 			String[] separados = lista.get(i).split(";");
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%name%", separados[2])));
 			List<String> lore = meta.getLore();
-			for(int c=0;c<lore.size();c++) {
-				lore.set(c, lore.get(c).replace("%amount%", separados[0]).replace("%cost%", separados[1]));
-			}
+            lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 			inv.setItem(27+i, item);
@@ -208,109 +195,104 @@ public class InventarioShop implements Listener{
 				event.setCancelled(true);
 				return;
 			}
-			if((event.getSlotType() == null)){
-				event.setCancelled(true);
-				return;
-			}else{
-				final Player jugador = (Player) event.getWhoClicked();
-				event.setCancelled(true);
-				if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-					FileConfiguration config = plugin.getConfig();
-					if(!event.getCurrentItem().getType().equals(Material.AIR)) {
-						int slot = event.getSlot();
-						if(slot >= 9 && slot <= 17 || slot >= 18 && slot <= 26 || slot >= 27 && slot <= 35) {
-							int slotSum = 0;
-							String perk = "";
-							if(slot >= 9 && slot <= 17) {
-								//ExtraLives
-								slotSum = 9;
-								perk = "extra_lives";
-							}else if(slot >= 18 && slot <= 26) {
-								//Initial KillCoins
-								slotSum = 18;
-								perk = "initial_killcoins";
-							}else {
-								//Extra KillCoins
-								slotSum = 27;
-								perk = "extra_killcoins";
-							}
-							
-							List<String> lista = shop.getStringList("perks_upgrades."+perk);
-							for(int i=0;i<lista.size();i++) {
-								String[] separados = lista.get(i).split(";");
-								if(slot == slotSum+i) {
-									//Si es nivel 1 significa que el proximo nivel a desbloquear es el slot 10
-									int nivel = PaintballAPI.getPerkLevel(jugador, perk);
-									int slotADesbloquear = nivel+slotSum;
-									if(slot == slotADesbloquear) {
-										int cost = Integer.valueOf(separados[1]);
-										double dinero = 0;
-										if(config.getString("economy_used").equals("vault")) {
-											Economy econ = plugin.getEconomy();
-											dinero = econ.getBalance(jugador);
-											if(dinero < cost) {
-												jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins"))); 
-												return;
-											}
-											econ.withdrawPlayer(jugador, cost);
-										}else if(config.getString("economy_used").equals("token_manager")) {
-											TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
-											float dineroF = tokenManager.getTokens(jugador).orElse(0);
-											if(dineroF < cost) {
-												jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins"))); 
-												return;
-											}
-											tokenManager.removeTokens(jugador, cost);
-										}
-										else {
-											dinero = PaintballAPI.getCoins(jugador);
-											if(dinero < cost) {
-												jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins"))); 
-												return;
-											}
-											PaintballAPI.removeCoins(jugador, cost);
-										}
-										if(MySQL.isEnabled(config)) {
-											MySQL.setPerkJugadorAsync(plugin, jugador.getUniqueId().toString(), jugador.getName(), perk, nivel+1);
-										}else {
-											plugin.registerPlayer(jugador.getUniqueId().toString()+".yml");
-											if(plugin.getJugador(jugador.getName()) == null) {
-												plugin.agregarJugadorDatos(new JugadorDatos(jugador.getName(),jugador.getUniqueId().toString(),0,0,0,0,0,new ArrayList<Perk>(),new ArrayList<Hat>()));
-											}
-											JugadorDatos jDatos = plugin.getJugador(jugador.getName());
-											jDatos.setPerk(perk, nivel+1);
-										}
-										jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("perkUnlocked").replace("%name%", separados[2]))); 
-										String[] separadosSound = config.getString("shopUnlockSound").split(";");
-										try {
-											Sound sound = ValueOfPatch.valueOf(separadosSound[0]);
-											jugador.playSound(jugador.getLocation(), sound, Float.valueOf(separadosSound[1]), Float.valueOf(separadosSound[2]));
-										}catch(Exception ex) {
-											Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separadosSound[0]+" &7is not valid."));
-										}
-										Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-											public void run() {
-												InventarioShop.crearInventarioPerks(jugador, plugin);
-											}
-										}, 5L);
-									}else if(slot > slotADesbloquear) {
-										jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("perkErrorPrevious"))); 
-										return;
-									}else {
-										jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("perkErrorUnlocked"))); 
-										return;
-									}
-									
-									return;
-								}
-							}
-						}else if(slot == Integer.valueOf(shop.getString("perks_items.go_to_menu.slot"))) {
-							InventarioShop.crearInventarioPrincipal(jugador, plugin);
-						}
-					}
-				}
-			}
-		}
+            final Player jugador = (Player) event.getWhoClicked();
+            event.setCancelled(true);
+            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+                FileConfiguration config = plugin.getConfig();
+                if(!event.getCurrentItem().getType().equals(Material.AIR)) {
+                    int slot = event.getSlot();
+                    if(slot >= 9 && slot <= 17 || slot >= 18 && slot <= 26 || slot >= 27 && slot <= 35) {
+                        int slotSum;
+                        String perk;
+                        if(slot <= 17) {
+                            //ExtraLives
+                            slotSum = 9;
+                            perk = "extra_lives";
+                        }else if(slot <= 26) {
+                            //Initial KillCoins
+                            slotSum = 18;
+                            perk = "initial_killcoins";
+                        }else {
+                            //Extra KillCoins
+                            slotSum = 27;
+                            perk = "extra_killcoins";
+                        }
+
+                        List<String> lista = shop.getStringList("perks_upgrades."+perk);
+                        for(int i=0;i<lista.size();i++) {
+                            String[] separados = lista.get(i).split(";");
+                            if(slot == slotSum+i) {
+                                //Si es nivel 1 significa que el proximo nivel a desbloquear es el slot 10
+                                int nivel = PaintballAPI.getPerkLevel(jugador, perk);
+                                int slotADesbloquear = nivel+slotSum;
+                                if(slot == slotADesbloquear) {
+                                    int cost = Integer.parseInt(separados[1]);
+                                    double dinero;
+                                    if(config.getString("economy_used").equals("vault")) {
+                                        Economy econ = plugin.getEconomy();
+                                        dinero = econ.getBalance(jugador);
+                                        if(dinero < cost) {
+                                            jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
+                                            return;
+                                        }
+                                        econ.withdrawPlayer(jugador, cost);
+                                    }else if(config.getString("economy_used").equals("token_manager")) {
+                                        TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
+                                        float dineroF = tokenManager.getTokens(jugador).orElse(0);
+                                        if(dineroF < cost) {
+                                            jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
+                                            return;
+                                        }
+                                        tokenManager.removeTokens(jugador, cost);
+                                    }
+                                    else {
+                                        dinero = PaintballAPI.getCoins(jugador);
+                                        if(dinero < cost) {
+                                            jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
+                                            return;
+                                        }
+                                        PaintballAPI.removeCoins(jugador, cost);
+                                    }
+                                    if(MySQL.isEnabled(config)) {
+                                        MySQL.setPerkJugadorAsync(plugin, jugador.getUniqueId().toString(), jugador.getName(), perk, nivel+1);
+                                    }else {
+                                        plugin.registerPlayer(jugador.getUniqueId() +".yml");
+                                        if(plugin.getJugador(jugador.getName()) == null) {
+                                            plugin.agregarJugadorDatos(new JugadorDatos(jugador.getName(),jugador.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
+                                        }
+                                        JugadorDatos jDatos = plugin.getJugador(jugador.getName());
+                                        jDatos.setPerk(perk, nivel+1);
+                                    }
+                                    jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("perkUnlocked").replace("%name%", separados[2])));
+                                    String[] separadosSound = config.getString("shopUnlockSound").split(";");
+                                    try {
+                                        Sound sound = ValueOfPatch.valueOf(separadosSound[0]);
+                                        jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separadosSound[1]), Float.parseFloat(separadosSound[2]));
+                                    }catch(Exception ex) {
+                                        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separadosSound[0]+" &7is not valid."));
+                                    }
+                                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                        public void run() {
+                                            InventarioShop.crearInventarioPerks(jugador, plugin);
+                                        }
+                                    }, 5L);
+                                }else if(slot > slotADesbloquear) {
+                                    jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("perkErrorPrevious")));
+                                    return;
+                                }else {
+                                    jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("perkErrorUnlocked")));
+                                    return;
+                                }
+
+                                return;
+                            }
+                        }
+                    }else if(slot == Integer.parseInt(shop.getString("perks_items.go_to_menu.slot"))) {
+                        InventarioShop.crearInventarioPrincipal(jugador, plugin);
+                    }
+                }
+            }
+        }
 	}
 	
 	public static void crearInventarioHats(Player jugador,PaintballBattle plugin) {
@@ -338,9 +320,7 @@ public class InventarioShop implements Listener{
 					if(PaintballAPI.hasHat(jugador, key)) {
 						ItemMeta meta = item.getItemMeta();
 						List<String> lore = shop.getStringList("hats_items."+key+".bought_lore");
-						for(int i=0;i<lore.size();i++) {
-							lore.set(i, ChatColor.translateAlternateColorCodes('&', lore.get(i)));
-						}
+                        lore.replaceAll(textToTranslate -> ChatColor.translateAlternateColorCodes('&', textToTranslate));
 						meta.setLore(lore);
 						item.setItemMeta(meta);
 					}
@@ -354,7 +334,7 @@ public class InventarioShop implements Listener{
 			}
 			
 			if(shop.contains("hats_items."+key+".slot")) {
-				int slot = Integer.valueOf(shop.getString("hats_items."+key+".slot"));
+				int slot = Integer.parseInt(shop.getString("hats_items."+key+".slot"));
 				if(slot != - 1) {
 					inv.setItem(slot, item);
 				}
@@ -377,86 +357,81 @@ public class InventarioShop implements Listener{
 				event.setCancelled(true);
 				return;
 			}
-			if((event.getSlotType() == null)){
-				event.setCancelled(true);
-				return;
-			}else{
-				final Player jugador = (Player) event.getWhoClicked();
-				event.setCancelled(true);
-				if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-					FileConfiguration config = plugin.getConfig();
-					if(!event.getCurrentItem().getType().equals(Material.AIR)) {
-						int slot = event.getSlot();
-						for(String key : shop.getConfigurationSection("hats_items").getKeys(false)) {
-							if(key.equals("go_to_menu")) {
-								if(slot == Integer.valueOf(shop.getString("hats_items."+key+".slot"))) {
-									InventarioShop.crearInventarioPrincipal(jugador, plugin);
-									return;
-								}
-							}else if(!key.equals("coins_info")) {
-								if(slot == Integer.valueOf(shop.getString("hats_items."+key+".slot"))) {
-									if(PaintballAPI.hasHat(jugador, key)) {
-										jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatErrorBought"))); 
-										return;
-									}
-									int cost = Integer.valueOf(shop.getString("hats_items."+key+".cost"));
-									double dinero = 0;
-									if(config.getString("economy_used").equals("vault")) {
-										Economy econ = plugin.getEconomy();
-										dinero = econ.getBalance(jugador);
-										if(dinero < cost) {
-											jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins"))); 
-											return;
-										}
-										econ.withdrawPlayer(jugador, cost);
-									}else if(config.getString("economy_used").equals("token_manager")) {
-										TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
-										float dineroF = tokenManager.getTokens(jugador).orElse(0);
-										if(dineroF < cost) {
-											jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins"))); 
-											return;
-										}
-										tokenManager.removeTokens(jugador, cost);
-									}
-									else {
-										dinero = PaintballAPI.getCoins(jugador);
-										if(dinero < cost) {
-											jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins"))); 
-											return;
-										}
-										PaintballAPI.removeCoins(jugador, cost);
-									}
-									
-									if(MySQL.isEnabled(config)) {
-										MySQL.agregarJugadorHatAsync(plugin, jugador.getUniqueId().toString(), jugador.getName(), key);
-									}else {
-										plugin.registerPlayer(jugador.getUniqueId().toString()+".yml");
-										if(plugin.getJugador(jugador.getName()) == null) {
-											plugin.agregarJugadorDatos(new JugadorDatos(jugador.getName(),jugador.getUniqueId().toString(),0,0,0,0,0,new ArrayList<Perk>(),new ArrayList<Hat>()));
-										}
-										JugadorDatos jDatos = plugin.getJugador(jugador.getName());
-										jDatos.agregarHat(key);
-									}
-									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatBought").replace("%name%", shop.getString("hats_items."+key+".name")))); 
-									String[] separadosSound = config.getString("shopUnlockSound").split(";");
-									try {
-										Sound sound = ValueOfPatch.valueOf(separadosSound[0]);
-										jugador.playSound(jugador.getLocation(), sound, Float.valueOf(separadosSound[1]), Float.valueOf(separadosSound[2]));
-									}catch(Exception ex) {
-										Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separadosSound[0]+" &7is not valid."));
-									}
-									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-										public void run() {
-											InventarioShop.crearInventarioHats(jugador, plugin);
-										}
-									}, 5L);
-									return;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+            final Player jugador = (Player) event.getWhoClicked();
+            event.setCancelled(true);
+            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+                FileConfiguration config = plugin.getConfig();
+                if(!event.getCurrentItem().getType().equals(Material.AIR)) {
+                    int slot = event.getSlot();
+                    for(String key : shop.getConfigurationSection("hats_items").getKeys(false)) {
+                        if(key.equals("go_to_menu")) {
+                            if(slot == Integer.parseInt(shop.getString("hats_items."+key+".slot"))) {
+                                InventarioShop.crearInventarioPrincipal(jugador, plugin);
+                                return;
+                            }
+                        }else if(!key.equals("coins_info")) {
+                            if(slot == Integer.parseInt(shop.getString("hats_items."+key+".slot"))) {
+                                if(PaintballAPI.hasHat(jugador, key)) {
+                                    jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatErrorBought")));
+                                    return;
+                                }
+                                int cost = Integer.valueOf(shop.getString("hats_items."+key+".cost"));
+                                double dinero;
+                                if(config.getString("economy_used").equals("vault")) {
+                                    Economy econ = plugin.getEconomy();
+                                    dinero = econ.getBalance(jugador);
+                                    if(dinero < cost) {
+                                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
+                                        return;
+                                    }
+                                    econ.withdrawPlayer(jugador, cost);
+                                }else if(config.getString("economy_used").equals("token_manager")) {
+                                    TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
+                                    float dineroF = tokenManager.getTokens(jugador).orElse(0);
+                                    if(dineroF < cost) {
+                                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
+                                        return;
+                                    }
+                                    tokenManager.removeTokens(jugador, cost);
+                                }
+                                else {
+                                    dinero = PaintballAPI.getCoins(jugador);
+                                    if(dinero < cost) {
+                                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
+                                        return;
+                                    }
+                                    PaintballAPI.removeCoins(jugador, cost);
+                                }
+
+                                if(MySQL.isEnabled(config)) {
+                                    MySQL.agregarJugadorHatAsync(plugin, jugador.getUniqueId().toString(), jugador.getName(), key);
+                                }else {
+                                    plugin.registerPlayer(jugador.getUniqueId() +".yml");
+                                    if(plugin.getJugador(jugador.getName()) == null) {
+                                        plugin.agregarJugadorDatos(new JugadorDatos(jugador.getName(),jugador.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
+                                    }
+                                    JugadorDatos jDatos = plugin.getJugador(jugador.getName());
+                                    jDatos.agregarHat(key);
+                                }
+                                jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatBought").replace("%name%", shop.getString("hats_items."+key+".name"))));
+                                String[] separadosSound = config.getString("shopUnlockSound").split(";");
+                                try {
+                                    Sound sound = ValueOfPatch.valueOf(separadosSound[0]);
+                                    jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separadosSound[1]), Float.parseFloat(separadosSound[2]));
+                                }catch(Exception ex) {
+                                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separadosSound[0]+" &7is not valid."));
+                                }
+                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                    public void run() {
+                                        InventarioShop.crearInventarioHats(jugador, plugin);
+                                    }
+                                }, 5L);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 	}
 }
