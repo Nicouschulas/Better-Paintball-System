@@ -35,9 +35,6 @@ public class CooldownManager {
 		final FileConfiguration messages = plugin.getMessages();
 		final FileConfiguration config = plugin.getConfig();
 
-		String prefixStr = messages.getString("prefix", "&2[Paintball]&r");
-		final String prefix = ChatColor.translateAlternateColorCodes('&', prefixStr) + " ";
-
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		String startingMsg = messages.getString("arenaStartingMessage", "&aThe game starts in %time% seconds!");
 		for (JugadorPaintball j : jugadores) {
@@ -81,10 +78,12 @@ public class CooldownManager {
 				return true;
 			}
 		}else {
-			ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
-			String cancelMsg = messages.getString("gameStartingCancelled", "&cGame start cancelled because there are not enough players.");
-			for (JugadorPaintball j : jugadores) {
-				j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', cancelMsg));
+			if(partida != null) {
+				ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
+				String cancelMsg = messages.getString("gameStartingCancelled", "&cGame start cancelled because there are not enough players.");
+				for (JugadorPaintball j : jugadores) {
+					j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', cancelMsg));
+				}
 			}
 			return false;
 		}
