@@ -233,11 +233,11 @@ public class PartidaListener implements Listener{
 				if(hat.equals("guardian_hat") || hat.equals("jump_hat")) {
 					if(!j.isEfectoHatEnCooldown()) {
 						FileConfiguration config = plugin.getConfig();
-						int duration = Integer.valueOf(config.getString("hats_items."+hat+".duration"));
-						int cooldown = Integer.valueOf(config.getString("hats_items."+hat+".cooldown"));
+						int duration = Integer.parseInt(config.getString("hats_items."+hat+".duration"));
+						int cooldown = Integer.parseInt(config.getString("hats_items."+hat+".cooldown"));
 						if(hat.equals("jump_hat")) {
 							jugador.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST,20*duration,1,false,false));
-						}else if(hat.equals("guardian_hat")) {
+						}else {
 							jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,20*duration,2,false,false));
 							CooldownHats c = new CooldownHats(plugin);
 							c.durationHat(j, partida, duration);
@@ -248,7 +248,7 @@ public class PartidaListener implements Listener{
 						String[] separados = config.getString("hatAbilityActivatedSound").split(";");
 						try {
 							Sound sound = ValueOfPatch.valueOf(separados[0]);
-							j.getJugador().playSound(j.getJugador().getLocation(), sound, Float.valueOf(separados[1]), Float.valueOf(separados[2]));
+							j.getJugador().playSound(j.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
 						}catch(Exception ex) {
 							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
 						}
@@ -271,11 +271,11 @@ public class PartidaListener implements Listener{
 		if(partida != null && !jugador.isOp() && !jugador.hasPermission("paintball.admin")) {
 			FileConfiguration config = plugin.getConfig();
 			List<String> comandos = config.getStringList("commands_whitelist");
-			for(int i=0;i<comandos.size();i++) {
-				if(comando.toLowerCase().startsWith(comandos.get(i))) {
-					return;
-				}
-			}
+            for (String s : comandos) {
+                if (comando.toLowerCase().startsWith(s)) {
+                    return;
+                }
+            }
 			event.setCancelled(true);
 		}
 	}
@@ -304,9 +304,7 @@ public class PartidaListener implements Listener{
 		Player jugador = (Player) event.getWhoClicked();
 		Partida partida = plugin.getPartidaJugador(jugador.getName());
 		if(partida != null) {
-			if((event.getInventory().getType().equals(InventoryType.PLAYER) || 
-					event.getInventory().getType().equals(InventoryType.CRAFTING)) 
-					&& event.getSlotType() != null && event.getCurrentItem() != null){
+			if((event.getInventory().getType().equals(InventoryType.PLAYER) || event.getInventory().getType().equals(InventoryType.CRAFTING)) && event.getCurrentItem() != null){
 				if(!event.getCurrentItem().getType().equals(Material.AIR) && 
 						!event.getCurrentItem().getType().name().contains("SNOW")) {
 					event.setCancelled(true);
@@ -327,9 +325,8 @@ public class PartidaListener implements Listener{
 	@EventHandler
 	public void caerVacio(EntityDamageEvent event) {
 		Entity entidad = event.getEntity();
-		if(entidad instanceof Player) {
-			Player jugador = (Player) entidad;
-			Partida partida = plugin.getPartidaJugador(jugador.getName());
+		if(entidad instanceof Player jugador) {
+            Partida partida = plugin.getPartidaJugador(jugador.getName());
 			if(partida != null  && partida.estaIniciada()) {
 				if(event.getCause().equals(DamageCause.VOID)) {
 					Equipo equipo = partida.getEquipoJugador(jugador.getName());
@@ -347,11 +344,9 @@ public class PartidaListener implements Listener{
 		Partida partida = plugin.getPartidaJugador(jugador.getName());
 		if(partida != null) {
 			if(event.getClickedInventory() != null) {
-				if(event.getClickedInventory().getType().equals(InventoryType.CRAFTING)
-						&& event.getSlot() == 0 && event.getSlotType() != null && event.getSlotType().equals(SlotType.RESULT)) {
+				if(event.getClickedInventory().getType().equals(InventoryType.CRAFTING) && event.getSlot() == 0 && event.getSlotType().equals(SlotType.RESULT)) {
 					event.setCancelled(true);
-					return;
-				}
+                }
 			}
 		}
 	}
@@ -373,9 +368,8 @@ public class PartidaListener implements Listener{
 	@EventHandler
 	public void alDañar(EntityDamageEvent event) {
 		Entity entidad = event.getEntity();
-		if(entidad instanceof Player) {
-			Player jugador = (Player) entidad;
-			Partida partida = plugin.getPartidaJugador(jugador.getName());
+		if(entidad instanceof Player jugador) {
+            Partida partida = plugin.getPartidaJugador(jugador.getName());
 			if(partida != null) {
 				event.setCancelled(true);
 			}
@@ -482,95 +476,88 @@ public class PartidaListener implements Listener{
 				event.setCancelled(true);
 				return;
 			}
-			if((event.getSlotType() == null)){
-				event.setCancelled(true);
-				return;
-			}else{
-				Player jugador = (Player) event.getWhoClicked();
-				event.setCancelled(true);
-				if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-					Partida partida = plugin.getPartidaJugador(jugador.getName());
-					JugadorPaintball j = partida.getJugador(jugador.getName());
-					if(partida != null) {
-						int slot = event.getSlot();
-						for(String key : config.getConfigurationSection("killstreaks_items").getKeys(false)) {
-							if(slot == Integer.valueOf(config.getString("killstreaks_items."+key+".slot"))) {
-								if(j.getKillstreak(key) != null) {
-									jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("killstreakAlreadyActivated")));
-									return;
-								}
-								if(config.contains("killstreaks_items."+key+".permission")) {
-									if(!jugador.hasPermission(config.getString("killstreaks_items."+key+".permission"))) {
-										jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getString("killstreaks_items."+key+".permissionError")));
-										return;
-									}
-								}
-								
-								int cost = Integer.valueOf(config.getString("killstreaks_items."+key+".cost"));
-								if(j.getCoins() >= cost) {
-									if(key.equalsIgnoreCase("nuke") && partida.isEnNuke()) {
-										jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("nukeError")));
-										return;
-									}
-									
-									j.disminuirCoins(cost);
-									String name = ChatColor.translateAlternateColorCodes('&', config.getString("killstreaks_items."+key+".name"));
-									String teamName = config.getString("teams."+partida.getEquipoJugador(jugador.getName()).getTipo()+".name");
-									
-									for(JugadorPaintball player : partida.getJugadores()) {
-										if(!player.getJugador().getName().equals(jugador.getName())) {
-											String msg = ChatColor.translateAlternateColorCodes('&', messages.getString("killstreakActivatedPlayer").replace("%player%", jugador.getName()).replace("%team%", teamName)
-													.replace("%killstreak%", name));
-											player.getJugador().sendMessage(msg);
-										}
-									}
-									
-									jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("killstreakActivated").replace("%killstreak%", name)));
-									
-									
-									if(key.equalsIgnoreCase("strong_arm") || key.equalsIgnoreCase("triple_shoot") || key.equalsIgnoreCase("fury")) {
-										int duration = Integer.valueOf(config.getString("killstreaks_items."+key+".duration"));
-										if(j.getSelectedHat().equals("time_hat")) {
-											duration = duration+5;
-										}
-										Killstreak k = new Killstreak(key,duration);
-										j.agregarKillstreak(k);
-										CooldownKillstreaks cooldown = new CooldownKillstreaks(plugin);
-										cooldown.cooldownKillstreak(j, partida, key, duration);
-									}else {
-										PartidaManager.killstreakInstantanea(key, jugador, partida, plugin);
-									}
-									
-									String[] separados = config.getString("killstreaks_items."+key+".activateSound").split(";");
-									try {
-										Sound sound = ValueOfPatch.valueOf(separados[0]);
-										if(separados.length >= 4) {
-											if(separados[3].equalsIgnoreCase("global")) {
-												for(JugadorPaintball player : partida.getJugadores()) {
-													player.getJugador().playSound(player.getJugador().getLocation(), sound, Float.valueOf(separados[1]), Float.valueOf(separados[2]));
-												}
-											}else {
-												jugador.playSound(jugador.getLocation(), sound, Float.valueOf(separados[1]), Float.valueOf(separados[2]));
-											}
-										}else {
-											jugador.playSound(jugador.getLocation(), sound, Float.valueOf(separados[1]), Float.valueOf(separados[2]));
-										}
-										
-									}catch(Exception ex) {
-										Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
-									}
-									
-									UtilidadesItems.crearItemKillstreaks(j, config);
-								}else {
-									jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("noSufficientCoins")));
-								}
-								return;
-							}
-						}
-					}
-				}
-			}
-		}
+            Player jugador = (Player) event.getWhoClicked();
+            event.setCancelled(true);
+            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+                Partida partida = plugin.getPartidaJugador(jugador.getName());
+                JugadorPaintball j = partida.getJugador(jugador.getName());
+                int slot = event.getSlot();
+                for(String key : config.getConfigurationSection("killstreaks_items").getKeys(false)) {
+                    if(slot == Integer.valueOf(config.getString("killstreaks_items."+key+".slot"))) {
+                        if(j.getKillstreak(key) != null) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("killstreakAlreadyActivated")));
+                            return;
+                        }
+                        if(config.contains("killstreaks_items."+key+".permission")) {
+                            if(!jugador.hasPermission(config.getString("killstreaks_items."+key+".permission"))) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getString("killstreaks_items."+key+".permissionError")));
+                                return;
+                            }
+                        }
+
+                        int cost = Integer.parseInt(config.getString("killstreaks_items."+key+".cost"));
+                        if(j.getCoins() >= cost) {
+                            if(key.equalsIgnoreCase("nuke") && partida.isEnNuke()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("nukeError")));
+                                return;
+                            }
+
+                            j.disminuirCoins(cost);
+                            String name = ChatColor.translateAlternateColorCodes('&', config.getString("killstreaks_items."+key+".name"));
+                            String teamName = config.getString("teams."+partida.getEquipoJugador(jugador.getName()).getTipo()+".name");
+
+                            for(JugadorPaintball player : partida.getJugadores()) {
+                                if(!player.getJugador().getName().equals(jugador.getName())) {
+                                    String msg = ChatColor.translateAlternateColorCodes('&', messages.getString("killstreakActivatedPlayer").replace("%player%", jugador.getName()).replace("%team%", teamName)
+                                            .replace("%killstreak%", name));
+                                    player.getJugador().sendMessage(msg);
+                                }
+                            }
+
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("killstreakActivated").replace("%killstreak%", name)));
+
+
+                            if(key.equalsIgnoreCase("strong_arm") || key.equalsIgnoreCase("triple_shoot") || key.equalsIgnoreCase("fury")) {
+                                int duration = Integer.valueOf(config.getString("killstreaks_items."+key+".duration"));
+                                if(j.getSelectedHat().equals("time_hat")) {
+                                    duration = duration+5;
+                                }
+                                Killstreak k = new Killstreak(key,duration);
+                                j.agregarKillstreak(k);
+                                CooldownKillstreaks cooldown = new CooldownKillstreaks(plugin);
+                                cooldown.cooldownKillstreak(j, partida, key, duration);
+                            }else {
+                                PartidaManager.killstreakInstantanea(key, jugador, partida, plugin);
+                            }
+
+                            String[] separados = config.getString("killstreaks_items."+key+".activateSound").split(";");
+                            try {
+                                Sound sound = ValueOfPatch.valueOf(separados[0]);
+                                if(separados.length >= 4) {
+                                    if(separados[3].equalsIgnoreCase("global")) {
+                                        for(JugadorPaintball player : partida.getJugadores()) {
+                                            player.getJugador().playSound(player.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
+                                        }
+                                    }else {
+                                        jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
+                                    }
+                                }else {
+                                    jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
+                                }
+
+                            }catch(Exception ex) {
+                                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
+                            }
+
+                            UtilidadesItems.crearItemKillstreaks(j, config);
+                        }else {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("noSufficientCoins")));
+                        }
+                        return;
+                    }
+                }
+            }
+        }
 	}
 	
 	@EventHandler
@@ -604,7 +591,7 @@ public class PartidaListener implements Listener{
 					String[] separados = config.getString("snowballShootSound").split(";");
 					try {
 						Sound sound = ValueOfPatch.valueOf(separados[0]);
-						jugador.playSound(jugador.getLocation(), sound, Float.valueOf(separados[1]), Float.valueOf(separados[2]));
+						jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
 					}catch(Exception ex) {
 						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PaintballBattle.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
 					}
@@ -661,9 +648,8 @@ public class PartidaListener implements Listener{
 		Projectile p = event.getEntity();
 		ProjectileSource source = p.getShooter();
 		FileConfiguration config = plugin.getConfig();
-		if((p.getType().equals(EntityType.SNOWBALL) || p.getType().equals(EntityType.EGG)) && source instanceof Player) {
-			Player jugador = (Player) source;
-			Partida partida = plugin.getPartidaJugador(jugador.getName());
+		if((p.getType().equals(EntityType.SNOWBALL) || p.getType().equals(EntityType.EGG)) && source instanceof Player jugador) {
+            Partida partida = plugin.getPartidaJugador(jugador.getName());
 			if(partida != null) {
 				p.setMetadata("PaintballBattle", new FixedMetadataValue(plugin,"proyectil"));
 				p.setVelocity(p.getVelocity().multiply(1.25));
