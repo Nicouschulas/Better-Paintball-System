@@ -25,7 +25,6 @@ public class JugadorPaintball {
 	private int tiempoEfectoHat;
 	private String lastKilledBy;
 
-	@SuppressWarnings("deprecation")
 	public JugadorPaintball(@NotNull Player jugador) {
 		this.jugador = jugador;
 		this.guardados = new ElementosGuardados(jugador.getInventory().getContents().clone(), jugador.getEquipment().getArmorContents().clone(), jugador.getGameMode()
@@ -103,7 +102,6 @@ public class JugadorPaintball {
 	}
 
 	public void removerKillstreak(@NotNull String tipo) {
-		// Sicheres Entfernen via Lambda ohne Index-Verschiebungsfehler
 		this.killstreaks.removeIf(k -> k.getTipo().equals(tipo));
 	}
 
@@ -111,7 +109,6 @@ public class JugadorPaintball {
 		if(killstreaks.isEmpty()) {
 			return null;
 		}else {
-			// Nutzt Java 21+ Sequenced Collections .getLast()
 			return killstreaks.getLast();
 		}
 	}
@@ -152,7 +149,6 @@ public class JugadorPaintball {
 		return this.asesinatos;
 	}
 
-	@SuppressWarnings("unused")
 	public int getMuertes() {
 		return this.muertes;
 	}

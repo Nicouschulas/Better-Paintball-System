@@ -13,7 +13,6 @@ import pb.ajneb97.database.MySQL;
 import pb.ajneb97.juego.EstadoPartida;
 import pb.ajneb97.juego.Partida;
 
-@SuppressWarnings("unused")
 public class PaintballAPI {
 
 	private static PaintballBattle plugin;

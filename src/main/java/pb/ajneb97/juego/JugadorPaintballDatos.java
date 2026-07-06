@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import pb.ajneb97.api.Hat;
 import pb.ajneb97.api.Perk;
 
-@SuppressWarnings("unused")
 public class JugadorPaintballDatos {
 
 	private int wins;
