@@ -33,7 +33,8 @@ public class CooldownHats {
 			if(!ejecutarCooldownHat()){
 				FileConfiguration messages = plugin.getMessages();
 				if(!partida.getEstado().equals(EstadoPartida.TERMINANDO)) {
-					jugador.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("hatCooldownFinished")));
+					String msg = messages.getString("hatCooldownFinished", "&aHat cooldown finished!");
+					jugador.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 				}
 
 				Bukkit.getScheduler().cancelTask(taskID);
