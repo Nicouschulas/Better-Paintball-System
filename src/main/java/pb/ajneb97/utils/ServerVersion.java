@@ -31,7 +31,7 @@ public enum ServerVersion {
     v1_21_R1,
     v1_21_R2,
     v1_21_R3,
-    v1_21_R4; // Added for Paper 1.21.8
+    v1_21_R4;
 
     public boolean serverVersionGreaterEqualThan(ServerVersion version1, ServerVersion version2) {
         return version1.ordinal() >= version2.ordinal();
@@ -50,10 +50,10 @@ public enum ServerVersion {
 
         try {
             ServerVersion version = ServerVersion.valueOf(detected);
-            Bukkit.getLogger().info("[PaintballBattle] Detected server version: " + version.name());
+            Bukkit.getLogger().info("[Paintball] Detected server version: " + version.name());
             return version;
         } catch (IllegalArgumentException ex) {
-            Bukkit.getLogger().warning("[PaintballBattle] Unknown server version '" + detected + "', defaulting to v1_21_R4");
+            Bukkit.getLogger().warning("[Paintball] Unknown server version '" + detected + "', defaulting to v1_21_R4");
             return ServerVersion.v1_21_R4;
         }
     }
