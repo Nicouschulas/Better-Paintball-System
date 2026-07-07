@@ -36,7 +36,7 @@ public class Comando implements CommandExecutor {
 	public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NonNull [] args){
 		FileConfiguration messages = plugin.getMessages();
 		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix"))+" ";
-	   if (!(sender instanceof Player)){
+	   if (!(sender instanceof Player jugador)){
 		   if(args.length >= 1) {
 			   if(args[0].equalsIgnoreCase("givecoins")) {
 				   // /paintball givecoins <player> <amount>
@@ -54,8 +54,7 @@ public class Comando implements CommandExecutor {
 		   }
 		   return false;   	
 	   }
-	   Player jugador = (Player)sender;
-	   if(args.length >= 1) {
+        if(args.length >= 1) {
 		   
 		   if(args[0].equalsIgnoreCase("create")) {
 			   // /paintball create <nombre>
@@ -80,7 +79,7 @@ public class Comando implements CommandExecutor {
 							   i++;
 						   }
 						   
-						   Partida partida = new Partida(args[1],Integer.valueOf(config.getString("arena_time_default")),equipo1,equipo2,Integer.valueOf(config.getString("team_starting_lives_default")));
+						   Partida partida = new Partida(args[1],Integer.parseInt(config.getString("arena_time_default")),equipo1,equipo2,Integer.parseInt(config.getString("team_starting_lives_default")));
 						   plugin.agregarPartida(partida);
 						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaCreated").replace("%name%", args[1]))); 
 						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaCreatedExtraInfo").replace("%name%", args[1]))); 
@@ -190,8 +189,8 @@ public class Comando implements CommandExecutor {
 			   // /paintball leave
 			   Partida partida = plugin.getPartidaJugador(jugador.getName());
 			   if(partida != null) {  
-				   PartidaManager.jugadorSale(partida, jugador, false, plugin, false);;
-			   }else {
+				   PartidaManager.jugadorSale(partida, jugador, false, plugin, false);
+               }else {
 				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("notInAGame"))); 
 			   }
 		   }else if(args[0].equalsIgnoreCase("shop")) {   
@@ -378,7 +377,7 @@ public class Comando implements CommandExecutor {
 		if(args.length >= 3) {
 			   String player = args[1];
 			   try {
-				   int amount = Integer.valueOf(args[2]);
+				   int amount = Integer.parseInt(args[2]);
 				   //Si el jugador no esta en la base de datos, o en un archivo, DEBE estar conectado para darle coins.
 				   if(MySQL.isEnabled(plugin.getConfig())) {
 					   if(MySQL.jugadorExiste(plugin, player)) {
@@ -401,9 +400,9 @@ public class Comando implements CommandExecutor {
 				   }else {
 					   Player p = Bukkit.getPlayer(player);
 					   if(p != null) {
-						   plugin.registerPlayer(p.getUniqueId().toString()+".yml");
+						   plugin.registerPlayer(p.getUniqueId() +".yml");
 						   if(plugin.getJugador(p.getName()) == null) {
-								plugin.agregarJugadorDatos(new JugadorDatos(p.getName(),p.getUniqueId().toString(),0,0,0,0,0,new ArrayList<Perk>(),new ArrayList<Hat>()));
+								plugin.agregarJugadorDatos(new JugadorDatos(p.getName(),p.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
 						   }
 						   JugadorDatos jDatos = plugin.getJugador(p.getName());
 						   jDatos.aumentarCoins(amount);

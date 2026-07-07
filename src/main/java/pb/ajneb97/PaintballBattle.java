@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,9 +94,9 @@ public class PaintballBattle extends JavaPlugin {
 	@SuppressWarnings("unused")
 	public void onEnable(){
 	   setVersion();
-	   configPlayers = new ArrayList<PlayerConfig>();
-	   jugadoresDatos = new ArrayList<JugadorDatos>();
-	   topHologramas = new ArrayList<TopHologram>();
+	   configPlayers = new ArrayList<>();
+	   jugadoresDatos = new ArrayList<>();
+	   topHologramas = new ArrayList<>();
 	   registerEvents();
 	   registerArenas();
 	   registerConfig();
@@ -139,11 +140,11 @@ public class PaintballBattle extends JavaPlugin {
 
 	public void onDisable(){
 		if(partidas != null) {
-			for(int i=0;i<partidas.size();i++) {
-				if(!partidas.get(i).getEstado().equals(EstadoPartida.DESACTIVADA)) {
-					PartidaManager.finalizarPartida(partidas.get(i),this,true,null);
-				}
-			}
+            for (Partida partida : partidas) {
+                if (!partida.getEstado().equals(EstadoPartida.DESACTIVADA)) {
+                    PartidaManager.finalizarPartida(partida, this, true, null);
+                }
+            }
 		}
 		guardarPartidas();
 		guardarJugadores();
@@ -218,7 +219,7 @@ public class PaintballBattle extends JavaPlugin {
 	          return false;
 	      }
 	      econ = rsp.getProvider();
-	      return econ != null;
+	      return true;
 	  }
 	  
 	public Economy getEconomy(){	
@@ -244,14 +245,14 @@ public class PaintballBattle extends JavaPlugin {
 	}
 	
 	public Partida getPartidaJugador(String jugador) {
-		for(int i=0;i<partidas.size();i++) {
-			ArrayList<JugadorPaintball> jugadores = partidas.get(i).getJugadores();
-			for(int c=0;c<jugadores.size();c++) {
-				if(jugadores.get(c).getJugador().getName().equals(jugador)) {
-					return partidas.get(i);
-				}
-			}
-		}
+        for (Partida partida : partidas) {
+            ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
+            for (JugadorPaintball jugadore : jugadores) {
+                if (jugadore.getJugador().getName().equals(jugador)) {
+                    return partida;
+                }
+            }
+        }
 		return null;
 	}
 	
@@ -260,11 +261,11 @@ public class PaintballBattle extends JavaPlugin {
 	}
 	
 	public Partida getPartida(String nombre) {
-		for(int i=0;i<partidas.size();i++) {
-			if(partidas.get(i).getNombre().equals(nombre)) {
-				return partidas.get(i);
-			}
-		}
+        for (Partida partida : partidas) {
+            if (partida.getNombre().equals(nombre)) {
+                return partida;
+            }
+        }
 		return null;
 	}
 	
@@ -281,23 +282,23 @@ public class PaintballBattle extends JavaPlugin {
 	}
 	
 	public void cargarPartidas() {
-		  this.partidas = new ArrayList<Partida>();
+		  this.partidas = new ArrayList<>();
 		  FileConfiguration arenas = getArenas();
 		  if(arenas.contains("Arenas")) {
 			  for(String key : arenas.getConfigurationSection("Arenas").getKeys(false)) {
-				  int min_players = Integer.valueOf(arenas.getString("Arenas."+key+".min_players"));
-				  int max_players = Integer.valueOf(arenas.getString("Arenas."+key+".max_players"));
-				  int time = Integer.valueOf(arenas.getString("Arenas."+key+".time"));
-				  int vidas = Integer.valueOf(arenas.getString("Arenas."+key+".lives"));
+				  int min_players = Integer.parseInt(arenas.getString("Arenas."+key+".min_players"));
+				  int max_players = Integer.parseInt(arenas.getString("Arenas."+key+".max_players"));
+				  int time = Integer.parseInt(arenas.getString("Arenas."+key+".time"));
+				  int vidas = Integer.parseInt(arenas.getString("Arenas."+key+".lives"));
 				  
 				  Location lLobby = null;
 				  if(arenas.contains("Arenas."+key+".Lobby")) {
-					  double xLobby = Double.valueOf(arenas.getString("Arenas."+key+".Lobby.x"));
-					  double yLobby = Double.valueOf(arenas.getString("Arenas."+key+".Lobby.y"));
-					  double zLobby = Double.valueOf(arenas.getString("Arenas."+key+".Lobby.z"));
+					  double xLobby = Double.parseDouble(arenas.getString("Arenas."+key+".Lobby.x"));
+					  double yLobby = Double.parseDouble(arenas.getString("Arenas."+key+".Lobby.y"));
+					  double zLobby = Double.parseDouble(arenas.getString("Arenas."+key+".Lobby.z"));
 					  String worldLobby = arenas.getString("Arenas."+key+".Lobby.world");
-					  float pitchLobby = Float.valueOf(arenas.getString("Arenas."+key+".Lobby.pitch"));
-					  float yawLobby = Float.valueOf(arenas.getString("Arenas."+key+".Lobby.yaw"));
+					  float pitchLobby = Float.parseFloat(arenas.getString("Arenas."+key+".Lobby.pitch"));
+					  float yawLobby = Float.parseFloat(arenas.getString("Arenas."+key+".Lobby.yaw"));
 					  lLobby = new Location(Bukkit.getWorld(worldLobby),xLobby,yLobby,zLobby,yawLobby,pitchLobby);
 				  }
 				  
@@ -306,12 +307,12 @@ public class PaintballBattle extends JavaPlugin {
 				  
 				  Location lSpawnTeam1 = null;
 				  if(arenas.contains("Arenas."+key+".Team1.Spawn")) {
-					  double xSpawnTeam1 = Double.valueOf(arenas.getString("Arenas."+key+".Team1.Spawn.x"));
-					  double ySpawnTeam1 = Double.valueOf(arenas.getString("Arenas."+key+".Team1.Spawn.y"));
-					  double zSpawnTeam1 = Double.valueOf(arenas.getString("Arenas."+key+".Team1.Spawn.z"));
+					  double xSpawnTeam1 = Double.parseDouble(arenas.getString("Arenas."+key+".Team1.Spawn.x"));
+					  double ySpawnTeam1 = Double.parseDouble(arenas.getString("Arenas."+key+".Team1.Spawn.y"));
+					  double zSpawnTeam1 = Double.parseDouble(arenas.getString("Arenas."+key+".Team1.Spawn.z"));
 					  String worldSpawnTeam1 = arenas.getString("Arenas."+key+".Team1.Spawn.world");
-					  float pitchSpawnTeam1 = Float.valueOf(arenas.getString("Arenas."+key+".Team1.Spawn.pitch"));
-					  float yawSpawnTeam1 = Float.valueOf(arenas.getString("Arenas."+key+".Team1.Spawn.yaw"));
+					  float pitchSpawnTeam1 = Float.parseFloat(arenas.getString("Arenas."+key+".Team1.Spawn.pitch"));
+					  float yawSpawnTeam1 = Float.parseFloat(arenas.getString("Arenas."+key+".Team1.Spawn.yaw"));
 					  lSpawnTeam1 = new Location(Bukkit.getWorld(worldSpawnTeam1),xSpawnTeam1,ySpawnTeam1,zSpawnTeam1,yawSpawnTeam1,pitchSpawnTeam1);
 				  }
 				  
@@ -319,8 +320,8 @@ public class PaintballBattle extends JavaPlugin {
 				  String nombreTeam2 = arenas.getString("Arenas."+key+".Team2.name");
 				  Location lSpawnTeam2 = null;
 				  if(arenas.contains("Arenas."+key+".Team2.Spawn")) {
-					  double xSpawnTeam2 = Double.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.x"));
-					  double ySpawnTeam2 = Double.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.y"));
+					  double xSpawnTeam2 = Double.parseDouble(arenas.getString("Arenas."+key+".Team2.Spawn.x"));
+					  double ySpawnTeam2 = Double.parseDouble(arenas.getString("Arenas."+key+".Team2.Spawn.y"));
 					  double zSpawnTeam2 = Double.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.z"));
 					  String worldSpawnTeam2 = arenas.getString("Arenas."+key+".Team2.Spawn.world");
 					  float pitchSpawnTeam2 = Float.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.pitch"));
@@ -442,16 +443,10 @@ public class PaintballBattle extends JavaPlugin {
 		    arenas = YamlConfiguration.loadConfiguration(arenasFile);
 
 		    Reader defConfigStream;
-			try {
-				defConfigStream = new InputStreamReader(this.getResource("arenas.yml"), "UTF8");
-				if (defConfigStream != null) {
-			        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			        arenas.setDefaults(defConfig);
-			    }
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}	    
-		}
+          defConfigStream = new InputStreamReader(this.getResource("arenas.yml"), StandardCharsets.UTF_8);
+          YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+          arenas.setDefaults(defConfig);
+      }
 	  
 	  public void registerConfig(){	
 			File config = new File(this.getDataFolder(), "config.yml");
@@ -492,16 +487,10 @@ public class PaintballBattle extends JavaPlugin {
 			}
 			shop = YamlConfiguration.loadConfiguration(shopFile);
 			Reader defConfigStream;
-			try {
-				defConfigStream = new InputStreamReader(this.getResource("shop.yml"), "UTF8");
-				if (defConfigStream != null) {
-				     YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-				     shop.setDefaults(defConfig);
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}	    
-		}
+            defConfigStream = new InputStreamReader(this.getResource("shop.yml"), StandardCharsets.UTF_8);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            shop.setDefaults(defConfig);
+        }
 	  
 	  public void registerMessages(){
 		  messagesFile = new File(this.getDataFolder(), "messages.yml");
@@ -533,16 +522,10 @@ public class PaintballBattle extends JavaPlugin {
 			}
 			messages = YamlConfiguration.loadConfiguration(messagesFile);
 			Reader defConfigStream;
-			try {
-				defConfigStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
-				if (defConfigStream != null) {
-				     YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-				     messages.setDefaults(defConfig);
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}	    
-		}
+            defConfigStream = new InputStreamReader(this.getResource("messages.yml"), StandardCharsets.UTF_8);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            messages.setDefaults(defConfig);
+        }
 	
 		public void createPlayersFolder(){
 			File folder;
@@ -557,23 +540,23 @@ public class PaintballBattle extends JavaPlugin {
 		}
 		
 		public void savePlayers() {
-			for(int i=0;i<configPlayers.size();i++) {
-				configPlayers.get(i).savePlayerConfig();
-			}
+            for (PlayerConfig configPlayer : configPlayers) {
+                configPlayer.savePlayerConfig();
+            }
 		}
 		
 		public void registerPlayers(){
 			String path = this.getDataFolder() + File.separator + "players";
 			File folder = new File(path);
 			File[] listOfFiles = folder.listFiles();
-			for (int i=0;i<listOfFiles.length;i++) {
-				if(listOfFiles[i].isFile()) {
-			        String pathName = listOfFiles[i].getName();
-			        PlayerConfig config = new PlayerConfig(pathName,this);
-			        config.registerPlayerConfig();
-			        configPlayers.add(config);
-			    }
-			}
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile()) {
+                    String pathName = listOfFile.getName();
+                    PlayerConfig config = new PlayerConfig(pathName, this);
+                    config.registerPlayerConfig();
+                    configPlayers.add(config);
+                }
+            }
 		}
 		
 		public ArrayList<PlayerConfig> getConfigPlayers(){
@@ -581,20 +564,20 @@ public class PaintballBattle extends JavaPlugin {
 		}
 		
 		public boolean archivoYaRegistrado(String pathName) {
-			for(int i=0;i<configPlayers.size();i++) {
-				if(configPlayers.get(i).getPath().equals(pathName)) {
-					return true;
-				}
-			}
+            for (PlayerConfig configPlayer : configPlayers) {
+                if (configPlayer.getPath().equals(pathName)) {
+                    return true;
+                }
+            }
 			return false;
 		}
 		
 		public PlayerConfig getPlayerConfig(String pathName) {
-			for(int i=0;i<configPlayers.size();i++) {
-				if(configPlayers.get(i).getPath().equals(pathName)) {
-					return configPlayers.get(i);
-				}
-			}
+            for (PlayerConfig configPlayer : configPlayers) {
+                if (configPlayer.getPath().equals(pathName)) {
+                    return configPlayer;
+                }
+            }
 			return null;
 		}
 		public ArrayList<PlayerConfig> getPlayerConfigs() {
@@ -632,37 +615,37 @@ public class PaintballBattle extends JavaPlugin {
 					int coins = 0;
 					
 					if(players.contains("kills")) {
-						kills = Integer.valueOf(players.getString("kills"));
+						kills = Integer.parseInt(players.getString("kills"));
 					}
 					if(players.contains("wins")) {
-						wins = Integer.valueOf(players.getString("wins"));
+						wins = Integer.parseInt(players.getString("wins"));
 					}
 					if(players.contains("loses")) {
-						loses = Integer.valueOf(players.getString("loses"));
+						loses = Integer.parseInt(players.getString("loses"));
 					}
 					if(players.contains("ties")) {
-						ties = Integer.valueOf(players.getString("ties"));
+						ties = Integer.parseInt(players.getString("ties"));
 					}
 					if(players.contains("coins")) {
-						coins = Integer.valueOf(players.getString("coins"));
+						coins = Integer.parseInt(players.getString("coins"));
 					}
-					ArrayList<Perk> perks = new ArrayList<Perk>();
+					ArrayList<Perk> perks = new ArrayList<>();
 					if(players.contains("perks")) {
 						List<String> listaPerks = players.getStringList("perks");
-						for(int i=0;i<listaPerks.size();i++) {
-							String[] separados = listaPerks.get(i).split(";");
-							Perk p = new Perk(separados[0],Integer.valueOf(separados[1]));
-							perks.add(p);
-						}	
+                        for (String listaPerk : listaPerks) {
+                            String[] separados = listaPerk.split(";");
+                            Perk p = new Perk(separados[0], Integer.parseInt(separados[1]));
+                            perks.add(p);
+                        }
 					}
-					ArrayList<Hat> hats = new ArrayList<Hat>();
+					ArrayList<Hat> hats = new ArrayList<>();
 					if(players.contains("hats")) {
 						List<String> listaHats = players.getStringList("hats");
-						for(int i=0;i<listaHats.size();i++) {
-							String[] separados = listaHats.get(i).split(";");
-							Hat h = new Hat(separados[0],Boolean.valueOf(separados[1]));
-							hats.add(h);
-						}
+                        for (String listaHat : listaHats) {
+                            String[] separados = listaHat.split(";");
+                            Hat h = new Hat(separados[0], Boolean.parseBoolean(separados[1]));
+                            hats.add(h);
+                        }
 					}
 					
 						
@@ -684,14 +667,14 @@ public class PaintballBattle extends JavaPlugin {
 					players.set("loses", j.getLoses());
 					players.set("coins", j.getCoins());
 					
-					List<String> listaPerks = new ArrayList<String>();
+					List<String> listaPerks = new ArrayList<>();
 					ArrayList<Perk> perks = j.getPerks();
 					for(Perk p : perks) {
 						listaPerks.add(p.getName()+";"+p.getNivel());
 					}
 					players.set("perks", listaPerks);
 					
-					List<String> listaHats = new ArrayList<String>();
+					List<String> listaHats = new ArrayList<>();
 					ArrayList<Hat> hats = j.getHats();
 					for(Hat h : hats) {
 						listaHats.add(h.getName()+";"+h.isSelected());
@@ -748,16 +731,10 @@ public class PaintballBattle extends JavaPlugin {
 			    holograms = YamlConfiguration.loadConfiguration(hologramsFile);
 
 			    Reader defConfigStream;
-				try {
-					defConfigStream = new InputStreamReader(this.getResource("holograms.yml"), "UTF8");
-					if (defConfigStream != null) {
-				        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-				        holograms.setDefaults(defConfig);
-				    }
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}	    
-			}
+              defConfigStream = new InputStreamReader(this.getResource("holograms.yml"), StandardCharsets.UTF_8);
+              YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+              holograms.setDefaults(defConfig);
+          }
 		  
 		  public void agregarTopHolograma(TopHologram topHologram) {
 				this.topHologramas.add(topHologram);
@@ -775,29 +752,29 @@ public class PaintballBattle extends JavaPlugin {
 			}
 			
 			public TopHologram getTopHologram(String nombre) {
-				for(int i=0;i<topHologramas.size();i++) {
-					if(topHologramas.get(i).getName().equals(nombre)) {
-						return topHologramas.get(i);
-					}
-				}
+                for (TopHologram topHolograma : topHologramas) {
+                    if (topHolograma.getName().equals(nombre)) {
+                        return topHolograma;
+                    }
+                }
 				return null;
 			}
 			
 			public void guardarTopHologramas() {
 				FileConfiguration holograms = getHolograms();
 				holograms.set("Holograms", null);
-				for(int i=0;i<topHologramas.size();i++) {
-					Location l = topHologramas.get(i).getHologram().getLocation();
-					String name = topHologramas.get(i).getName();
-					String type = topHologramas.get(i).getType();
-					String period = topHologramas.get(i).getPeriod();
-					holograms.set("Holograms."+name+".type", type);
-					holograms.set("Holograms."+name+".period", period);
-					holograms.set("Holograms."+name+".x", l.getX()+"");
-					holograms.set("Holograms."+name+".y", topHologramas.get(i).getyOriginal()+"");
-					holograms.set("Holograms."+name+".z", l.getZ()+"");
-					holograms.set("Holograms."+name+".world", l.getWorld().getName());
-				}
+                for (TopHologram topHolograma : topHologramas) {
+                    Location l = topHolograma.getHologram().getLocation();
+                    String name = topHolograma.getName();
+                    String type = topHolograma.getType();
+                    String period = topHolograma.getPeriod();
+                    holograms.set("Holograms." + name + ".type", type);
+                    holograms.set("Holograms." + name + ".period", period);
+                    holograms.set("Holograms." + name + ".x", l.getX() + "");
+                    holograms.set("Holograms." + name + ".y", topHolograma.getyOriginal() + "");
+                    holograms.set("Holograms." + name + ".z", l.getZ() + "");
+                    holograms.set("Holograms." + name + ".world", l.getWorld().getName());
+                }
 				saveHolograms();
 			}
 			
@@ -806,9 +783,9 @@ public class PaintballBattle extends JavaPlugin {
 				if(holograms.contains("Holograms")) {
 					for(String name : holograms.getConfigurationSection("Holograms").getKeys(false)) {
 						String type = holograms.getString("Holograms."+name+".type");
-						double x = Double.valueOf(holograms.getString("Holograms."+name+".x"));
-						double y = Double.valueOf(holograms.getString("Holograms."+name+".y"));
-						double z = Double.valueOf(holograms.getString("Holograms."+name+".z"));
+						double x = Double.parseDouble(holograms.getString("Holograms."+name+".x"));
+						double y = Double.parseDouble(holograms.getString("Holograms."+name+".y"));
+						double z = Double.parseDouble(holograms.getString("Holograms."+name+".z"));
 						World world = Bukkit.getWorld(holograms.getString("Holograms."+name+".world"));
 						Location location = new Location(world,x,y,z);
 						String period = "global";
@@ -855,7 +832,7 @@ public class PaintballBattle extends JavaPlugin {
 					  String textoConfig = new String(Files.readAllBytes(archivoConfig));
 					  if(!textoConfig.contains("broadcast_starting_arena:")){
 						  getConfig().set("broadcast_starting_arena.enabled", true);
-						  List<String> lista = new ArrayList<String>();
+						  List<String> lista = new ArrayList<>();
 						  lista.add("paintball");lista.add("lobby");
 						  getConfig().set("broadcast_starting_arena.worlds", lista);
 						  getConfig().set("rewards_executed_after_teleport", false);
@@ -884,11 +861,11 @@ public class PaintballBattle extends JavaPlugin {
 						  saveMessages();	
 					  }
 					  if(!textoConfig.contains("losers_command_rewards:")) {
-						  List<String> lista = new ArrayList<String>();
+						  List<String> lista = new ArrayList<>();
 						  lista.add("msg %player% &aYou've lost! Here, take this compensation reward.");
 						  lista.add("paintball givecoins %player% %random_2*kills-6*kills%");
 						  getConfig().set("losers_command_rewards", lista);
-						  lista = new ArrayList<String>();
+						  lista = new ArrayList<>();
 						  lista.add("msg %player% &aIt's a tie! Here, take this reward.");
 						  lista.add("paintball givecoins %player% %random_2*kills-6*kills%");
 						  getConfig().set("tie_command_rewards", lista);
