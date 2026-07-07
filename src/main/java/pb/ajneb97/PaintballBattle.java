@@ -134,7 +134,6 @@ public class PaintballBattle extends JavaPlugin {
 	   
 	   Checks.checkearYModificar(this, primeraVez);
 	   Bukkit.getConsoleSender().sendMessage(prefix+ChatColor.YELLOW + "Has been enabled! " + ChatColor.WHITE + "Version: " + version);
-	   Bukkit.getConsoleSender().sendMessage(prefix+ChatColor.YELLOW + "Thanks for using my plugin!  " + ChatColor.WHITE + "~Ajneb97");
 	   updateChecker();
 	}
 
