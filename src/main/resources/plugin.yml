@@ -1,4 +1,4 @@
-main: pb.ajneb97.PaintballBattle
+main: de.nicouschulas.betterpaintballsystem.BetterPaintballSystem
 version: '${project.version}'
 name: Paintball
 api-version: '26.1.2'
@@ -7,5 +7,5 @@ softdepend: [Multiverse-Core, Vault, PlaceholderAPI, DecentHolograms]
 
 commands:
   paintball:
-    description: Main command of PaintballBattle
+    description: Main command of BetterPaintballSystem
     aliases: pb
