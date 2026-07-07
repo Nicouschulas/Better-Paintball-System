@@ -2,7 +2,7 @@
 https://www.spigotmc.org/resources/76676/ 
 
 todo:
-- Msyl; Comando; PaintballBattle; InventarioAdmin; InventarioShop
+- Msyl; Comando; PaintballBattle; InventarioAdmin; InventarioShop; PartidaManager
 - everything english
 - everywhere prefix
 - update every file
