@@ -9,3 +9,4 @@ todo:
 - fix deprecations
 - modernize code
 - add proper readme
+- make paper plugin
