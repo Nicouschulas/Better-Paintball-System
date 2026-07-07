@@ -1,6 +1,5 @@
 package pb.ajneb97.managers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.decentsoftware.holograms.api.DHAPI;
@@ -9,20 +8,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-
-
 import pb.ajneb97.PaintballBattle;
 import pb.ajneb97.database.MySQL;
-import pb.ajneb97.database.MySQLCallback;
 import pb.ajneb97.utils.UtilidadesHologramas;
 
 public class TopHologram {
 
-	private String name;
-	private String type;
+	private final String name;
+	private final String type;
 	private Hologram hologram;
-	private double yOriginal;
-	private String period;
+	private final double yOriginal;
+	private final String period;
 
 	public TopHologram(String name, String type, Location location, PaintballBattle plugin, String period) {
 		this.type = type;
@@ -49,83 +45,70 @@ public class TopHologram {
 	public void spawnHologram(PaintballBattle plugin) {
 		FileConfiguration messages = plugin.getMessages();
 		FileConfiguration config = plugin.getConfig();
-		final int topPlayersMax = Integer.valueOf(config.getString("top_hologram_number_of_players"));
+		final int topPlayersMax = config.getInt("top_hologram_number_of_players", 10);
 		List<String> lineas = messages.getStringList("topHologramFormat");
 
 		hologram.setDefaultVisibleState(true);
-		//this.hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.VISIBLE);
 
-		String typeName = "";
-		String periodName = "";
-		if (type.equals("kills")) {
-			typeName = messages.getString("topHologramTypeKills");
-		} else {
-			typeName = messages.getString("topHologramTypeWins");
-		}
+		String typeName = type.equals("kills") ? messages.getString("topHologramTypeKills", "Kills") : messages.getString("topHologramTypeWins", "Wins");
+
+		String periodName;
 		if (period.equals("monthly")) {
-			periodName = messages.getString("topHologramPeriodMonthly");
+			periodName = messages.getString("topHologramPeriodMonthly", "Monthly");
 		} else if (period.equals("weekly")) {
-			periodName = messages.getString("topHologramPeriodWeekly");
+			periodName = messages.getString("topHologramPeriodWeekly", "Weekly");
 		} else {
-			periodName = messages.getString("topHologramPeriodGlobal");
+			periodName = messages.getString("topHologramPeriodGlobal", "Global");
 		}
 
-		final String lineaMessage = messages.getString("topHologramScoreboardLine");
-		for (int i = 0; i < lineas.size(); i++) {
-			String linea = lineas.get(i).replace("%type%", typeName).replace("%period%", periodName);
+		final String lineaMessage = messages.getString("topHologramScoreboardLine", "&7%position%. &a%name% &7- &e%points%");
+		for (String s : lineas) {
+			if (s == null) continue;
+			String linea = s.replace("%type%", typeName).replace("%period%", periodName);
 			if (linea.contains("%scoreboard_lines%")) {
 				if (MySQL.isEnabled(config) && !period.equals("global")) {
-					UtilidadesHologramas.getTopPlayersSQL(plugin, type, period, new MySQLCallback() {
-						@Override
-						public void alTerminar(ArrayList<String> playersList) {
-							for (int c = 0; c < topPlayersMax; c++) {
-								int num = c + 1;
-								try {
-									String[] separados = playersList.get(c).split(";");
-									DHAPI.addHologramLine(hologram,ChatColor.translateAlternateColorCodes('&', lineaMessage
-											.replace("%position%", String.valueOf(num))
-											.replace("%name%", separados[0])
-											.replace("%points%", separados[1])));
-								} catch (Exception e) {
-									break;
-								}
+					UtilidadesHologramas.getTopPlayersSQL(plugin, type, period, playersList -> {
+						for (int c = 0; c < topPlayersMax; c++) {
+							int num = c + 1;
+							try {
+								String[] separados = playersList.get(c).split(";");
+								DHAPI.addHologramLine(hologram, ChatColor.translateAlternateColorCodes('&', lineaMessage
+										.replace("%position%", String.valueOf(num))
+										.replace("%name%", separados[0])
+										.replace("%points%", separados[1])));
+							} catch (Exception e) {
+								break;
 							}
 						}
 					});
 				} else {
-					UtilidadesHologramas.getTopPlayers(plugin, plugin.getJugadores(), type, new MySQLCallback() {
-						@Override
-						public void alTerminar(ArrayList<String> playersList) {
-							for (int c = 0; c < topPlayersMax; c++) {
-								int num = c + 1;
-								try {
-									String[] separados = playersList.get(c).split(";");
-									DHAPI.addHologramLine(hologram,(ChatColor.translateAlternateColorCodes('&', lineaMessage
-											.replace("%position%", String.valueOf(num))
-											.replace("%name%", separados[0])
-											.replace("%points%", separados[1]))));
-								} catch (Exception e) {
-									break;
-								}
+					UtilidadesHologramas.getTopPlayers(plugin, plugin.getJugadores(), type, playersList -> {
+						for (int c = 0; c < topPlayersMax; c++) {
+							int num = c + 1;
+							try {
+								String[] separados = playersList.get(c).split(";");
+								DHAPI.addHologramLine(hologram, (ChatColor.translateAlternateColorCodes('&', lineaMessage
+										.replace("%position%", String.valueOf(num))
+										.replace("%name%", separados[0])
+										.replace("%points%", separados[1]))));
+							} catch (Exception e) {
+								break;
 							}
 						}
 					});
 				}
 			} else {
 				DHAPI.addHologramLine(hologram, ChatColor.translateAlternateColorCodes('&', linea));
-				//hologram.getLines().appendText(ChatColor.translateAlternateColorCodes('&', linea));
 			}
 		}
 	}
 
 	public void actualizar(PaintballBattle plugin) {
-		//Location loc = this.hologram.getPosition().toLocation();
 		Location loc = this.hologram.getLocation();
 		removeHologram();
 		loc.setY(yOriginal);
 		Location nuevaLoc = loc.clone();
 		nuevaLoc.setY(nuevaLoc.getY() + UtilidadesHologramas.determinarY(nuevaLoc, UtilidadesHologramas.getCantidadLineasHolograma(plugin)) + 1.4);
-		//this.hologram = HolographicDisplaysAPI.get(plugin).createHologram(nuevaLoc);
 		this.hologram = DHAPI.createHologram(name,nuevaLoc);
 		spawnHologram(plugin);
 	}
