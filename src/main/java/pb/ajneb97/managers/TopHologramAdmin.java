@@ -10,31 +10,27 @@ import pb.ajneb97.PaintballBattle;
 public class TopHologramAdmin {
 
 	int taskID;
-	private PaintballBattle plugin;
-	public TopHologramAdmin(PaintballBattle plugin){		
-		this.plugin = plugin;		
+	private final PaintballBattle plugin;
+	public TopHologramAdmin(PaintballBattle plugin){
+		this.plugin = plugin;
 	}
-	
+
 	public int getTaskID() {
 		return this.taskID;
 	}
-	
+
 	public void actualizarHologramas() {
 		FileConfiguration config = plugin.getConfig();
-		long ticks = Long.valueOf(config.getString("top_hologram_update_time"))*20;
-	    BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
- 	    taskID = scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
-            public void run() { 
-            	ejecutarActualizarHologramas();
-            }
-        },ticks, ticks);
+		long ticks = config.getLong("top_hologram_update_time", 300L) * 20;
+		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		taskID = scheduler.scheduleSyncRepeatingTask(plugin, this::ejecutarActualizarHologramas, ticks, ticks);
 	}
 
 	protected void ejecutarActualizarHologramas() {
 		ArrayList<TopHologram> hologramas = plugin.getTopHologramas();
-		for(int i=0;i<hologramas.size();i++) {
-			hologramas.get(i).actualizar(plugin);
-			
+		for (TopHologram holograma : hologramas) {
+			holograma.actualizar(plugin);
+
 		}
 	}
 }
