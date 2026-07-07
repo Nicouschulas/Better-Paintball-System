@@ -1,4 +1,4 @@
-package pb.ajneb97;
+package de.nicouschulas.betterpaintballsystem;
 
 
 import java.io.BufferedReader;
@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -28,39 +27,39 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.milkbowl.vault.economy.Economy;
-import pb.ajneb97.api.ExpansionPaintballBattle;
-import pb.ajneb97.api.Hat;
-import pb.ajneb97.api.PaintballAPI;
-import pb.ajneb97.api.Perk;
-import pb.ajneb97.database.ConexionDatabase;
-import pb.ajneb97.database.JugadorDatos;
-import pb.ajneb97.database.MySQL;
-import pb.ajneb97.juego.EstadoPartida;
-import pb.ajneb97.juego.JugadorPaintball;
-import pb.ajneb97.juego.Partida;
-import pb.ajneb97.juego.PartidaEditando;
-import pb.ajneb97.managers.Actualizacion;
-import pb.ajneb97.managers.CartelesAdmin;
-import pb.ajneb97.managers.CartelesListener;
-import pb.ajneb97.managers.Checks;
-import pb.ajneb97.managers.CooldownKillstreaksActionbar;
-import pb.ajneb97.managers.InventarioAdmin;
-import pb.ajneb97.managers.InventarioHats;
-import pb.ajneb97.managers.InventarioShop;
-import pb.ajneb97.managers.PartidaListener;
-import pb.ajneb97.managers.PartidaListenerNew;
-import pb.ajneb97.managers.PartidaManager;
-import pb.ajneb97.managers.ScoreboardAdmin;
-import pb.ajneb97.managers.TopHologram;
-import pb.ajneb97.managers.TopHologramAdmin;
-import pb.ajneb97.utils.ServerVersion;
+import de.nicouschulas.betterpaintballsystem.api.ExpansionPaintballBattle;
+import de.nicouschulas.betterpaintballsystem.api.Hat;
+import de.nicouschulas.betterpaintballsystem.api.PaintballAPI;
+import de.nicouschulas.betterpaintballsystem.api.Perk;
+import de.nicouschulas.betterpaintballsystem.database.ConexionDatabase;
+import de.nicouschulas.betterpaintballsystem.database.JugadorDatos;
+import de.nicouschulas.betterpaintballsystem.database.MySQL;
+import de.nicouschulas.betterpaintballsystem.juego.EstadoPartida;
+import de.nicouschulas.betterpaintballsystem.juego.JugadorPaintball;
+import de.nicouschulas.betterpaintballsystem.juego.Partida;
+import de.nicouschulas.betterpaintballsystem.juego.PartidaEditando;
+import de.nicouschulas.betterpaintballsystem.managers.Actualizacion;
+import de.nicouschulas.betterpaintballsystem.managers.CartelesAdmin;
+import de.nicouschulas.betterpaintballsystem.managers.CartelesListener;
+import de.nicouschulas.betterpaintballsystem.managers.Checks;
+import de.nicouschulas.betterpaintballsystem.managers.CooldownKillstreaksActionbar;
+import de.nicouschulas.betterpaintballsystem.managers.InventarioAdmin;
+import de.nicouschulas.betterpaintballsystem.managers.InventarioHats;
+import de.nicouschulas.betterpaintballsystem.managers.InventarioShop;
+import de.nicouschulas.betterpaintballsystem.managers.PartidaListener;
+import de.nicouschulas.betterpaintballsystem.managers.PartidaListenerNew;
+import de.nicouschulas.betterpaintballsystem.managers.PartidaManager;
+import de.nicouschulas.betterpaintballsystem.managers.ScoreboardAdmin;
+import de.nicouschulas.betterpaintballsystem.managers.TopHologram;
+import de.nicouschulas.betterpaintballsystem.managers.TopHologramAdmin;
+import de.nicouschulas.betterpaintballsystem.utils.ServerVersion;
 
 
-public class PaintballBattle extends JavaPlugin {
+public class BetterPaintballSystem extends JavaPlugin {
   
 	PluginDescriptionFile pdfFile = getDescription();
 	public String version = pdfFile.getVersion();
-	public static String prefix = ChatColor.translateAlternateColorCodes('&', "&8[&b&lPaintball Battle&8] ");
+	public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&cBetterPaintballSystem&7] ");
 	private ArrayList<Partida> partidas;
 	private FileConfiguration arenas = null;
 	private File arenasFile = null;
