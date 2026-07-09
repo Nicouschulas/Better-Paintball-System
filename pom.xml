@@ -4,17 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.nicouschulas</groupId>
-    <artifactId>Paintball</artifactId>
+    <artifactId>BetterPaintballSystem</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>Paintball</name>
-    <description>Paintball Minigame Plugin for Paper</description>
+    <name>BetterPaintballSystem</name>
     <url>https://github.com/Nicouschulas/Paintball</url>
 
     <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -84,6 +82,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Mojang Authlib (für Skins/Profile, falls verwendet) -->
@@ -126,8 +125,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.15.0</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
             <plugin>
