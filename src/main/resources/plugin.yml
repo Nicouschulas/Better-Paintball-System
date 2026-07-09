@@ -9,3 +9,11 @@ commands:
   paintball:
     description: Main command of BetterPaintballSystem
     aliases: pb
+
+permissions:
+  betterpaintballsystem.update:
+    description: Allows a player to receive in-game update notifications.
+    default: op
+  paintball.admin:
+    description: Parent permission for all administrative commands and usage.
+    default: op
