@@ -32,7 +32,7 @@ public class ExpansionPaintballBattle extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor(){
-        return "Ajneb97";
+        return "Nicouschulas";
     }
 
     @Override
