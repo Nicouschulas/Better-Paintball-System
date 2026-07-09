@@ -37,7 +37,7 @@ import de.nicouschulas.betterpaintballsystem.juego.EstadoPartida;
 import de.nicouschulas.betterpaintballsystem.juego.JugadorPaintball;
 import de.nicouschulas.betterpaintballsystem.juego.Partida;
 import de.nicouschulas.betterpaintballsystem.juego.PartidaEditando;
-import de.nicouschulas.betterpaintballsystem.managers.Actualizacion;
+import de.nicouschulas.betterpaintballsystem.managers.UpdateManager;
 import de.nicouschulas.betterpaintballsystem.managers.CartelesAdmin;
 import de.nicouschulas.betterpaintballsystem.managers.CartelesListener;
 import de.nicouschulas.betterpaintballsystem.managers.Checks;
@@ -132,7 +132,10 @@ public class BetterPaintballSystem extends JavaPlugin {
 	   
 	   Checks.checkearYModificar(this, primeraVez);
 	   Bukkit.getConsoleSender().sendMessage(prefix+ChatColor.YELLOW + "Has been enabled! " + ChatColor.WHITE + "Version: " + version);
-	   updateChecker();
+
+        UpdateManager updateManager = new UpdateManager(this);
+        getServer().getPluginManager().registerEvents(updateManager, this);
+        updateManager.checkForUpdates();
 	}
 
 	public void onDisable(){
@@ -233,7 +236,6 @@ public class BetterPaintballSystem extends JavaPlugin {
 		pm.registerEvents(new InventarioAdmin(this), this);
 		pm.registerEvents(new InventarioShop(this), this);
 		pm.registerEvents(new InventarioHats(this), this);
-		pm.registerEvents(new Actualizacion(this), this);
 	}
 	
 	public void registerCommands(){

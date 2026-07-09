@@ -1,7 +1,15 @@
 #If you need help with the config, remember to visit the main page on Spigot
 #https://www.spigotmc.org/resources/paintball-battle-team-minigame-1-8-1-15.76676/
 
-new_version_reminder: true
+# --- update checker configuration ---
+
+update-checker:
+    # Enable/disable the update checker
+    enabled: true
+
+    # How should update notifications be displayed?
+    # Options: "console", "player" or "both"
+    notify-method: "both"
 arena_starting_cooldown: 20
 arena_time_default: 360
 arena_ending_phase_cooldown: 10
