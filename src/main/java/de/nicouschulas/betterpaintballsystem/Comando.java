@@ -422,8 +422,7 @@ public class Comando implements CommandExecutor {
 	}
 	
 	public void enviarAyuda(Player jugador) {
-		jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7[&cPaintball&7]"));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',""));
+		jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7&m--------------------&r&7[&cPaintball&7]&7&m--------------------&r"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball create <arena> &7- &7Creates a new arena"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball delete <arena> &7- &7Deletes an arena"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball join <arena> &7- &7Joins an arena"));
@@ -438,7 +437,6 @@ public class Comando implements CommandExecutor {
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball createtophologram <name> <kills/wins> <global/monthly/weekly> &7- &7Creates a top hologram"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball removetophologram <name> &7- &7Removes a top hologram"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball reload &7- &7Reloads the configuration files"));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',""));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7[&cPaintball&7]"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7&m------------------------------------------------&r"));
 	}
 }
