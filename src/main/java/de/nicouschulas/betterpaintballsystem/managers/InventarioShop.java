@@ -85,15 +85,15 @@ public class InventarioShop implements Listener{
 				ItemMeta meta = item.getItemMeta();
 				if(config.getString("economy_used").equals("vault")) {
 					Economy econ = plugin.getEconomy();
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", econ.getBalance(jugador)+"")));
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) econ.getBalance(jugador)+"")));
 				}else if(config.getString("economy_used").equals("token_manager")) {
 					TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
 					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", tokenManager.getTokens(jugador).orElse(0)+"")));
 				}
 				else {
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", PaintballAPI.getCoins(jugador)+"")));
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) PaintballAPI.getCoins(jugador)+"")));
 				}
-				
+
 				item.setItemMeta(meta);
 			}
 			if(shop.contains("perks_items."+key+".slot")) {
@@ -303,15 +303,15 @@ public class InventarioShop implements Listener{
 				ItemMeta meta = item.getItemMeta();
 				if(config.getString("economy_used").equals("vault")) {
 					Economy econ = plugin.getEconomy();
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", econ.getBalance(jugador)+"")));
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) econ.getBalance(jugador)+"")));
 				}else if(config.getString("economy_used").equals("token_manager")) {
 					TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
 					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", tokenManager.getTokens(jugador).orElse(0)+"")));
 				}
 				else {
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", PaintballAPI.getCoins(jugador)+"")));
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) PaintballAPI.getCoins(jugador)+"")));
 				}
-				
+
 				item.setItemMeta(meta);
 			}else {
 				if(!key.equals("go_to_menu")) {
