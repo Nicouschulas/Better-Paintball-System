@@ -34,7 +34,8 @@ public class PaintballAPI {
 		}
 	}
 
-	public static void addCoins(@NotNull Player player, int coins) {
+	@SuppressWarnings("unused")
+    public static void addCoins(@NotNull Player player, int coins) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {
@@ -147,6 +148,7 @@ public class PaintballAPI {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static ArrayList<Perk> getPerks(@NotNull Player player) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
