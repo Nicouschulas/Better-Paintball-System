@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Location;
 
-
-
 public class Equipo {
 
 	private final ArrayList<JugadorPaintball> jugadores;
