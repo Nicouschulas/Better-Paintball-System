@@ -86,7 +86,7 @@ public class InventarioHats implements Listener {
 		String pathInventoryM = ChatColor.stripColor(pathInventory);
 		FileConfiguration messages = plugin.getMessages();
 
-		String prefixStr = messages.getString("prefix", "&2[Paintball]&r");
+		String prefixStr = messages.getString("prefix", "&7[&cPaintball&7]&r");
 		String prefix = ChatColor.translateAlternateColorCodes('&', prefixStr) + " ";
 
 		if(ChatColor.stripColor(event.getView().getTitle()).equals(pathInventoryM)) {

@@ -220,7 +220,7 @@ public class InventarioShop implements Listener{
                         for(int i=0;i<lista.size();i++) {
                             String[] separados = lista.get(i).split(";");
                             if(slot == slotSum+i) {
-                                //Si es nivel 1 significa que el proximo nivel a desbloquear es el slot 10
+                                //If it's level 1, it means the next level to unlock is slot 10.
                                 int nivel = PaintballAPI.getPerkLevel(jugador, perk);
                                 int slotADesbloquear = nivel+slotSum;
                                 if(slot == slotADesbloquear) {

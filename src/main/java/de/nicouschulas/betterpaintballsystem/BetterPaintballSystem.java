@@ -58,7 +58,7 @@ public class BetterPaintballSystem extends JavaPlugin {
   
 	PluginDescriptionFile pdfFile = getDescription();
 	public String version = pdfFile.getVersion();
-	public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&cBetterPaintballSystem&7] ");
+	public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&cPaintball&7] ");
 	private ArrayList<Partida> partidas;
 	private FileConfiguration arenas = null;
 	private File arenasFile = null;

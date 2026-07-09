@@ -46,7 +46,6 @@ import de.nicouschulas.betterpaintballsystem.utils.ValueOfPatch;
 
 public class PartidaManager {
 
-	@SuppressWarnings("deprecation")
 	public static void jugadorEntra(Partida partida, Player jugador, BetterPaintballSystem plugin) {
 		JugadorPaintball jugadorPaintball = new JugadorPaintball(jugador);
 		FileConfiguration messages = plugin.getMessages();
@@ -124,7 +123,6 @@ public class PartidaManager {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void jugadorSale(Partida partida, Player jugador, boolean finalizaPartida,
 	                               BetterPaintballSystem plugin, boolean cerrandoServer) {
 		JugadorPaintball jugadorPaintball = partida.getJugador(jugador.getName());
@@ -210,7 +208,7 @@ public class PartidaManager {
 		CooldownManager cooldown = new CooldownManager(plugin);
 		cooldown.cooldownComenzarJuego(partida, time);
 
-		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix", "&8[&cPaintball&8]")) + " ";
+		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix", "&7[&cPaintball&7]")) + " ";
 
 		if("true".equals(config.getString("broadcast_starting_arena.enabled", "false"))) {
 			List<String> worlds = config.getStringList("broadcast_starting_arena.worlds");
