@@ -10,7 +10,7 @@
 
 # --- general configuration ---
 
-prefix: "&7[&cPaintball Battle&7] "  # Don't forget the space at the end!
+prefix: "&7[&cPaintball&7] "  # Don't forget the space at the end!
 
 # General no permission error
 noPermissions: "&cYou don't have permissions to use that command!"
