@@ -19,9 +19,9 @@ public class MySQL {
 	public static boolean isEnabled(FileConfiguration config){
         return config.getString("mysql-database.enabled").equals("true");
 	}
-	
-		//Cada usuario tendra un registro en donde se guardaran sus registros global, que se especifica con el INTEGER Global = 1
-		//Si el atributo Global = 0 significa que este registro sera usado para los tops mensuales y semanales
+
+		//Each user will have a record where their global records will be stored, specified with the INTEGER Global = 1
+		//If the Global attribute = 0, it means that this record will be used for the monthly and weekly top rankings
 		public static void createTablePlayers(ConexionDatabase conexion) {
 	        try {
 	        	PreparedStatement statement = conexion.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS "+conexion.getTablePlayers()+" (`UUID` varchar(200), `Name` varchar(40), `Date` varchar(100), `Year` INT(10), `Month` INT(5), `Week` INT(5), `Day` INT(5), `Arena` varchar(40), `Win` INT(2), `Tie` INT(2), `Lose` INT(2), `Kills` INT(5), `Coins` INT(10), `Global_Data` INT(2) )");
@@ -67,8 +67,8 @@ public class MySQL {
 			}
 			return cantidad;
 		}
-		
-		//Comprueba solo el dato global
+
+		//Check only the global data
 		public static boolean jugadorExiste(BetterPaintballSystem plugin, String player){
 			try {
 				PreparedStatement statement = plugin.getConexionDatabase().getConnection().prepareStatement("SELECT * FROM "+plugin.getConexionDatabase().getTablePlayers()+" WHERE (Name=? AND Global_Data=1)");
@@ -388,8 +388,7 @@ public class MySQL {
 					int ties = resultado.getInt("Tie");
 					int kills = resultado.getInt("Kills");
 					int coins = resultado.getInt("Coins");
-					JugadorDatos p = new JugadorDatos(name,"",wins,loses,ties,kills,coins,null,null);
-					return p;
+                    return new JugadorDatos(name,"",wins,loses,ties,kills,coins,null,null);
 				}		
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -400,7 +399,7 @@ public class MySQL {
 		
 		public static ArrayList<JugadorDatos> getPlayerDataMonthly(BetterPaintballSystem plugin){
 			
-			ArrayList<JugadorDatos> players = new ArrayList<JugadorDatos>();
+			ArrayList<JugadorDatos> players = new ArrayList<>();
 			Calendar calendar = Calendar.getInstance();
 			Date date = new Date();
 			calendar.setTime(date);
@@ -427,7 +426,7 @@ public class MySQL {
 		
 		public static ArrayList<JugadorDatos> getPlayerDataWeekly(BetterPaintballSystem plugin){
 			
-			ArrayList<JugadorDatos> players = new ArrayList<JugadorDatos>();
+			ArrayList<JugadorDatos> players = new ArrayList<>();
 			Calendar calendar = Calendar.getInstance();
 			Date date = new Date();
 			calendar.setTime(date);
@@ -504,10 +503,10 @@ public class MySQL {
 			}
 			return cantidades;
 		}
-		
-		//Se cargan solo las globales
+
+		//Only global ones are loaded
 		public static ArrayList<JugadorDatos> getPlayerData(BetterPaintballSystem plugin){
-			ArrayList<JugadorDatos> players = new ArrayList<JugadorDatos>();
+			ArrayList<JugadorDatos> players = new ArrayList<>();
 			try {
 				PreparedStatement statement = plugin.getConexionDatabase().getConnection().prepareStatement("SELECT * FROM "+plugin.getConexionDatabase().getTablePlayers()+" WHERE Global_Data=1");
 				ResultSet resultado = statement.executeQuery();	
