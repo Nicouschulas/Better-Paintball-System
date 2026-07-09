@@ -422,23 +422,23 @@ public class Comando implements CommandExecutor {
 	}
 	
 	public void enviarAyuda(Player jugador) {
-		jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7[ [ &4[&fPaintball Battle&4] &7] ]"));
+		jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7[&cPaintball&7]"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',""));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball create <arena> &8Creates a new arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball delete <arena> &8Deletes an arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball join <arena> &8Joins an arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball joinrandom &8Joins a random arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball leave &8Leaves from the arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball shop &8Opens the Paintball Shop."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball givecoins <player> <amount>"));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball setmainlobby &8Defines the minigame main lobby."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball enable <arena> &8Enables an arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball disable <arena> &8Disables an arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball edit <arena> &8Edit the properties of an arena."));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball createtophologram <name> <kills/wins> <global/monthly/weekly>"));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball removetophologram <name>"));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6/paintball reload &8Reloads the configuration files."));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball create <arena> &7- &7Creates a new arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball delete <arena> &7- &7Deletes an arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball join <arena> &7- &7Joins an arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball joinrandom &7- &7Joins a random arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball leave &7- &7Leaves from the arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball shop &7- &7Opens the Paintball Shop"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball givecoins <player> <amount> &7- &7Gives a player coins"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball setmainlobby &7- &7Defines the minigame main lobby"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball enable <arena> &7- &7Enables an arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball disable <arena> &7- &7Disables an arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball edit <arena> &7- &7Edit the properties of an arena"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball createtophologram <name> <kills/wins> <global/monthly/weekly> &7- &7Creates a top hologram"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball removetophologram <name> &7- &7Removes a top hologram"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&cpaintball reload &7- &7Reloads the configuration files"));
 		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',""));
-		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7[ [ &4[&fPaintball Battle&4] &7] ]"));
+		   jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7[&cPaintball&7]"));
 	}
 }
