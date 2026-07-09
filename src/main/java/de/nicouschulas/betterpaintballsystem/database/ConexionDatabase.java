@@ -56,13 +56,13 @@ public class ConexionDatabase {
 		try {
 			synchronized(this){
 				if(getConnection() != null && !getConnection().isClosed()){
-					Bukkit.getLogger().warning("Error while connecting to the Database: Connection already open.");
+					Bukkit.getLogger().warning("Error while connecting to the Database: Connection already open!");
 					return;
 				}
 
 				setConnection(DriverManager.getConnection("jdbc:mysql://"+this.host+":"+this.port+"/"+this.database,this.username,this.password));
 
-				Bukkit.getLogger().info("Successfully connected to the Database.");
+				Bukkit.getLogger().info("Successfully connected to the Database!");
 			}
 		} catch (SQLException e) {
 			Bukkit.getLogger().log(Level.SEVERE, "Could not connect to MySQL database!", e);
