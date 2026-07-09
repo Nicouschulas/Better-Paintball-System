@@ -42,7 +42,7 @@ public class ComandoTabCompleter implements TabCompleter {
         }
 
         if (args.length == 2) {
-            // Bei join, delete, enable, disable, edit → Arenanamen
+            //For join, delete, enable, disable, edit → arena name
             if (args[0].equalsIgnoreCase("join") ||
                     args[0].equalsIgnoreCase("delete") ||
                     args[0].equalsIgnoreCase("enable") ||
@@ -55,7 +55,7 @@ public class ComandoTabCompleter implements TabCompleter {
             }
         }
 
-        // Bei createtophologram: Vorschläge für kills/wins, global/monthly/weekly
+        // For createtophologram: suggestions for kills/wins, global/monthly/weekly
         if (args.length == 3 && args[0].equalsIgnoreCase("createtophologram")) {
             List<String> stats = new ArrayList<>();
             stats.add("kills"); stats.add("wins");
