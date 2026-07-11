@@ -52,6 +52,13 @@ This plugin is **fully configurable**, easy to set up, and packed with gameplay 
 
 **So what are you waiting for? Get Better Painbtall System now and bring a new layer of excitement to your server!**
 
+## **📥 Downloads:**
+Modrinth: https://modrinth.com/plugin/better-paintball-system/
+
+Curseforge: https://www.curseforge.com/minecraft/bukkit-plugins/bps-better-paintball-system
+
+Spigot: https://www.spigotmc.org/resources/bps-better-paintball-system.136911/
+
 ## 🛠️ **How to Create an Arena:**
  1. Set the main minigame lobby using  ```/paintball setmainlobby```.
  2. Create your arena with ```/paintball create <arena_name>```.
