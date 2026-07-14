@@ -1,6 +1,8 @@
 # **Better Paintball System: The Next Level Paintball plugin!**
 
-badges & icon wip
+![Curseforge Downloads](https://img.shields.io/curseforge/dt/1603946?style=for-the-badge&logo=curseforge&color=D02F2F&link=https://www.curseforge.com/minecraft/bukkit-plugins/bps-better-paintball-system&link=https://www.curseforge.com/minecraft/bukkit-plugins/bps-better-paintball-system) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/c7PiXtN1?style=for-the-badge&logo=modrinth&color=D02F2F&link=https://modrinth.com/plugin/better-paintball-system/&link=https://modrinth.com/plugin/better-paintball-system/) ![Spiget Downloads](https://img.shields.io/spiget/downloads/136911?style=for-the-badge&logo=spigotmc&color=D02F2F&link=https://www.spigotmc.org/resources/bps-better-paintball-system.136911/&link=https://www.spigotmc.org/resources/bps-better-paintball-system.136911/) ![Discord](https://img.shields.io/discord/866268252245590016?style=for-the-badge&logo=discord&color=D02F2F&link=https%3A%2F%2Fdiscord.com%2Finvite%2FZ3rrqYSpUE&link=https%3A%2F%2Fdiscord.com%2Finvite%2FZ3rrqYSpUE)
+
+icon wip
 
 ## **❓ What is BPS?**
 **Better Paintball System** is an action-packed minigame plugin where two teams face off in an intense snowball fight! Both teams start with a set amount of lives. Every time a player gets hit and defeated, their team loses a life. The first team to hit 0 lives loses the game.
