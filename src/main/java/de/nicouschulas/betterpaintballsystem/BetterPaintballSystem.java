@@ -1,12 +1,9 @@
 package de.nicouschulas.betterpaintballsystem;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -238,7 +235,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 	
 	public void registerCommands(){
 		this.getCommand("paintball").setExecutor(new Comando(this));
-		this.getCommand("paintball").setTabCompleter(new ComandoTabCompleter(this)); // TabCompleter hinzufügen
+		this.getCommand("paintball").setTabCompleter(new ComandoTabCompleter(this)); // TabCompleter
 	}
 	
 	public Partida getPartidaJugador(String jugador) {
