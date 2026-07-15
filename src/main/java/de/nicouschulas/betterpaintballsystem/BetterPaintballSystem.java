@@ -232,10 +232,13 @@ public class BetterPaintballSystem extends JavaPlugin {
 		pm.registerEvents(new InventarioShop(this), this);
 		pm.registerEvents(new InventarioHats(this), this);
 	}
-	
+
 	public void registerCommands(){
-		this.getCommand("paintball").setExecutor(new Comando(this));
-		this.getCommand("paintball").setTabCompleter(new ComandoTabCompleter(this)); // TabCompleter
+		org.bukkit.command.PluginCommand paintballCommand = this.getCommand("paintball");
+		if (paintballCommand != null) {
+			paintballCommand.setExecutor(new Comando(this));
+			paintballCommand.setTabCompleter(new ComandoTabCompleter(this));
+		}
 	}
 	
 	public Partida getPartidaJugador(String jugador) {
