@@ -4,7 +4,7 @@ name: Paintball
 api-version: '26.1.2'
 author: Nicouschulas
 description: An snowball minigame featuring customizable arenas, unique KillStreaks, Hats & Perks, full leaderboard support, and a powerful developer API!
-softdepend: [Multiverse-Core, Vault, PlaceholderAPI, DecentHolograms]
+softdepend: [Multiverse-Core, Vault, PlaceholderAPI, DecentHolograms, CoinsAPINB]
 
 commands:
   paintball:
