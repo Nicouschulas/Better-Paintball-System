@@ -154,7 +154,6 @@ public class BetterPaintballSystem extends JavaPlugin {
 	}
 	
 	public void setVersion(){
-		String packageName = Bukkit.getServer().getClass().getPackage().getName();
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
 		switch(bukkitVersion){
 			case "1.20.5":
@@ -168,7 +167,6 @@ public class BetterPaintballSystem extends JavaPlugin {
 				serverVersion = ServerVersion.v1_21_R1;
 				break;
 			default:
-				//serverVersion = ServerVersion.valueOf(packageName.replace("org.bukkit.craftbukkit.", ""));
 				serverVersion = ServerVersion.detect();
 		}
 	}
