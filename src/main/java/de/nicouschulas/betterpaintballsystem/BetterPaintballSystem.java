@@ -274,80 +274,88 @@ public class BetterPaintballSystem extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	public void cargarPartidas() {
-		  this.partidas = new ArrayList<>();
-		  FileConfiguration arenas = getArenas();
-		  if(arenas.contains("Arenas")) {
-			  for(String key : arenas.getConfigurationSection("Arenas").getKeys(false)) {
-				  int min_players = Integer.parseInt(arenas.getString("Arenas."+key+".min_players"));
-				  int max_players = Integer.parseInt(arenas.getString("Arenas."+key+".max_players"));
-				  int time = Integer.parseInt(arenas.getString("Arenas."+key+".time"));
-				  int vidas = Integer.parseInt(arenas.getString("Arenas."+key+".lives"));
-				  
-				  Location lLobby = null;
-				  if(arenas.contains("Arenas."+key+".Lobby")) {
-					  double xLobby = Double.parseDouble(arenas.getString("Arenas."+key+".Lobby.x"));
-					  double yLobby = Double.parseDouble(arenas.getString("Arenas."+key+".Lobby.y"));
-					  double zLobby = Double.parseDouble(arenas.getString("Arenas."+key+".Lobby.z"));
-					  String worldLobby = arenas.getString("Arenas."+key+".Lobby.world");
-					  float pitchLobby = Float.parseFloat(arenas.getString("Arenas."+key+".Lobby.pitch"));
-					  float yawLobby = Float.parseFloat(arenas.getString("Arenas."+key+".Lobby.yaw"));
-					  lLobby = new Location(Bukkit.getWorld(worldLobby),xLobby,yLobby,zLobby,yawLobby,pitchLobby);
-				  }
-				  
-				  
-				  String nombreTeam1 = arenas.getString("Arenas."+key+".Team1.name");
-				  
-				  Location lSpawnTeam1 = null;
-				  if(arenas.contains("Arenas."+key+".Team1.Spawn")) {
-					  double xSpawnTeam1 = Double.parseDouble(arenas.getString("Arenas."+key+".Team1.Spawn.x"));
-					  double ySpawnTeam1 = Double.parseDouble(arenas.getString("Arenas."+key+".Team1.Spawn.y"));
-					  double zSpawnTeam1 = Double.parseDouble(arenas.getString("Arenas."+key+".Team1.Spawn.z"));
-					  String worldSpawnTeam1 = arenas.getString("Arenas."+key+".Team1.Spawn.world");
-					  float pitchSpawnTeam1 = Float.parseFloat(arenas.getString("Arenas."+key+".Team1.Spawn.pitch"));
-					  float yawSpawnTeam1 = Float.parseFloat(arenas.getString("Arenas."+key+".Team1.Spawn.yaw"));
-					  lSpawnTeam1 = new Location(Bukkit.getWorld(worldSpawnTeam1),xSpawnTeam1,ySpawnTeam1,zSpawnTeam1,yawSpawnTeam1,pitchSpawnTeam1);
-				  }
-				  
-				  
-				  String nombreTeam2 = arenas.getString("Arenas."+key+".Team2.name");
-				  Location lSpawnTeam2 = null;
-				  if(arenas.contains("Arenas."+key+".Team2.Spawn")) {
-					  double xSpawnTeam2 = Double.parseDouble(arenas.getString("Arenas."+key+".Team2.Spawn.x"));
-					  double ySpawnTeam2 = Double.parseDouble(arenas.getString("Arenas."+key+".Team2.Spawn.y"));
-					  double zSpawnTeam2 = Double.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.z"));
-					  String worldSpawnTeam2 = arenas.getString("Arenas."+key+".Team2.Spawn.world");
-					  float pitchSpawnTeam2 = Float.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.pitch"));
-					  float yawSpawnTeam2 = Float.valueOf(arenas.getString("Arenas."+key+".Team2.Spawn.yaw"));
-					  lSpawnTeam2 = new Location(Bukkit.getWorld(worldSpawnTeam2),xSpawnTeam2,ySpawnTeam2,zSpawnTeam2,yawSpawnTeam2,pitchSpawnTeam2);
-				  }
-				  
-				  Partida partida = new Partida(key,time,nombreTeam1,nombreTeam2,vidas);
-				  if(nombreTeam1.equalsIgnoreCase("random")) {
-					  partida.getTeam1().setRandom(true);
-				  }
-				  if(nombreTeam2.equalsIgnoreCase("random")) {
-					  partida.getTeam2().setRandom(true);
-				  }
-				  partida.modificarTeams(getConfig());
-				  partida.setCantidadMaximaJugadores(max_players);
-				  partida.setCantidadMinimaJugadores(min_players);
-				  partida.setLobby(lLobby);
-				  partida.getTeam1().setSpawn(lSpawnTeam1);
-				  partida.getTeam2().setSpawn(lSpawnTeam2);
-				  String enabled = arenas.getString("Arenas."+key+".enabled");
-				  if(enabled.equals("true")) {
-					  partida.setEstado(EstadoPartida.ESPERANDO);
-				  }else {
-					  partida.setEstado(EstadoPartida.DESACTIVADA);
-				  }
-				  
-				  this.partidas.add(partida);
-			  }
-		  }
-		  
-	  }
+		this.partidas = new ArrayList<>();
+		FileConfiguration arenas = getArenas();
+
+		if(arenas.contains("Arenas") && arenas.getConfigurationSection("Arenas") != null) {
+			for(String key : arenas.getConfigurationSection("Arenas").getKeys(false)) {
+				int min_players = arenas.getInt("Arenas."+key+".min_players", 0);
+				int max_players = arenas.getInt("Arenas."+key+".max_players", 0);
+				int time = arenas.getInt("Arenas."+key+".time", 0);
+				int vidas = arenas.getInt("Arenas."+key+".lives", 0);
+
+				Location lLobby = null;
+				if(arenas.contains("Arenas."+key+".Lobby")) {
+					double xLobby = arenas.getDouble("Arenas."+key+".Lobby.x", 0.0);
+					double yLobby = arenas.getDouble("Arenas."+key+".Lobby.y", 0.0);
+					double zLobby = arenas.getDouble("Arenas."+key+".Lobby.z", 0.0);
+					String worldLobby = arenas.getString("Arenas."+key+".Lobby.world");
+					float pitchLobby = (float) arenas.getDouble("Arenas."+key+".Lobby.pitch", 0.0);
+					float yawLobby = (float) arenas.getDouble("Arenas."+key+".Lobby.yaw", 0.0);
+
+					if (worldLobby != null && Bukkit.getWorld(worldLobby) != null) {
+						lLobby = new Location(Bukkit.getWorld(worldLobby), xLobby, yLobby, zLobby, yawLobby, pitchLobby);
+					}
+				}
+
+				String nombreTeam1 = arenas.getString("Arenas."+key+".Team1.name", "Team1");
+
+				Location lSpawnTeam1 = null;
+				if(arenas.contains("Arenas."+key+".Team1.Spawn")) {
+					double xSpawnTeam1 = arenas.getDouble("Arenas."+key+".Team1.Spawn.x", 0.0);
+					double ySpawnTeam1 = arenas.getDouble("Arenas."+key+".Team1.Spawn.y", 0.0);
+					double zSpawnTeam1 = arenas.getDouble("Arenas."+key+".Team1.Spawn.z", 0.0);
+					String worldSpawnTeam1 = arenas.getString("Arenas."+key+".Team1.Spawn.world");
+					float pitchSpawnTeam1 = (float) arenas.getDouble("Arenas."+key+".Team1.Spawn.pitch", 0.0);
+					float yawSpawnTeam1 = (float) arenas.getDouble("Arenas."+key+".Team1.Spawn.yaw", 0.0);
+
+					if (worldSpawnTeam1 != null && Bukkit.getWorld(worldSpawnTeam1) != null) {
+						lSpawnTeam1 = new Location(Bukkit.getWorld(worldSpawnTeam1), xSpawnTeam1, ySpawnTeam1, zSpawnTeam1, yawSpawnTeam1, pitchSpawnTeam1);
+					}
+				}
+
+				String nombreTeam2 = arenas.getString("Arenas."+key+".Team2.name", "Team2");
+				Location lSpawnTeam2 = null;
+				if(arenas.contains("Arenas."+key+".Team2.Spawn")) {
+					double xSpawnTeam2 = arenas.getDouble("Arenas."+key+".Team2.Spawn.x", 0.0);
+					double ySpawnTeam2 = arenas.getDouble("Arenas."+key+".Team2.Spawn.y", 0.0);
+					double zSpawnTeam2 = arenas.getDouble("Arenas."+key+".Team2.Spawn.z", 0.0);
+					String worldSpawnTeam2 = arenas.getString("Arenas."+key+".Team2.Spawn.world");
+					float pitchSpawnTeam2 = (float) arenas.getDouble("Arenas."+key+".Team2.Spawn.pitch", 0.0);
+					float yawSpawnTeam2 = (float) arenas.getDouble("Arenas."+key+".Team2.Spawn.yaw", 0.0);
+
+					if (worldSpawnTeam2 != null && Bukkit.getWorld(worldSpawnTeam2) != null) {
+						lSpawnTeam2 = new Location(Bukkit.getWorld(worldSpawnTeam2), xSpawnTeam2, ySpawnTeam2, zSpawnTeam2, yawSpawnTeam2, pitchSpawnTeam2);
+					}
+				}
+
+				Partida partida = new Partida(key,time,nombreTeam1,nombreTeam2,vidas);
+				if("random".equalsIgnoreCase(nombreTeam1)) {
+					partida.getTeam1().setRandom(true);
+				}
+				if("random".equalsIgnoreCase(nombreTeam2)) {
+					partida.getTeam2().setRandom(true);
+				}
+				partida.modificarTeams(getConfig());
+				partida.setCantidadMaximaJugadores(max_players);
+				partida.setCantidadMinimaJugadores(min_players);
+				partida.setLobby(lLobby);
+				partida.getTeam1().setSpawn(lSpawnTeam1);
+				partida.getTeam2().setSpawn(lSpawnTeam2);
+
+				String enabled = arenas.getString("Arenas."+key+".enabled", "false");
+				if("true".equals(enabled)) {
+					partida.setEstado(EstadoPartida.ESPERANDO);
+				}else {
+					partida.setEstado(EstadoPartida.DESACTIVADA);
+				}
+
+				this.partidas.add(partida);
+			}
+		}
+	}
 	
 	public void guardarPartidas() {
 		  FileConfiguration arenas = getArenas();
