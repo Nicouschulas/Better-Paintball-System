@@ -1,6 +1,8 @@
 # **Better Paintball System: The Next Level Paintball plugin!**
 
-badges wip
+![Curseforge Downloads](https://img.shields.io/curseforge/dt/1603946?style=for-the-badge&logo=curseforge&color=D02F2F&link=https://www.curseforge.com/minecraft/bukkit-plugins/bps-better-paintball-system&link=https://www.curseforge.com/minecraft/bukkit-plugins/bps-better-paintball-system) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/c7PiXtN1?style=for-the-badge&logo=modrinth&color=D02F2F&link=https://modrinth.com/plugin/better-paintball-system/&link=https://modrinth.com/plugin/better-paintball-system/) ![Spiget Downloads](https://img.shields.io/spiget/downloads/136911?style=for-the-badge&logo=spigotmc&color=D02F2F&link=https://www.spigotmc.org/resources/bps-better-paintball-system.136911/&link=https://www.spigotmc.org/resources/bps-better-paintball-system.136911/) ![Discord](https://img.shields.io/discord/866268252245590016?style=for-the-badge&logo=discord&color=D02F2F&link=https%3A%2F%2Fdiscord.com%2Finvite%2FZ3rrqYSpUE&link=https%3A%2F%2Fdiscord.com%2Finvite%2FZ3rrqYSpUE)
+
+icon wip
 
 ## **❓ What is BPS?**
 **Better Paintball System** is an action-packed minigame plugin where two teams face off in an intense snowball fight! Both teams start with a set amount of lives. Every time a player gets hit and defeated, their team loses a life. The first team to hit 0 lives loses the game.
@@ -32,7 +34,7 @@ This plugin is **fully configurable**, easy to set up, and packed with gameplay 
 - Chicken Hat (You will shoot eggs instead of snowballs)
 - Explosive Hat (Gives you a small chance of exploding when you are killed, killing nearby enemies)
 </details>
-
+ 
 <details>
 <summary>3 permanent Perks with upgradable levels</summary>
 - Extra Lives (Allows you to start the game with additional lives)
@@ -52,15 +54,22 @@ This plugin is **fully configurable**, easy to set up, and packed with gameplay 
 
 **So what are you waiting for? Get Better Painbtall System now and bring a new layer of excitement to your server!**
 
+## **📥 Downloads:**
+Modrinth: https://modrinth.com/plugin/better-paintball-system/
+
+Curseforge: https://www.curseforge.com/minecraft/bukkit-plugins/bps-better-paintball-system
+
+Spigot: https://www.spigotmc.org/resources/bps-better-paintball-system.136911/
+
 ## 🛠️ **How to Create an Arena:**
-1. Set the main minigame lobby using  ```/paintball setmainlobby```.
-2. Create your arena with ```/paintball create <arena_name>```.
-3. Use ```/paintball edit <arena_name>``` to open the interactive **GUI Setup Menu**.
-4. Set the **Arena Lobby** (where players wait for the game to start) by clicking the first item.
-5. Set the **Spawnpoints** for Team 1 and Team 2 using the second and third items.
-6. Use the remaining GUI items to tweak game time, starting lives, player limits, and team colors.
-7. Enable the arena using ```/paintball enable <arena_name>```.
-8. Optional you can **create a Join Sign** using this format:
+ 1. Set the main minigame lobby using  ```/paintball setmainlobby```.
+ 2. Create your arena with ```/paintball create <arena_name>```.
+ 3. Use ```/paintball edit <arena_name>``` to open the interactive **GUI Setup Menu**.
+ 4. Set the **Arena Lobby** (where players wait for the game to start) by clicking the first item.
+ 5. Set the **Spawnpoints** for Team 1 and Team 2 using the second and third items.
+ 6. Use the remaining GUI items to tweak game time, starting lives, player limits, and team colors.
+ 7. Enable the arena using ```/paintball enable <arena_name>```.
+ 8. Optional you can **create a Join Sign** using this format:
 ```
 [Paintball]
 arena_name
@@ -120,7 +129,8 @@ You can use these placeholders in any other plugin with PlaceholderAPI support.
 ## **💻 API:**
 For this to work you need to add my plugin to your plugin external jars dependencies and to set softdepends: BetterPaintballSystem on your plugin.yml file.
 
-### **⚙️ Code (Java):**
+<details>
+<summary>Code (Java):</summary>
 ```
 //Returns some player data
 int wins = PaintballAPI.getWins(String player);
@@ -149,6 +159,8 @@ ArrayList<Hat> hats = PaintballAPI.getHats(Player player)
 int perkLevel = PaintballAPI.getPerkLevel(Player player,String perk)
 ArrayList<Perk> perks = PaintballAPI.getPerks(Player player)
 ```
+</details>
+
 
 ## **📆 Planned features:**
 - optimise Msyl; Comando; PaintballBattle; InventarioAdmin; InventarioShop; PartidaManager
