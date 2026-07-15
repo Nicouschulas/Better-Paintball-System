@@ -152,7 +152,7 @@ statusIngame: "&7ENDS IN &a%time%"
 statusFinishing: "&7FINISHING IN &a%time%"
 
 # Game Scoreboard Layout
-gameScoreboardTitle: "&9&lPAINTBALL"
+gameScoreboardTitle: "&c&lPaintball"
 gameScoreboardBody:
   - "&1"
   - "&fStatus:"
