@@ -416,3 +416,5 @@ hats_items:
             - "&7are killed, killing nearby enemies."
             - ""
             - "&7Status: %status%"
+
+# --- lobby & map locations ---
