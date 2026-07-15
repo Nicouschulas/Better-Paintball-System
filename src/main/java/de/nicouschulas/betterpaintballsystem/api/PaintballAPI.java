@@ -17,8 +17,12 @@ public class PaintballAPI {
 
 	private static BetterPaintballSystem plugin;
 
-	public PaintballAPI(BetterPaintballSystem plugin) {
-		PaintballAPI.plugin = plugin;
+	private PaintballAPI() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
+
+	public static void init(BetterPaintballSystem instance) {
+		plugin = instance;
 	}
 
 	public static int getCoins(@NotNull Player player) {
@@ -35,7 +39,7 @@ public class PaintballAPI {
 	}
 
 	@SuppressWarnings("unused")
-    public static void addCoins(@NotNull Player player, int coins) {
+	public static void addCoins(@NotNull Player player, int coins) {
 		if(!MySQL.isEnabled(plugin.getConfig())) {
 			JugadorDatos j = plugin.getJugador(player.getName());
 			if(j != null) {

@@ -121,8 +121,8 @@ public class BetterPaintballSystem extends JavaPlugin {
 	   cargarTopHologramas();
 	   hologramasTask = new TopHologramAdmin(this);
 	   hologramasTask.actualizarHologramas();
-	   
-	   PaintballAPI api = new PaintballAPI(this);
+
+	   PaintballAPI.init(this);
 	   if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
 		   new ExpansionPaintballBattle(this).register();
 	   }
