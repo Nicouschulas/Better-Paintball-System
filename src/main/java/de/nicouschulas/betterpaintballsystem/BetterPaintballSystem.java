@@ -269,13 +269,9 @@ public class BetterPaintballSystem extends JavaPlugin {
 	public void agregarPartida(Partida partida) {
 		this.partidas.add(partida);
 	}
-	
+
 	public void removerPartida(String nombre) {
-		for(int i=0;i<partidas.size();i++) {
-			if(partidas.get(i).getNombre().equals(nombre)) {
-				partidas.remove(i);
-			}
-		}
+		partidas.removeIf(partida -> partida.getNombre().equals(nombre));
 	}
 
 	public void cargarPartidas() {
