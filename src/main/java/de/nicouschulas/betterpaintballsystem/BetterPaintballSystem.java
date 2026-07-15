@@ -799,28 +799,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 			public ArrayList<TopHologram> getTopHologramas(){
 				return this.topHologramas;
 			}
-			
-			public void updateChecker(){
-				  
-				  try {
-					  HttpURLConnection con = (HttpURLConnection) new URL(
-			                  "https://api.spigotmc.org/legacy/update.php?resource=76676").openConnection();
-			          int timed_out = 1250;
-			          con.setConnectTimeout(timed_out);
-			          con.setReadTimeout(timed_out);
-			          latestversion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-			          if (latestversion.length() <= 7) {
-			        	  if(!version.equals(latestversion)){
-			        		  Bukkit.getConsoleSender().sendMessage(ChatColor.RED +"There is a new version available. "+ChatColor.YELLOW+
-			        				  "("+ChatColor.GRAY+latestversion+ChatColor.YELLOW+")");
-			        		  Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"You can download it at: "+ChatColor.WHITE+"https://www.spigotmc.org/resources/76676/");  
-			        	  }      	  
-			          }
-			      } catch (Exception ex) {
-			    	  Bukkit.getConsoleSender().sendMessage(prefix + ChatColor.RED +"Error while checking update.");
-			      }
-			  }
-			
+
 			public void checkMessagesUpdate(){
 				  Path archivo = Paths.get(rutaMessages);
 				  Path archivoConfig = Paths.get(rutaConfig);
