@@ -470,8 +470,8 @@ public class BetterPaintballSystem extends JavaPlugin {
 			try {
 				shop.save(shopFile);
 			}catch (IOException e) {
-				 e.printStackTrace();
-		 	}
+				getLogger().log(java.util.logging.Level.SEVERE, "Could not save shop.yml!", e);
+			}
 		}
 		  
 		public FileConfiguration getShop() {
