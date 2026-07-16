@@ -549,20 +549,22 @@ public class BetterPaintballSystem extends JavaPlugin {
 			configPlayer.savePlayerConfig();
 		}
 	}
-		
-		public void registerPlayers(){
-			String path = this.getDataFolder() + File.separator + "players";
-			File folder = new File(path);
-			File[] listOfFiles = folder.listFiles();
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile()) {
-                    String pathName = listOfFile.getName();
-                    PlayerConfig config = new PlayerConfig(pathName, this);
-                    config.registerPlayerConfig();
-                    configPlayers.add(config);
-                }
-            }
+
+	public void registerPlayers() {
+		File folder = new File(this.getDataFolder(), "players");
+		File[] listOfFiles = folder.listFiles();
+
+		if (listOfFiles != null) {
+			for (File listOfFile : listOfFiles) {
+				if (listOfFile.isFile()) {
+					String pathName = listOfFile.getName();
+					PlayerConfig config = new PlayerConfig(pathName, this);
+					config.registerPlayerConfig();
+					configPlayers.add(config);
+				}
+			}
 		}
+	}
 		
 		public ArrayList<PlayerConfig> getConfigPlayers(){
 			return this.configPlayers;
