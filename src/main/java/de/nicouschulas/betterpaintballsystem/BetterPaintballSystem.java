@@ -861,7 +861,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 						  saveConfig();
 					  }
 				  }catch(IOException e){
-					  e.printStackTrace();
+					  getLogger().log(java.util.logging.Level.SEVERE, "Could not check or apply updates to configuration files!", e);
 				  }
-			  }
+			}
 }
