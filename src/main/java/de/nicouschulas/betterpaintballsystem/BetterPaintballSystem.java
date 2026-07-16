@@ -601,14 +601,10 @@ public class BetterPaintballSystem extends JavaPlugin {
 				return false;
 			}
 		}
-		
-		public void removerConfigPlayer(String path) {
-			for(int i=0;i<configPlayers.size();i++) {
-				if(configPlayers.get(i).getPath().equals(path)) {
-					configPlayers.remove(i);
-				}
-			}
-		}
+
+	public void removerConfigPlayer(String path) {
+		configPlayers.removeIf(config -> config.getPath().equals(path));
+	}
 	
 		public void cargarJugadores() {
 			if(!MySQL.isEnabled(getConfig())) {
