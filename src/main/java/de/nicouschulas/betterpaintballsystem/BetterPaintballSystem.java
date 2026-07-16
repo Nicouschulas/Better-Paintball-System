@@ -710,48 +710,51 @@ public class BetterPaintballSystem extends JavaPlugin {
 					saveHolograms();
 			    }
 		  }
-		  public void saveHolograms() {
-			 try {
-				 holograms.save(hologramsFile);
-			 } catch (IOException e) {
-				 e.printStackTrace();
-		 	}
-		 }
-		  
-		  public FileConfiguration getHolograms() {
-			    if (holograms == null) {
-			        reloadHolograms();
-			    }
-			    return holograms;
-			}
-		  
-		  public void reloadHolograms() {
-			    if (holograms == null) {
-			    	hologramsFile = new File(getDataFolder(), "holograms.yml");
-			    }
-			    holograms = YamlConfiguration.loadConfiguration(hologramsFile);
 
-			    Reader defConfigStream;
-              defConfigStream = new InputStreamReader(this.getResource("holograms.yml"), StandardCharsets.UTF_8);
-              YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-              holograms.setDefaults(defConfig);
-          }
-		  
-		  public void agregarTopHolograma(TopHologram topHologram) {
-				this.topHologramas.add(topHologram);
+		public void saveHolograms() {
+			try {
+				holograms.save(hologramsFile);
+			} catch (IOException e) {
+				getLogger().log(java.util.logging.Level.SEVERE, "Could not save holograms.yml!", e);
 			}
-			
-			public boolean eliminarTopHologama(String nombre) {
-				for(int i=0;i<topHologramas.size();i++) {
-					if(topHologramas.get(i).getName().equals(nombre)) {
-						topHologramas.get(i).removeHologram();
-						topHologramas.remove(i);
-						return true;
-					}
+		}
+
+		public FileConfiguration getHolograms() {
+			if (holograms == null) {
+				reloadHolograms();
+			    }
+			return holograms;
+		}
+
+		public void reloadHolograms() {
+			if (holograms == null) {
+				hologramsFile = new File(getDataFolder(), "holograms.yml");
+			}
+			holograms = YamlConfiguration.loadConfiguration(hologramsFile);
+
+			java.io.InputStream resourceStream = this.getResource("holograms.yml");
+			if (resourceStream != null) {
+				Reader defConfigStream = new InputStreamReader(resourceStream, StandardCharsets.UTF_8);
+				YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+				holograms.setDefaults(defConfig);
+			}
+		}
+
+		public void agregarTopHolograma(TopHologram topHologram) {
+			this.topHologramas.add(topHologram);
+		}
+
+		public boolean eliminarTopHologama(String nombre) {
+			for(int i=0;i<topHologramas.size();i++) {
+				if(topHologramas.get(i).getName().equals(nombre)) {
+					topHologramas.get(i).removeHologram();
+					topHologramas.remove(i);
+					return true;
 				}
-				return false;
 			}
-			
+			return false;
+		}
+
 			public TopHologram getTopHologram(String nombre) {
                 for (TopHologram topHolograma : topHologramas) {
                     if (topHolograma.getName().equals(nombre)) {
@@ -760,7 +763,7 @@ public class BetterPaintballSystem extends JavaPlugin {
                 }
 				return null;
 			}
-			
+
 			public void guardarTopHologramas() {
 				FileConfiguration holograms = getHolograms();
 				holograms.set("Holograms", null);
@@ -778,28 +781,34 @@ public class BetterPaintballSystem extends JavaPlugin {
                 }
 				saveHolograms();
 			}
-			
-			public void cargarTopHologramas() {
-				FileConfiguration holograms = getHolograms();
-				if(holograms.contains("Holograms")) {
-					for(String name : holograms.getConfigurationSection("Holograms").getKeys(false)) {
-						String type = holograms.getString("Holograms."+name+".type");
-						double x = Double.parseDouble(holograms.getString("Holograms."+name+".x"));
-						double y = Double.parseDouble(holograms.getString("Holograms."+name+".y"));
-						double z = Double.parseDouble(holograms.getString("Holograms."+name+".z"));
-						World world = Bukkit.getWorld(holograms.getString("Holograms."+name+".world"));
-						Location location = new Location(world,x,y,z);
-						String period = "global";
-						if(holograms.contains("Holograms."+name+".period")) {
-							period = holograms.getString("Holograms."+name+".period");
-						}
-						TopHologram topHologram = new TopHologram(name,type,location,this,period);
-						topHologram.spawnHologram(this);
-						this.agregarTopHolograma(topHologram);
-					}
+
+		public void cargarTopHologramas() {
+			FileConfiguration holograms = getHolograms();
+			org.bukkit.configuration.ConfigurationSection section = holograms.getConfigurationSection("Holograms");
+
+			if (section != null) {
+				for (String name : section.getKeys(false)) {
+					String type = holograms.getString("Holograms." + name + ".type", "kills");
+					double x = holograms.getDouble("Holograms." + name + ".x", 0.0);
+					double y = holograms.getDouble("Holograms." + name + ".y", 0.0);
+					double z = holograms.getDouble("Holograms." + name + ".z", 0.0);
+
+					String worldName = holograms.getString("Holograms." + name + ".world");
+					if (worldName == null) continue;
+
+					World world = Bukkit.getWorld(worldName);
+					if (world == null) continue;
+
+					Location location = new Location(world, x, y, z);
+					String period = holograms.getString("Holograms." + name + ".period", "global");
+
+					TopHologram topHologram = new TopHologram(name, type, location, this, period);
+					topHologram.spawnHologram(this);
+					this.agregarTopHolograma(topHologram);
 				}
 			}
-			
+		}
+
 			public ArrayList<TopHologram> getTopHologramas(){
 				return this.topHologramas;
 			}
