@@ -102,7 +102,6 @@ public class BetterPaintballSystem extends JavaPlugin {
 	   registerShop();
 	   cargarPartidas();
 	   registerCommands();
-	   checkMessagesUpdate();
 	   
 	   cargarJugadores();
 	   setupEconomy();
@@ -809,59 +808,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 			}
 		}
 
-			public ArrayList<TopHologram> getTopHologramas(){
-				return this.topHologramas;
-			}
-
-			public void checkMessagesUpdate(){
-				  Path archivo = Paths.get(rutaMessages);
-				  Path archivoConfig = Paths.get(rutaConfig);
-				  try{
-					  String texto = new String(Files.readAllBytes(archivo));
-					  String textoConfig = new String(Files.readAllBytes(archivoConfig));
-					  if(!textoConfig.contains("broadcast_starting_arena:")){
-						  getConfig().set("broadcast_starting_arena.enabled", true);
-						  List<String> lista = new ArrayList<>();
-						  lista.add("paintball");lista.add("lobby");
-						  getConfig().set("broadcast_starting_arena.worlds", lista);
-						  getConfig().set("rewards_executed_after_teleport", false);
-						  getMessages().set("arenaStartingBroadcast", "&aArena &6&l%arena% &ais about to start! Use &b/pb join %arena% &ato join the game!");
-						  saveConfig();	
-						  saveMessages();
-					  }
-					  if(!textoConfig.contains("startCooldownSound:")){
-						  getConfig().set("startCooldownSound", "BLOCK_NOTE_BLOCK_PLING;10;1");
-						  getConfig().set("startGameSound", "BLOCK_NOTE_BLOCK_PLING;10;2");
-						  getConfig().set("arena_chat_enabled", true);
-						  saveConfig();	
-					  }
-					  if(!texto.contains("errorClearInventory:")){
-							getMessages().set("errorClearInventory", "&c&lERROR! &7To join an arena clear your inventory first.");
-							getConfig().set("empty_inventory_to_join", false);
-							saveConfig();
-							saveMessages();
-					  }
-					  if(!textoConfig.contains("snowball_particle:")){
-						  getConfig().set("snowball_particle", "SNOW_SHOVEL");
-						  saveConfig();	
-					  }
-					  if(!texto.contains("receiveCoinsMessage:")){
-						  getMessages().set("receiveCoinsMessage", "&aYou received &e%amount% &acoins.");
-						  saveMessages();	
-					  }
-					  if(!textoConfig.contains("losers_command_rewards:")) {
-						  List<String> lista = new ArrayList<>();
-						  lista.add("msg %player% &aYou've lost! Here, take this compensation reward.");
-						  lista.add("paintball givecoins %player% %random_2*kills-6*kills%");
-						  getConfig().set("losers_command_rewards", lista);
-						  lista = new ArrayList<>();
-						  lista.add("msg %player% &aIt's a tie! Here, take this reward.");
-						  lista.add("paintball givecoins %player% %random_2*kills-6*kills%");
-						  getConfig().set("tie_command_rewards", lista);
-						  saveConfig();
-					  }
-				  }catch(IOException e){
-					  getLogger().log(java.util.logging.Level.SEVERE, "Could not check or apply updates to configuration files!", e);
-				  }
-			}
+		public ArrayList<TopHologram> getTopHologramas(){
+			return this.topHologramas;
+		}
 }
