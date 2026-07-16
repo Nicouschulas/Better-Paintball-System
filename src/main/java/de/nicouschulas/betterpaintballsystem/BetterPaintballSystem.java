@@ -532,24 +532,23 @@ public class BetterPaintballSystem extends JavaPlugin {
 			messages.setDefaults(defConfig);
 		}
 	}
-	
-		public void createPlayersFolder(){
-			File folder;
-	        try {
-	            folder = new File(this.getDataFolder() + File.separator + "players");
-	            if(!folder.exists()){
-	                folder.mkdirs();
-	            }
-	        } catch(SecurityException e) {
-	            folder = null;
-	        }
+
+	public void createPlayersFolder() {
+		File folder = new File(this.getDataFolder(), "players");
+
+		if (!folder.exists()) {
+			boolean created = folder.mkdirs();
+			if (!created) {
+				getLogger().warning("Could not create the 'players' folder! Please check your file permissions.");
+			}
 		}
+	}
 		
-		public void savePlayers() {
-            for (PlayerConfig configPlayer : configPlayers) {
-                configPlayer.savePlayerConfig();
-            }
+	public void savePlayers() {
+		for (PlayerConfig configPlayer : configPlayers) {
+			configPlayer.savePlayerConfig();
 		}
+	}
 		
 		public void registerPlayers(){
 			String path = this.getDataFolder() + File.separator + "players";
