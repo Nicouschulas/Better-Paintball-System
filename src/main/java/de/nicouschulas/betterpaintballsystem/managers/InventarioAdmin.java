@@ -308,7 +308,7 @@ public class InventarioAdmin implements Listener{
             switch (paso) {
                 case "min" -> {
                     try {
-                        int num = Integer.valueOf(message);
+                        int num = Integer.parseInt(message);
                         if (num >= 2 && num % 2 == 0) {
                             jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("minPlayersDefined").replace("%name%", partida.getPartida().getNombre())));
                             partida.getPartida().setCantidadMinimaJugadores(num);
@@ -327,7 +327,7 @@ public class InventarioAdmin implements Listener{
                 }
                 case "max" -> {
                     try {
-                        int num = Integer.valueOf(message);
+                        int num = Integer.parseInt(message);
                         if (num >= 2 && num % 2 == 0) {
                             jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("maxPlayersDefined").replace("%name%", partida.getPartida().getNombre())));
                             partida.getPartida().setCantidadMaximaJugadores(num);
@@ -368,11 +368,7 @@ public class InventarioAdmin implements Listener{
                     if (config.contains("teams." + message) || message.equalsIgnoreCase("random")) {
                         jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("typeDefined").replace("%number%", "2").replace("%name%", partida.getPartida().getNombre())));
                         partida.getPartida().getTeam2().setTipo(message);
-                        if (message.equalsIgnoreCase("random")) {
-                            partida.getPartida().getTeam2().setRandom(true);
-                        } else {
-                            partida.getPartida().getTeam2().setRandom(false);
-                        }
+                        partida.getPartida().getTeam2().setRandom(message.equalsIgnoreCase("random"));
                         partida.getPartida().modificarTeams(config);
                         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                             @Override
@@ -386,7 +382,7 @@ public class InventarioAdmin implements Listener{
                 }
                 case "time" -> {
                     try {
-                        int num = Integer.valueOf(message);
+                        int num = Integer.parseInt(message);
                         if (num > 0) {
                             jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("timeDefined").replace("%name%", partida.getPartida().getNombre())));
                             partida.getPartida().setTiempoMaximo(num);
@@ -405,7 +401,7 @@ public class InventarioAdmin implements Listener{
                 }
                 case "lives" -> {
                     try {
-                        int num = Integer.valueOf(message);
+                        int num = Integer.parseInt(message);
                         if (num > 0) {
                             jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("livesDefined").replace("%name%", partida.getPartida().getNombre())));
                             partida.getPartida().setVidasIniciales(num);
