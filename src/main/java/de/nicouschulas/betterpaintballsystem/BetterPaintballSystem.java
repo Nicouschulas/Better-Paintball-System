@@ -480,17 +480,20 @@ public class BetterPaintballSystem extends JavaPlugin {
 			}
 			return shop;
 		}
-		  
-		public void reloadShop() {
-			if (shop == null) {
-				shopFile = new File(getDataFolder(), "shop.yml");
-			}
-			shop = YamlConfiguration.loadConfiguration(shopFile);
-			Reader defConfigStream;
-            defConfigStream = new InputStreamReader(this.getResource("shop.yml"), StandardCharsets.UTF_8);
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            shop.setDefaults(defConfig);
-        }
+
+	public void reloadShop() {
+		if (shop == null) {
+			shopFile = new File(getDataFolder(), "shop.yml");
+		}
+		shop = YamlConfiguration.loadConfiguration(shopFile);
+
+		java.io.InputStream resourceStream = this.getResource("shop.yml");
+		if (resourceStream != null) {
+			Reader defConfigStream = new InputStreamReader(resourceStream, StandardCharsets.UTF_8);
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			shop.setDefaults(defConfig);
+		}
+	}
 	  
 	  public void registerMessages(){
 		  messagesFile = new File(this.getDataFolder(), "messages.yml");
