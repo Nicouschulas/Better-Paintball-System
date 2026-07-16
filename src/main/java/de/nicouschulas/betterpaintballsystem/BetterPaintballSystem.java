@@ -605,57 +605,45 @@ public class BetterPaintballSystem extends JavaPlugin {
 	public void removerConfigPlayer(String path) {
 		configPlayers.removeIf(config -> config.getPath().equals(path));
 	}
-	
-		public void cargarJugadores() {
-			if(!MySQL.isEnabled(getConfig())) {
-				for(PlayerConfig playerConfig : configPlayers) {
-					FileConfiguration players = playerConfig.getConfig();
-					String jugador = players.getString("name");
-					int kills = 0;
-					int wins = 0;
-					int loses = 0;
-					int ties = 0;
-					int coins = 0;
-					
-					if(players.contains("kills")) {
-						kills = Integer.parseInt(players.getString("kills"));
+
+	public void cargarJugadores() {
+		if(!MySQL.isEnabled(getConfig())) {
+			for(PlayerConfig playerConfig : configPlayers) {
+				FileConfiguration players = playerConfig.getConfig();
+				String jugador = players.getString("name", playerConfig.getPath().replace(".yml", ""));
+
+				int kills = players.getInt("kills", 0);
+				int wins = players.getInt("wins", 0);
+				int loses = players.getInt("loses", 0);
+				int ties = players.getInt("ties", 0);
+				int coins = players.getInt("coins", 0);
+
+				ArrayList<Perk> perks = new ArrayList<>();
+				if(players.contains("perks")) {
+					List<String> listaPerks = players.getStringList("perks");
+					for (String listaPerk : listaPerks) {
+						String[] separados = listaPerk.split(";");
+						if (separados.length >= 2) {
+							perks.add(new Perk(separados[0], Integer.parseInt(separados[1])));
+						}
 					}
-					if(players.contains("wins")) {
-						wins = Integer.parseInt(players.getString("wins"));
-					}
-					if(players.contains("loses")) {
-						loses = Integer.parseInt(players.getString("loses"));
-					}
-					if(players.contains("ties")) {
-						ties = Integer.parseInt(players.getString("ties"));
-					}
-					if(players.contains("coins")) {
-						coins = Integer.parseInt(players.getString("coins"));
-					}
-					ArrayList<Perk> perks = new ArrayList<>();
-					if(players.contains("perks")) {
-						List<String> listaPerks = players.getStringList("perks");
-                        for (String listaPerk : listaPerks) {
-                            String[] separados = listaPerk.split(";");
-                            Perk p = new Perk(separados[0], Integer.parseInt(separados[1]));
-                            perks.add(p);
-                        }
-					}
-					ArrayList<Hat> hats = new ArrayList<>();
-					if(players.contains("hats")) {
-						List<String> listaHats = players.getStringList("hats");
-                        for (String listaHat : listaHats) {
-                            String[] separados = listaHat.split(";");
-                            Hat h = new Hat(separados[0], Boolean.parseBoolean(separados[1]));
-                            hats.add(h);
-                        }
-					}
-					
-						
-					this.agregarJugadorDatos(new JugadorDatos(jugador,playerConfig.getPath().replace(".yml", ""),wins,loses,ties,kills,coins,perks,hats));
 				}
+
+				ArrayList<Hat> hats = new ArrayList<>();
+				if(players.contains("hats")) {
+					List<String> listaHats = players.getStringList("hats");
+					for (String listaHat : listaHats) {
+						String[] separados = listaHat.split(";");
+						if (separados.length >= 2) {
+							hats.add(new Hat(separados[0], Boolean.parseBoolean(separados[1])));
+						}
+					}
+				}
+
+				this.agregarJugadorDatos(new JugadorDatos(jugador, playerConfig.getPath().replace(".yml", ""), wins, loses, ties, kills, coins, perks, hats));
 			}
 		}
+	}
 		
 		public void guardarJugadores() {
 			if(!MySQL.isEnabled(getConfig())) {
