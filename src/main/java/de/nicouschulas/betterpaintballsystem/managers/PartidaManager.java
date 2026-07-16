@@ -915,7 +915,7 @@ public class PartidaManager {
 			return;
 		}
 			
-		int invulnerability = Integer.valueOf(config.getString("respawn_invulnerability"));
+		int invulnerability = Integer.parseInt(config.getString("respawn_invulnerability"));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
 				jugadorDañado.setAsesinadoRecientemente(false);
