@@ -274,8 +274,10 @@ public class BetterPaintballSystem extends JavaPlugin {
 		this.partidas = new ArrayList<>();
 		FileConfiguration arenas = getArenas();
 
-		if(arenas.contains("Arenas") && arenas.getConfigurationSection("Arenas") != null) {
-			for(String key : arenas.getConfigurationSection("Arenas").getKeys(false)) {
+		org.bukkit.configuration.ConfigurationSection arenasSection = arenas.getConfigurationSection("Arenas");
+
+		if (arenasSection != null) {
+			for(String key : arenasSection.getKeys(false)) {
 				int min_players = arenas.getInt("Arenas."+key+".min_players", 0);
 				int max_players = arenas.getInt("Arenas."+key+".max_players", 0);
 				int time = arenas.getInt("Arenas."+key+".time", 0);
@@ -351,7 +353,6 @@ public class BetterPaintballSystem extends JavaPlugin {
 			}
 		}
 	}
-	
 	public void guardarPartidas() {
 		  FileConfiguration arenas = getArenas();
 		  arenas.set("Arenas", null);
