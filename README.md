@@ -161,11 +161,10 @@ ArrayList<Perk> perks = PaintballAPI.getPerks(Player player)
 
 
 ## **📆 Planned features:**
-- optimise Msyl; Comando; PaintballBattle; InventarioAdmin; InventarioShop; PartidaManager
+- optimise Msyl; Comando; InventarioAdmin; InventarioShop; PartidaManager
 - refactor everything to english
 - consistent prefix
 - fix deprecations / modernize codes
-- add comments to config files
 - make paper plugin
 - optmise version support
 - drop old versions and unused stuff
