@@ -419,13 +419,13 @@ public class BetterPaintballSystem extends JavaPlugin {
 				saveArenas();
 		    }
 	  }
-	  public void saveArenas() {
-		 try {
-			 arenas.save(arenasFile);
-		 } catch (IOException e) {
-			 e.printStackTrace();
-	 	}
-	 }
+	public void saveArenas() {
+		try {
+			arenas.save(arenasFile);
+		} catch (IOException e) {
+			getLogger().log(java.util.logging.Level.SEVERE, "Could not save arenas.yml!", e);
+		}
+	}
 	  
 	  public FileConfiguration getArenas() {
 		    if (arenas == null) {
