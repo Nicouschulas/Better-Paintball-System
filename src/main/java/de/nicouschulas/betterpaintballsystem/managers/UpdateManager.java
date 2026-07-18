@@ -13,10 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -42,34 +40,34 @@ public class UpdateManager implements Listener {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
 				URL url = new URI("https://api.modrinth.com/v2/project/c7PiXtN1/version").toURL();
-				try (InputStream inputStream = url.openStream(); Scanner scanner = new Scanner(inputStream)) {
+				try (InputStream inputStream = url.openStream(); Scanner scanner = new Scanner(inputStream)){
 					String json = scanner.useDelimiter("\\A").next();
 
 					if (json.contains("\"version_number\":\"")) {
 						String fetchedLatestVersion = json.split("\"version_number\":\"")[1].split("\"")[0];
 
 						if (!currentVersion.equals(fetchedLatestVersion)) {
-							plugin.latestversion = fetchedLatestVersion;
+							plugin.latestVersion = fetchedLatestVersion;
 
 							if ("console".equalsIgnoreCase(notifyMethod) || "both".equalsIgnoreCase(notifyMethod)) {
 								plugin.getLogger().warning("-----------------------------------------------------");
 								plugin.getLogger().warning("A new version of BetterPaintballSystem is available!");
 								plugin.getLogger().warning("Current version: " + currentVersion);
-								plugin.getLogger().warning("Latest version: " + plugin.latestversion);
-								plugin.getLogger().warning("Download it here: https://modrinth.com/project/better-paintball-system");
+								plugin.getLogger().warning("Latest version: " + plugin.latestVersion);
+								plugin.getLogger().warning("Download it here: https://modrinth.com/project/better-paintball-system/versions");
 								plugin.getLogger().warning("-----------------------------------------------------");
 							}
 						}
 					}
 				}
-			} catch (IOException | URISyntaxException e) {
-				plugin.getLogger().log(Level.FINER, "Update checker failed to connect to the server!", e);
+			} catch (Exception e) {
+				plugin.getLogger().log(Level.FINER, "Update checker failed to process the response!", e);
 			}
 		});
 	}
 
 	@EventHandler
-	public void Join(@NotNull PlayerJoinEvent event) {
+	public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
 		FileConfiguration config = plugin.getConfig();
 		if (!config.getBoolean("update-checker.enabled", true)) {
 			return;
@@ -77,7 +75,7 @@ public class UpdateManager implements Listener {
 
 		String notifyMethod = config.getString("update-checker.notify-method", "both");
 
-		if (plugin.latestversion != null) {
+		if (plugin.latestVersion != null) {
 			Player jugador = event.getPlayer();
 
 			if ((jugador.isOp() || jugador.hasPermission("betterpaintballsystem.update")) &&
@@ -85,10 +83,9 @@ public class UpdateManager implements Listener {
 
 				Component prefixComponent = LegacyComponentSerializer.legacySection().deserialize(BetterPaintballSystem.prefix);
 
-				Component textComponent = legacySerializer.deserialize("&aA new version of BetterPaintballSystem is available: &e" + plugin.latestversion + " ");
-
+				Component textComponent = legacySerializer.deserialize("&aA new version of BetterPaintballSystem is available: &e" + plugin.latestVersion + " ");
 				Component linkComponent = Component.text("Click here to download it at Modrinth", NamedTextColor.GRAY)
-						.clickEvent(ClickEvent.openUrl("https://modrinth.com/project/better-paintball-system"));
+						.clickEvent(ClickEvent.openUrl("https://modrinth.com/project/better-paintball-system/versions"));
 
 				Component updateMessage = prefixComponent.append(textComponent).append(linkComponent);
 				jugador.sendMessage(updateMessage);

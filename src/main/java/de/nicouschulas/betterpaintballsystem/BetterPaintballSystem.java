@@ -47,7 +47,6 @@ import de.nicouschulas.betterpaintballsystem.managers.TopHologram;
 import de.nicouschulas.betterpaintballsystem.managers.TopHologramAdmin;
 import de.nicouschulas.betterpaintballsystem.utils.ServerVersion;
 
-
 public class BetterPaintballSystem extends JavaPlugin {
   
 	PluginDescriptionFile pdfFile = getDescription();
@@ -66,21 +65,21 @@ public class BetterPaintballSystem extends JavaPlugin {
 	private ArrayList<TopHologram> topHologramas;
 	private FileConfiguration holograms = null;
 	private File hologramsFile = null;
-	private static Economy econ = null;	
+	private static Economy econ = null;
 	public boolean primeraVez = false;
-	public String latestversion;
-	
+
 	public String rutaMessages;
 	public String rutaConfig;
-	
+
 	private ScoreboardAdmin scoreboardTask;
 	private CartelesAdmin cartelesTask;
 	private TopHologramAdmin hologramasTask;
-	
+
 	private ConexionDatabase conexionDatabase;
 
-
 	public static ServerVersion serverVersion;
+
+	public String latestVersion = null;
 	
 	
 	@SuppressWarnings("unused")
@@ -123,13 +122,13 @@ public class BetterPaintballSystem extends JavaPlugin {
 	   if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
 		   new ExpansionPaintballBattle(this).register();
 	   }
-	   
+
+	   UpdateManager updateManager = new UpdateManager(this);
+	   getServer().getPluginManager().registerEvents(updateManager, this);
+	   updateManager.checkForUpdates();
+
 	   Checks.checkearYModificar(this, primeraVez);
 	   getLogger().info("BetterPaintballSystem started successfully!");
-
-        UpdateManager updateManager = new UpdateManager(this);
-        getServer().getPluginManager().registerEvents(updateManager, this);
-        updateManager.checkForUpdates();
 	}
 
 	public void onDisable(){
