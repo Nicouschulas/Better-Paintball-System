@@ -85,6 +85,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 	
 	@SuppressWarnings("unused")
 	public void onEnable(){
+	   getLogger().info("BetterPaintballSystem is starting...");
 	   setVersion();
 	   configPlayers = new ArrayList<>();
 	   jugadoresDatos = new ArrayList<>();
@@ -124,7 +125,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 	   }
 	   
 	   Checks.checkearYModificar(this, primeraVez);
-	   Bukkit.getConsoleSender().sendMessage(prefix+ChatColor.YELLOW + "Has been enabled! " + ChatColor.WHITE + "Version: " + version);
+	   getLogger().info("BetterPaintballSystem started successfully!");
 
         UpdateManager updateManager = new UpdateManager(this);
         getServer().getPluginManager().registerEvents(updateManager, this);
