@@ -133,7 +133,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 	}
 
 	public void onDisable(){
-		getLogger().info("BetterPaintballSystem is shutdown...");
+		getLogger().info("BetterPaintballSystem is shutting down...");
 		if(partidas != null) {
             for (Partida partida : partidas) {
                 if (!partida.getEstado().equals(EstadoPartida.DESACTIVADA)) {
