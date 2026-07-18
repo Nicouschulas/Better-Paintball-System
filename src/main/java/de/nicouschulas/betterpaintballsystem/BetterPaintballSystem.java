@@ -133,6 +133,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 	}
 
 	public void onDisable(){
+		getLogger().info("BetterPaintballSystem is shutdown...");
 		if(partidas != null) {
             for (Partida partida : partidas) {
                 if (!partida.getEstado().equals(EstadoPartida.DESACTIVADA)) {
@@ -143,8 +144,8 @@ public class BetterPaintballSystem extends JavaPlugin {
 		guardarPartidas();
 		guardarJugadores();
 		guardarTopHologramas();
-		
-		Bukkit.getConsoleSender().sendMessage(prefix+ChatColor.YELLOW + "Has been disabled! " + ChatColor.WHITE + "Version: " + version);
+
+		getLogger().info("BetterPaintballSystem shutdown successfully!");
 	}
 	
 	public void setVersion(){
