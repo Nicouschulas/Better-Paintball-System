@@ -151,7 +151,7 @@ public class MySQL {
 			Date date = new Date();
 			calendar.setTime(date);
 			int mes = calendar.get(Calendar.MONTH);
-			int año = calendar.get(Calendar.YEAR);
+			int year = calendar.get(Calendar.YEAR);
 			int dia = calendar.get(Calendar.DAY_OF_MONTH);
 			int dia_semana = calendar.get(Calendar.WEEK_OF_MONTH);
 
@@ -163,7 +163,7 @@ public class MySQL {
 				insert.setString(1, uuid);
 				insert.setString(2, name);
 				insert.setString(3, String.valueOf(date.getTime()));
-				insert.setInt(4, año);
+				insert.setInt(4, year);
 				insert.setInt(5, mes);
 				insert.setInt(6, dia_semana);
 				insert.setInt(7, dia);
@@ -416,20 +416,20 @@ public class MySQL {
 		Date date = new Date();
 		calendar.setTime(date);
 		int mes = calendar.get(Calendar.MONTH);
-		int año = calendar.get(Calendar.YEAR);
+		int year = calendar.get(Calendar.YEAR);
 
 		String query = "SELECT * FROM " + plugin.getConexionDatabase().getTablePlayers() + " WHERE (Year=? AND Month=? AND Global_Data=0)";
 
 		try (Connection conn = plugin.getConexionDatabase().getConnection();
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 
-			statement.setInt(1, año);
+			statement.setInt(1, year);
 			statement.setInt(2, mes);
 			try (ResultSet resultado = statement.executeQuery()) {
 				while (resultado.next()) {
 					String name = resultado.getString("Name");
 					if (!yaContieneJugador(players, name)) {
-						int[] stats = getStatsTotalesMonthly(plugin, name, mes, año);
+						int[] stats = getStatsTotalesMonthly(plugin, name, mes, year);
 						JugadorDatos p = new JugadorDatos(name, "", stats[0], stats[1], stats[2], stats[3], 0, null, null);
 						players.add(p);
 					}
@@ -447,7 +447,7 @@ public class MySQL {
 		Date date = new Date();
 		calendar.setTime(date);
 		int mes = calendar.get(Calendar.MONTH);
-		int año = calendar.get(Calendar.YEAR);
+		int year = calendar.get(Calendar.YEAR);
 		int semana = calendar.get(Calendar.WEEK_OF_MONTH);
 
 		String query = "SELECT * FROM " + plugin.getConexionDatabase().getTablePlayers() + " WHERE (Year=? AND Month=? AND Week=? AND Global_Data=0)";
@@ -455,14 +455,14 @@ public class MySQL {
 		try (Connection conn = plugin.getConexionDatabase().getConnection();
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 
-			statement.setInt(1, año);
+			statement.setInt(1, year);
 			statement.setInt(2, mes);
 			statement.setInt(3, semana);
 			try (ResultSet resultado = statement.executeQuery()) {
 				while (resultado.next()) {
 					String name = resultado.getString("Name");
 					if (!yaContieneJugador(players, name)) {
-						int[] stats = getStatsTotalesWeekly(plugin, name, mes, año, semana);
+						int[] stats = getStatsTotalesWeekly(plugin, name, mes, year, semana);
 						JugadorDatos p = new JugadorDatos(name, "", stats[0], stats[1], stats[2], stats[3], 0, null, null);
 						players.add(p);
 					}
@@ -483,7 +483,7 @@ public class MySQL {
 		return false;
 	}
 
-	public static int[] getStatsTotalesWeekly(BetterPaintballSystem plugin, String name, int mes, int año, int semana) {
+	public static int[] getStatsTotalesWeekly(BetterPaintballSystem plugin, String name, int mes, int year, int semana) {
 		int[] cantidades = {0, 0, 0, 0}; // Wins, Loses, Ties, Kills
 		String query = "SELECT * FROM " + plugin.getConexionDatabase().getTablePlayers() + " WHERE (Name=? AND Year=? AND Month=? AND Week=? AND Global_Data=0)";
 
@@ -491,7 +491,7 @@ public class MySQL {
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 
 			statement.setString(1, name);
-			statement.setInt(2, año);
+			statement.setInt(2, year);
 			statement.setInt(3, mes);
 			statement.setInt(4, semana);
 			try (ResultSet resultado = statement.executeQuery()) {
@@ -508,15 +508,15 @@ public class MySQL {
 		return cantidades;
 	}
 
-	public static int[] getStatsTotalesMonthly(BetterPaintballSystem plugin, String name, int mes, int año) {
+	public static int[] getStatsTotalesMonthly(BetterPaintballSystem plugin, String name, int mes, int year) {
 		int[] cantidades = {0, 0, 0, 0}; // Wins, Loses, Ties, Kills
-		String query = "SELECT * FROM " + plugin.getConexionDatabase().getTablePlayers() + " WHERE (Name=? AND Year=? AND Month=? AND Global_Data=0)";
+		String query = "SELECT * FROM " + plugin.getConexionDatabase().getTablePlayers() + " WHERE (Name=? AND Year=? AND Month=? AND Week=? AND Global_Data=0)";
 
 		try (Connection conn = plugin.getConexionDatabase().getConnection();
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 
 			statement.setString(1, name);
-			statement.setInt(2, año);
+			statement.setInt(2, year);
 			statement.setInt(3, mes);
 			try (ResultSet resultado = statement.executeQuery()) {
 				while (resultado.next()) {
