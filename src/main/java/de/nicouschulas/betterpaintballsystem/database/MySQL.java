@@ -395,7 +395,7 @@ public class MySQL {
 
 			statement.setString(1, name);
 			try (ResultSet resultado = statement.executeQuery()) {
-				while (resultado.next()) {
+				if (resultado.next()) {
 					int wins = resultado.getInt("Win");
 					int loses = resultado.getInt("Lose");
 					int ties = resultado.getInt("Tie");
@@ -428,7 +428,7 @@ public class MySQL {
 			try (ResultSet resultado = statement.executeQuery()) {
 				while (resultado.next()) {
 					String name = resultado.getString("Name");
-					if (!yaContieneJugador(players, name)) {
+					if (noContieneJugador(players, name)) {
 						int[] stats = getStatsTotalesMonthly(plugin, name, mes, year);
 						JugadorDatos p = new JugadorDatos(name, "", stats[0], stats[1], stats[2], stats[3], 0, null, null);
 						players.add(p);
@@ -461,7 +461,7 @@ public class MySQL {
 			try (ResultSet resultado = statement.executeQuery()) {
 				while (resultado.next()) {
 					String name = resultado.getString("Name");
-					if (!yaContieneJugador(players, name)) {
+					if (noContieneJugador(players, name)) {
 						int[] stats = getStatsTotalesWeekly(plugin, name, mes, year, semana);
 						JugadorDatos p = new JugadorDatos(name, "", stats[0], stats[1], stats[2], stats[3], 0, null, null);
 						players.add(p);
@@ -474,13 +474,13 @@ public class MySQL {
 		return players;
 	}
 
-	private static boolean yaContieneJugador(ArrayList<JugadorDatos> players, String player) {
+	private static boolean noContieneJugador(ArrayList<JugadorDatos> players, String player) {
 		for (JugadorDatos p : players) {
 			if (p.getName().equals(player)) {
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public static int[] getStatsTotalesWeekly(BetterPaintballSystem plugin, String name, int mes, int year, int semana) {
@@ -542,7 +542,7 @@ public class MySQL {
 			try (ResultSet resultado = statement.executeQuery()) {
 				while (resultado.next()) {
 					String name = resultado.getString("Name");
-					if (!yaContieneJugador(players, name)) {
+					if (noContieneJugador(players, name)) {
 						int wins = resultado.getInt("Win");
 						int loses = resultado.getInt("Lose");
 						int ties = resultado.getInt("Tie");
