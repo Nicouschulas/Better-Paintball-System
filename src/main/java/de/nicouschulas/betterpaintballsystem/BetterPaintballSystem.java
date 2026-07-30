@@ -144,6 +144,10 @@ public class BetterPaintballSystem extends JavaPlugin {
 		guardarJugadores();
 		guardarTopHologramas();
 
+		if (this.conexionDatabase != null) {
+			this.conexionDatabase.close();
+		}
+
 		getLogger().info("BetterPaintballSystem shutdown successfully!");
 	}
 	
