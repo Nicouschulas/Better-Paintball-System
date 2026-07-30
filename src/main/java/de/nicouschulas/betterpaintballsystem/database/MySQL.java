@@ -96,7 +96,7 @@ public class MySQL {
 
 	public static void actualizarJugadorPartidaAsync(final BetterPaintballSystem plugin, final String uuid, final String player, final int wins, final int loses, final int ties, final int kills) {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-			String query = "UPDATE " + plugin.getConexionDatabase().getTablePlayers() + " SET Win=?, Tie=?, Lose=?, Kills=? WHERE (Name=? AND Global_Data=1)";
+			String query = "UPDATE " + plugin.getConexionDatabase().getTablePlayers() + " SET Win=?, Tie=?, Lose=?, Kills=? WHERE (UUID=? AND Global_Data=1)";
 
 			try (Connection conn = plugin.getConexionDatabase().getConnection();
 			     PreparedStatement statement = conn.prepareStatement(query)) {
@@ -105,7 +105,7 @@ public class MySQL {
 				statement.setInt(2, ties);
 				statement.setInt(3, loses);
 				statement.setInt(4, kills);
-				statement.setString(5, player);
+				statement.setString(5, uuid);
 				statement.executeUpdate();
 			} catch (SQLException e) {
 				Bukkit.getLogger().log(Level.SEVERE, "Failed to update match stats for player: " + player, e);
