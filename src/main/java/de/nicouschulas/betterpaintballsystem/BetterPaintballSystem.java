@@ -359,63 +359,63 @@ public class BetterPaintballSystem extends JavaPlugin {
 		}
 	}
 	public void guardarPartidas() {
-		  FileConfiguration arenas = getArenas();
-		  arenas.set("Arenas", null);
-		  for(Partida p : this.partidas) {
-			  String nombre = p.getNombre();
-			  arenas.set("Arenas."+nombre+".min_players", p.getCantidadMinimaJugadores()+"");
-			  arenas.set("Arenas."+nombre+".max_players", p.getCantidadMaximaJugadores()+"");
-			  arenas.set("Arenas."+nombre+".time", p.getTiempoMaximo()+"");
-			  arenas.set("Arenas."+nombre+".lives", p.getVidasIniciales()+"");
-			  Location lLobby = p.getLobby();
-			  if(lLobby != null) {
-				  arenas.set("Arenas."+nombre+".Lobby.x", lLobby.getX()+"");
-				  arenas.set("Arenas."+nombre+".Lobby.y", lLobby.getY()+"");
-				  arenas.set("Arenas."+nombre+".Lobby.z", lLobby.getZ()+"");
-				  arenas.set("Arenas."+nombre+".Lobby.world", lLobby.getWorld().getName());
-				  arenas.set("Arenas."+nombre+".Lobby.pitch", lLobby.getPitch());
-				  arenas.set("Arenas."+nombre+".Lobby.yaw", lLobby.getYaw());
-			  }
-			  
-			  Location lSpawnTeam1 = p.getTeam1().getSpawn();
-			  if(lSpawnTeam1 != null) {
-				  arenas.set("Arenas."+nombre+".Team1.Spawn.x", lSpawnTeam1.getX()+"");
-				  arenas.set("Arenas."+nombre+".Team1.Spawn.y", lSpawnTeam1.getY()+"");
-				  arenas.set("Arenas."+nombre+".Team1.Spawn.z", lSpawnTeam1.getZ()+"");
-				  arenas.set("Arenas."+nombre+".Team1.Spawn.world", lSpawnTeam1.getWorld().getName());
-				  arenas.set("Arenas."+nombre+".Team1.Spawn.pitch", lSpawnTeam1.getPitch());
-				  arenas.set("Arenas."+nombre+".Team1.Spawn.yaw", lSpawnTeam1.getYaw());
-			  }
-			  if(p.getTeam1().esRandom()) {
-				  arenas.set("Arenas."+nombre+".Team1.name", "random");
-			  }else {
-				  arenas.set("Arenas."+nombre+".Team1.name", p.getTeam1().getTipo()); 
-			  }
-			  
-			  
-			  Location lSpawnTeam2 = p.getTeam2().getSpawn();
-			  if(lSpawnTeam2 != null) {
-				  arenas.set("Arenas."+nombre+".Team2.Spawn.x", lSpawnTeam2.getX()+"");
-				  arenas.set("Arenas."+nombre+".Team2.Spawn.y", lSpawnTeam2.getY()+"");
-				  arenas.set("Arenas."+nombre+".Team2.Spawn.z", lSpawnTeam2.getZ()+"");
-				  arenas.set("Arenas."+nombre+".Team2.Spawn.world", lSpawnTeam2.getWorld().getName());
-				  arenas.set("Arenas."+nombre+".Team2.Spawn.pitch", lSpawnTeam2.getPitch());
-				  arenas.set("Arenas."+nombre+".Team2.Spawn.yaw", lSpawnTeam2.getYaw());
-			  }
-			  if(p.getTeam2().esRandom()) {
-				  arenas.set("Arenas."+nombre+".Team2.name", "random");
-			  }else {
-				  arenas.set("Arenas."+nombre+".Team2.name", p.getTeam2().getTipo()); 
-			  }
-			  
-			  if(p.getEstado().equals(EstadoPartida.DESACTIVADA)) {
-				  arenas.set("Arenas."+nombre+".enabled", "false");
-			  }else {
-				  arenas.set("Arenas."+nombre+".enabled", "true");
-			  }
-		  }
-		  this.saveArenas();
-	  }
+		FileConfiguration arenas = getArenas();
+		arenas.set("Arenas", null);
+		for (Partida p : this.partidas) {
+			String nombre = p.getNombre();
+			arenas.set("Arenas." + nombre + ".min_players", p.getCantidadMinimaJugadores());
+			arenas.set("Arenas." + nombre + ".max_players", p.getCantidadMaximaJugadores());
+			arenas.set("Arenas." + nombre + ".time", p.getTiempoMaximo());
+			arenas.set("Arenas." + nombre + ".lives", p.getVidasIniciales());
+
+			Location lLobby = p.getLobby();
+			if (lLobby != null) {
+				arenas.set("Arenas." + nombre + ".Lobby.x", lLobby.getX());
+				arenas.set("Arenas." + nombre + ".Lobby.y", lLobby.getY());
+				arenas.set("Arenas." + nombre + ".Lobby.z", lLobby.getZ());
+				arenas.set("Arenas." + nombre + ".Lobby.world", lLobby.getWorld().getName());
+				arenas.set("Arenas." + nombre + ".Lobby.pitch", lLobby.getPitch());
+				arenas.set("Arenas." + nombre + ".Lobby.yaw", lLobby.getYaw());
+			}
+
+			Location lSpawnTeam1 = p.getTeam1().getSpawn();
+			if (lSpawnTeam1 != null) {
+				arenas.set("Arenas." + nombre + ".Team1.Spawn.x", lSpawnTeam1.getX());
+				arenas.set("Arenas." + nombre + ".Team1.Spawn.y", lSpawnTeam1.getY());
+				arenas.set("Arenas." + nombre + ".Team1.Spawn.z", lSpawnTeam1.getZ());
+				arenas.set("Arenas." + nombre + ".Team1.Spawn.world", lSpawnTeam1.getWorld().getName());
+				arenas.set("Arenas." + nombre + ".Team1.Spawn.pitch", lSpawnTeam1.getPitch());
+				arenas.set("Arenas." + nombre + ".Team1.Spawn.yaw", lSpawnTeam1.getYaw());
+			}
+			if (p.getTeam1().esRandom()) {
+				arenas.set("Arenas." + nombre + ".Team1.name", "random");
+			} else {
+				arenas.set("Arenas." + nombre + ".Team1.name", p.getTeam1().getTipo());
+			}
+
+			Location lSpawnTeam2 = p.getTeam2().getSpawn();
+			if (lSpawnTeam2 != null) {
+				arenas.set("Arenas." + nombre + ".Team2.Spawn.x", lSpawnTeam2.getX());
+				arenas.set("Arenas." + nombre + ".Team2.Spawn.y", lSpawnTeam2.getY());
+				arenas.set("Arenas." + nombre + ".Team2.Spawn.z", lSpawnTeam2.getZ());
+				arenas.set("Arenas." + nombre + ".Team2.Spawn.world", lSpawnTeam2.getWorld().getName());
+				arenas.set("Arenas." + nombre + ".Team2.Spawn.pitch", lSpawnTeam2.getPitch());
+				arenas.set("Arenas." + nombre + ".Team2.Spawn.yaw", lSpawnTeam2.getYaw());
+			}
+			if (p.getTeam2().esRandom()) {
+				arenas.set("Arenas." + nombre + ".Team2.name", "random");
+			} else {
+				arenas.set("Arenas." + nombre + ".Team2.name", p.getTeam2().getTipo());
+			}
+
+			if (p.getEstado().equals(EstadoPartida.DESACTIVADA)) {
+				arenas.set("Arenas." + nombre + ".enabled", false);
+			} else {
+				arenas.set("Arenas." + nombre + ".enabled", true);
+			}
+		}
+		this.saveArenas();
+	}
 	
 	 public void registerArenas(){
 		  arenasFile = new File(this.getDataFolder(), "arenas.yml");
