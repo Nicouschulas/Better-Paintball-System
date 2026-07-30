@@ -54,16 +54,16 @@ public class ConexionDatabase {
 			config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
 			this.dataSource = new HikariDataSource(config);
-			Bukkit.getLogger().info("Successfully connected to the Database via HikariCP!");
+			Bukkit.getLogger().info("[Paintball] Successfully connected to the Database via HikariCP!");
 		} catch (Exception e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Could not connect to MySQL database!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Could not connect to MySQL database!", e);
 		}
 	}
 
 
 	public Connection getConnection() throws SQLException {
 		if (dataSource == null) {
-			throw new SQLException("HikariDataSource is not initialized!");
+			throw new SQLException("[Paintball] HikariDataSource is not initialized!");
 		}
 		return dataSource.getConnection();
 	}

@@ -29,7 +29,7 @@ public class MySQL {
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to create players table!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to create players table!", e);
 		}
 	}
 
@@ -41,7 +41,7 @@ public class MySQL {
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to create perks table!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to create perks table!", e);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class MySQL {
 		     PreparedStatement statement = conn.prepareStatement(query)) {
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to create hats table!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to create hats table!", e);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to get total stats for player: " + name, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to get total stats for player: " + name, e);
 		}
 		return cantidad;
 	}
@@ -89,7 +89,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to check if player exists: " + player, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to check if player exists: " + player, e);
 		}
 		return false;
 	}
@@ -108,7 +108,7 @@ public class MySQL {
 				statement.setString(5, uuid);
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to update match stats for player: " + player, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to update match stats for player: " + player, e);
 			}
 		});
 	}
@@ -124,7 +124,7 @@ public class MySQL {
 				statement.setString(2, player);
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to add coins for player: " + player, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to add coins for player: " + player, e);
 			}
 		});
 	}
@@ -140,7 +140,7 @@ public class MySQL {
 				statement.setString(2, player);
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to remove coins for player: " + player, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to remove coins for player: " + player, e);
 			}
 		});
 	}
@@ -176,7 +176,7 @@ public class MySQL {
 				insert.setInt(14, global);
 				insert.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to create match record for player: " + name, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to create match record for player: " + name, e);
 			}
 		});
 	}
@@ -195,7 +195,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to check if player " + player + " owns hat: " + hat, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to check if player " + player + " owns hat: " + hat, e);
 		}
 		return false;
 	}
@@ -213,7 +213,7 @@ public class MySQL {
 				insert.setInt(4, 0);
 				insert.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to add hat '" + hat + "' for player: " + name, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to add hat '" + hat + "' for player: " + name, e);
 			}
 		});
 	}
@@ -232,7 +232,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to check if hat '" + hat + "' is selected for player: " + player, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to check if hat '" + hat + "' is selected for player: " + player, e);
 		}
 		return false;
 	}
@@ -253,7 +253,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch hats for player: " + name, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch hats for player: " + name, e);
 		}
 		return hats;
 	}
@@ -267,7 +267,7 @@ public class MySQL {
 			statement.setString(1, player);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to deselect hats for player: " + player, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to deselect hats for player: " + player, e);
 		}
 	}
 
@@ -283,7 +283,7 @@ public class MySQL {
 				statement.setString(2, hat);
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to select hat '" + hat + "' for player: " + player, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to select hat '" + hat + "' for player: " + player, e);
 			}
 		});
 	}
@@ -301,7 +301,7 @@ public class MySQL {
 				insert.setInt(4, 1);
 				insert.executeUpdate();
 			} catch (SQLException e) {
-				Bukkit.getLogger().log(Level.SEVERE, "Failed to create perk '" + perk + "' for player: " + name, e);
+				Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to create perk '" + perk + "' for player: " + name, e);
 			}
 		});
 	}
@@ -321,7 +321,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to get perk level for player " + name + " and perk: " + perk, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to get perk level for player " + name + " and perk: " + perk, e);
 		}
 		return level;
 	}
@@ -340,7 +340,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to check if perk '" + perk + "' exists for player: " + player, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to check if perk '" + perk + "' exists for player: " + player, e);
 		}
 		return false;
 	}
@@ -361,7 +361,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch perks for player: " + name, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch perks for player: " + name, e);
 		}
 		return perks;
 	}
@@ -379,7 +379,7 @@ public class MySQL {
 					statement.setString(3, perk);
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					Bukkit.getLogger().log(Level.SEVERE, "Failed to update perk '" + perk + "' level for player: " + player, e);
+					Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to update perk '" + perk + "' level for player: " + player, e);
 				}
 			});
 		} else {
@@ -405,7 +405,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch data for player: " + name, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch data for player: " + name, e);
 		}
 		return null;
 	}
@@ -436,7 +436,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch monthly player data list!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch monthly player data list!", e);
 		}
 		return players;
 	}
@@ -469,7 +469,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch weekly player data list!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch weekly player data list!", e);
 		}
 		return players;
 	}
@@ -503,7 +503,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch total weekly stats for player: " + name, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch total weekly stats for player: " + name, e);
 		}
 		return cantidades;
 	}
@@ -527,7 +527,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch total monthly stats for player: " + name, e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch total monthly stats for player: " + name, e);
 		}
 		return cantidades;
 	}
@@ -554,7 +554,7 @@ public class MySQL {
 				}
 			}
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch global player data list!", e);
+			Bukkit.getLogger().log(Level.SEVERE, "[Paintball] Failed to fetch global player data list!", e);
 		}
 		return players;
 	}
