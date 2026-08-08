@@ -387,7 +387,7 @@ public class Comando implements CommandExecutor {
 		return true;
 	}
 
-	public boolean giveCoins(CommandSender sender, String[] args, FileConfiguration messages, String prefix) {
+	public void giveCoins(CommandSender sender, String[] args, FileConfiguration messages, String prefix) {
 		if(args.length >= 3) {
 			String player = args[1];
 			try {
@@ -442,7 +442,6 @@ public class Comando implements CommandExecutor {
 		}else {
 			sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandGiveCoinsErrorUse", "&cYou need to use &7/paintball givecoins <player> <amount>")));
 		}
-		return true;
 	}
 	
 	public void enviarAyuda(Player jugador) {
