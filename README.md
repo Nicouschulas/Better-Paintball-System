@@ -161,7 +161,7 @@ ArrayList<Perk> perks = PaintballAPI.getPerks(Player player)
 
 
 ## **📆 Planned features:**
-- optimise Comando; InventarioAdmin; InventarioShop; PartidaManager
+- optimise InventarioAdmin; InventarioShop; PartidaManager
 - refactor everything to english
 - consistent prefix (ingame and error handlling)
 - fix deprecations / modernize codes
