@@ -118,77 +118,79 @@ public class Comando implements CommandExecutor {
 				}else {
 					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
 				}
-		   }else if(args[0].equalsIgnoreCase("reload")) {
-			   // /paintball reload
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   plugin.reloadConfig();
-				   plugin.reloadMessages();
-				   plugin.reloadShop();
-				   plugin.recargarCarteles();
-				   plugin.recargarScoreboard();
-				   plugin.recargarHologramas();
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("configReloaded")));
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("setmainlobby")) {
-			   // /paintball setmainlobby
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   FileConfiguration config = plugin.getConfig();
+			}else if(args[0].equalsIgnoreCase("reload")) {
+				// /paintball reload
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					plugin.reloadConfig();
+					plugin.reloadMessages();
+					plugin.reloadShop();
+					plugin.recargarCarteles();
+					plugin.recargarScoreboard();
+					plugin.recargarHologramas();
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("configReloaded", "&aConfig Reloaded!")));
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("setmainlobby")) {
+				// /paintball setmainlobby
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					FileConfiguration config = plugin.getConfig();
 
-				   Location l = jugador.getLocation();
-				   config.set("MainLobby.x", l.getX()+"");
-				   config.set("MainLobby.y", l.getY()+"");
-				   config.set("MainLobby.z", l.getZ()+"");
-				   config.set("MainLobby.world", l.getWorld().getName());
-				   config.set("MainLobby.pitch", l.getPitch());
-				   config.set("MainLobby.yaw", l.getYaw());
-				   plugin.saveConfig();
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("mainLobbyDefined")));
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("join")) {
-			   // /paintball join <arena>
-			   if(!Checks.checkTodo(plugin, jugador)) {
-				   return false;
-			   }
-			   if(args.length >= 2) {
-				   Partida partida = plugin.getPartida(args[1]);
-				   if(partida != null) {
-					   if(partida.estaActivada()) {
-						   if(plugin.getPartidaJugador(jugador.getName()) == null) {
-							   if(!partida.estaIniciada()) {
-								   if(!partida.estaLlena()) {
-									   if(!UtilidadesOtros.pasaConfigInventario(jugador, plugin.getConfig())) {
-										   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("errorClearInventory")));
-										   return true;
-									   }
-									   PartidaManager.jugadorEntra(partida, jugador,plugin);
-								   }else {
-									   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaIsFull")));
-								   }
-							   }else {
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaAlreadyStarted")));
-							   }
-						   }else {
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("alreadyInArena")));
-						   }
-					   }else {
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDisabledError")));
-					   }
-				   }else {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists")));
-				   }
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandJoinErrorUse")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("joinrandom")) {
-			   // /paintball joinrandom
-			   if(plugin.getPartidaJugador(jugador.getName()) == null) {
-				    Partida partidaNueva = PartidaManager.getPartidaDisponible(plugin);
+					Location l = jugador.getLocation();
+					config.set("MainLobby.x", l.getX()+"");
+					config.set("MainLobby.y", l.getY()+"");
+					config.set("MainLobby.z", l.getZ()+"");
+					if (l.getWorld() != null) {
+						config.set("MainLobby.world", l.getWorld().getName());
+					}
+					config.set("MainLobby.pitch", l.getPitch());
+					config.set("MainLobby.yaw", l.getYaw());
+					plugin.saveConfig();
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("mainLobbyDefined", "&aMain Lobby defined!")));
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("join")) {
+				// /paintball join <arena>
+				if(!Checks.checkTodo(plugin, jugador)) {
+					return false;
+				}
+				if(args.length >= 2) {
+					Partida partida = plugin.getPartida(args[1]);
+					if(partida != null) {
+						if(partida.estaActivada()) {
+							if(plugin.getPartidaJugador(jugador.getName()) == null) {
+								if(!partida.estaIniciada()) {
+									if(!partida.estaLlena()) {
+										if(!UtilidadesOtros.pasaConfigInventario(jugador, plugin.getConfig())) {
+											jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("errorClearInventory", "&c&lERROR! &7To join an arena clear your inventory first!")));
+											return true;
+										}
+										PartidaManager.jugadorEntra(partida, jugador,plugin);
+									}else {
+										jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaIsFull", "&cThat arena is full!")));
+									}
+								}else {
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaAlreadyStarted", "&cThat arena already started!")));
+								}
+							}else {
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("alreadyInArena", "&cYou are already in a game!")));
+							}
+						}else {
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDisabledError", "&cThat arena is disabled!")));
+						}
+					}else {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists", "&cThat arena doesn't exists!")));
+					}
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandJoinErrorUse", "&cYou need to use &7/paintball join <arena>")));
+				}
+			}else if(args[0].equalsIgnoreCase("joinrandom")) {
+				// /paintball joinrandom
+				if(plugin.getPartidaJugador(jugador.getName()) == null) {
+					Partida partidaNueva = PartidaManager.getPartidaDisponible(plugin);
 					if(partidaNueva == null) {
-						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("noArenasAvailable")));
+						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("noArenasAvailable", "&cThere are no arenas available!")));
 					}else {
 						PartidaManager.jugadorEntra(partidaNueva, jugador, plugin);
 					}
