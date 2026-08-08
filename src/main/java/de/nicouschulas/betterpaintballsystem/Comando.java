@@ -333,76 +333,76 @@ public class Comando implements CommandExecutor {
 						}else {
 							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse", "&cYou need to use &7/paintball createtophologram <name> <kills/wins> <global/monthly/weekly>")));
 						}
-				   }else {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse")));
-				   }
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("removetophologram")) {
-			   // /paintball removetophologram <name>
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   if (plugin.getServer().getPluginManager().getPlugin("DecentHolograms") == null) {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', "&cYou need DecentHolograms plugin to use this feature."));
-				        return true;
-				   }
-				   if(args.length >= 2) {
-					   TopHologram topHologram = plugin.getTopHologram(args[1]);
-					   if(topHologram != null) {
-						   plugin.eliminarTopHologama(args[1]);
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramRemoved")));  
-					   }else {
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramDoesNotExists")));  
-					   }  
-				   }else {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandRemoveHologramErrorUse")));
-				   }
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("givecoins")) {
-			   // /paintball givecoins <player> <amount>
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   giveCoins(sender,args,messages,prefix);
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }
-		   else {
-			   // /paintball help /o cualquier otro comando
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   enviarAyuda(jugador);
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-			   
-		   }
-	   }else {
-		   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-			   enviarAyuda(jugador);
-		   }else {
-			   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-		   }
-	   }
-	   
-	   return true;
-	   
+					}else {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse", "&cYou need to use &7/paintball createtophologram <name> <kills/wins> <global/monthly/weekly>")));
+					}
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("removetophologram")) {
+				// /paintball removetophologram <name>
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					if (plugin.getServer().getPluginManager().getPlugin("DecentHolograms") == null) {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', "&cYou need DecentHolograms plugin to use this feature!")); // TODO add message key
+						return true;
+					}
+					if(args.length >= 2) {
+						TopHologram topHologram = plugin.getTopHologram(args[1]);
+						if(topHologram != null) {
+							plugin.eliminarTopHologama(args[1]);
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramRemoved", "&aTop Hologram removed!")));
+						}else {
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramDoesNotExists", "&cThat hologram doesn't exists!")));
+						}
+					}else {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandRemoveHologramErrorUse", "&cYou need to use &7/paintball removetopholgram <name>")));
+					}
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("givecoins")) {
+				// /paintball givecoins <player> <amount>
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					giveCoins(sender,args,messages,prefix);
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}
+			else {
+				// /paintball help or any other command
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					enviarAyuda(jugador);
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+
+			}
+		}else {
+			if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+				enviarAyuda(jugador);
+			}else {
+				jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+			}
+		}
+		return true;
 	}
-	
+
 	public boolean giveCoins(CommandSender sender, String[] args, FileConfiguration messages, String prefix) {
 		if(args.length >= 3) {
-			   String player = args[1];
-			   try {
-				   int amount = Integer.parseInt(args[2]);
-				   //Si el jugador no esta en la base de datos, o en un archivo, DEBE estar conectado para darle coins.
-				   if(MySQL.isEnabled(plugin.getConfig())) {
-					   if(MySQL.jugadorExiste(plugin, player)) {
-						   MySQL.agregarCoinsJugadorAsync(plugin, player, amount);
-						   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("giveCoinsMessage").replace("%player%", player).replace("%amount%", amount+"")));
-						   Player p = Bukkit.getPlayer(player);
-						   if(p != null) {
-							   p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("receiveCoinsMessage").replace("%amount%", amount+""))); 
-						   } 
+			String player = args[1];
+			try {
+				int amount = Integer.parseInt(args[2]);
+				//If the player is not in the database or a file, they MUST be online to receive coins.
+				if(MySQL.isEnabled(plugin.getConfig())) {
+					if(MySQL.jugadorExiste(plugin, player)) {
+						MySQL.agregarCoinsJugadorAsync(plugin, player, amount);
+						String msgGive = messages.getString("giveCoinsMessage", "&aYou gave &e%amount% &acoins to &e%player%&a.");
+						sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgGive.replace("%player%", player).replace("%amount%", amount+"")));
+						Player p = Bukkit.getPlayer(player);
+						if(p != null) {
+							String msgReceive = messages.getString("receiveCoinsMessage", "&aYou received &e%amount% &acoins.");
+							p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgReceive.replace("%amount%", amount+"")));
+						}
 					   }else {
 						   Player p = Bukkit.getPlayer(player);
 						   if(p != null) {
