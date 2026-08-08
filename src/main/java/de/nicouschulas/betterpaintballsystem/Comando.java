@@ -403,40 +403,46 @@ public class Comando implements CommandExecutor {
 							String msgReceive = messages.getString("receiveCoinsMessage", "&aYou received &e%amount% &acoins.");
 							p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgReceive.replace("%amount%", amount+"")));
 						}
-					   }else {
-						   Player p = Bukkit.getPlayer(player);
-						   if(p != null) {
-							   MySQL.crearJugadorPartidaAsync(plugin, p.getUniqueId().toString(), p.getName(), "", 0, 0, 0, 0, amount, 1);
-							   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("giveCoinsMessage").replace("%player%", player).replace("%amount%", amount+"")));
-							   p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("receiveCoinsMessage").replace("%amount%", amount+"")));
-						   }else {
-							   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("errorPlayerOnline")));
-						   }
-					   }
-				   }else {
-					   Player p = Bukkit.getPlayer(player);
-					   if(p != null) {
-						   plugin.registerPlayer(p.getUniqueId() +".yml");
-						   if(plugin.getJugador(p.getName()) == null) {
-								plugin.agregarJugadorDatos(new JugadorDatos(p.getName(),p.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
-						   }
-						   JugadorDatos jDatos = plugin.getJugador(p.getName());
-						   jDatos.aumentarCoins(amount);
-						   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("giveCoinsMessage").replace("%player%", player).replace("%amount%", amount+"")));
-						   p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("receiveCoinsMessage").replace("%amount%", amount+""))); 
-					   }else {
-						   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("errorPlayerOnline")));
-					   }
-				   }
-				   
-			   }catch(NumberFormatException e) {
-				   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-			   }
-			   
-		   }else {
-			   sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandGiveCoinsErrorUse")));
-		   }
-		   return true;
+					}else {
+						Player p = Bukkit.getPlayer(player);
+						if(p != null) {
+							MySQL.crearJugadorPartidaAsync(plugin, p.getUniqueId().toString(), p.getName(), "", 0, 0, 0, 0, amount, 1);
+							String msgGive = messages.getString("giveCoinsMessage", "&aYou gave &e%amount% &acoins to &e%player%&a.");
+							String msgReceive = messages.getString("receiveCoinsMessage", "&aYou received &e%amount% &acoins.");
+							sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgGive.replace("%player%", player).replace("%amount%", amount+"")));
+							p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgReceive.replace("%amount%", amount+"")));
+						}else {
+							sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("errorPlayerOnline", "&cThe player must be online to do that!")));
+						}
+					}
+				}else {
+					Player p = Bukkit.getPlayer(player);
+					if(p != null) {
+						plugin.registerPlayer(p.getUniqueId() +".yml");
+						if(plugin.getJugador(p.getName()) == null) {
+							plugin.agregarJugadorDatos(new JugadorDatos(p.getName(),p.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
+						}
+						JugadorDatos jDatos = plugin.getJugador(p.getName());
+						if (jDatos != null) {
+							jDatos.aumentarCoins(amount);
+						}
+						String msgGive = messages.getString("giveCoinsMessage", "&aYou gave &e%amount% &acoins to &e%player%&a.");
+						String msgReceive = messages.getString("receiveCoinsMessage", "&aYou received &e%amount% &acoins.");
+						sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgGive.replace("%player%", player).replace("%amount%", amount+"")));
+						p.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgReceive.replace("%amount%", amount+"")));
+					}else {
+						sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("errorPlayerOnline", "&cThe player must be online to do that!")));
+					}
+				}
+
+			}catch(NumberFormatException e) {
+				sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError", "&cYou need to use a valid number!")));
+			}
+
+		}else {
+			sender.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandGiveCoinsErrorUse", "&cYou need to use &7/paintball givecoins <player> <amount>")));
+		}
+		return true;
 	}
 	
 	public void enviarAyuda(Player jugador) {
