@@ -194,73 +194,77 @@ public class Comando implements CommandExecutor {
 					}else {
 						PartidaManager.jugadorEntra(partidaNueva, jugador, plugin);
 					}
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("alreadyInArena"))); 
-			   }
-		   }else if(args[0].equalsIgnoreCase("leave")) {
-			   // /paintball leave
-			   Partida partida = plugin.getPartidaJugador(jugador.getName());
-			   if(partida != null) {  
-				   PartidaManager.jugadorSale(partida, jugador, false, plugin, false);
-               }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("notInAGame"))); 
-			   }
-		   }else if(args[0].equalsIgnoreCase("shop")) {   
-			   // /paintball shop
-			   if(!Checks.checkTodo(plugin, jugador)) {
-				   return false;
-			   }
-			   InventarioShop.crearInventarioPrincipal(jugador, plugin);
-		   }else if(args[0].equalsIgnoreCase("enable")) {
-			   // /paintball enable <arena>
-			   //Para activar una arena todo debe estar definido
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   if(args.length >= 2) {
-					   Partida partida = plugin.getPartida(args[1]);
-					   if(partida != null) {
-						   if(partida.estaActivada()) {
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaAlreadyEnabled"))); 
-						   }else {
-							   if(partida.getLobby() == null) {
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("enableArenaLobbyError"))); 
-								   return true;
-							   }
-							   if(partida.getTeam1().getSpawn() == null) {
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("enableArenaSpawnError").replace("%number%", "1"))); 
-								   return true;
-							   }
-							   if(partida.getTeam2().getSpawn() == null) {
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("enableArenaSpawnError").replace("%number%", "2"))); 
-								   return true;
-							   }
-							   
-							   partida.setEstado(EstadoPartida.ESPERANDO);
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaEnabled").replace("%name%", args[1]))); 
-						   }
-					   }else {
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists"))); 
-					   }
-				   }else {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandEnableErrorUse"))); 
-				   }
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("disable")) {
-			   // /paintball disable <arena>
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   if(args.length >= 2) {
-					   Partida partida = plugin.getPartida(args[1]);
-					   if(partida != null) {
-						   if(!partida.estaActivada()) {
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaAlreadyDisabled"))); 
-						   }else {
-							   partida.setEstado(EstadoPartida.DESACTIVADA);
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDisabled").replace("%name%", args[1]))); 
-						   }
-					   }else {
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists"))); 
-					   }
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("alreadyInArena", "&cYou are already in a game!")));
+				}
+			}else if(args[0].equalsIgnoreCase("leave")) {
+				// /paintball leave
+				Partida partida = plugin.getPartidaJugador(jugador.getName());
+				if(partida != null) {
+					PartidaManager.jugadorSale(partida, jugador, false, plugin, false);
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("notInAGame", "&cYou are not in a game.")));
+				}
+			}else if(args[0].equalsIgnoreCase("shop")) {
+				// /paintball shop
+				if(!Checks.checkTodo(plugin, jugador)) {
+					return false;
+				}
+				InventarioShop.crearInventarioPrincipal(jugador, plugin);
+			}else if(args[0].equalsIgnoreCase("enable")) {
+				// /paintball enable <arena>
+				//To activate an arena, everything must be defined
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					if(args.length >= 2) {
+						Partida partida = plugin.getPartida(args[1]);
+						if(partida != null) {
+							if(partida.estaActivada()) {
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaAlreadyEnabled", "&cThat arena is already enabled.")));
+							}else {
+								if(partida.getLobby() == null) {
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("enableArenaLobbyError", "&cTo enable the arena you need to define the Lobby first!")));
+									return true;
+								}
+								if(partida.getTeam1().getSpawn() == null) {
+									String msgSpawnErr = messages.getString("enableArenaSpawnError", "");
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgSpawnErr.replace("%number%", "1")));
+									return true;
+								}
+								if(partida.getTeam2().getSpawn() == null) {
+									String msgSpawnErr = messages.getString("enableArenaSpawnError", "");
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgSpawnErr.replace("%number%", "2")));
+									return true;
+								}
+
+								partida.setEstado(EstadoPartida.ESPERANDO);
+								String msgEnabled = messages.getString("arenaEnabled", "");
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgEnabled.replace("%name%", args[1])));
+							}
+						}else {
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists", "&cThat arena doesn't exists!")));
+						}
+					}else {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandEnableErrorUse", "&cYou need to use &7/paintball enable <arena>")));
+					}
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("disable")) {
+				// /paintball disable <arena>
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					if(args.length >= 2) {
+						Partida partida = plugin.getPartida(args[1]);
+						if(partida != null) {
+							if(!partida.estaActivada()) {
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaAlreadyDisabled", "&cThat arena is already disabled.")));
+							}else {
+								partida.setEstado(EstadoPartida.DESACTIVADA);
+								String msgDisabled = messages.getString("arenaDisabled", "");
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', msgDisabled.replace("%name%", args[1])));
+							}
+						}else {
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists", "&cThat arena doesn't exists!")));
+						}
 				   }else {
 					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandDisableErrorUse"))); 
 				   }
