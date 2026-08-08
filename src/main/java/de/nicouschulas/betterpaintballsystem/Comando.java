@@ -265,74 +265,74 @@ public class Comando implements CommandExecutor {
 						}else {
 							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists", "&cThat arena doesn't exists!")));
 						}
-				   }else {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandDisableErrorUse"))); 
-				   }
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions")));
-			   }
-		   }else if(args[0].equalsIgnoreCase("edit")) {
-			   // /paintball edit <arena>  
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   if(!Checks.checkTodo(plugin, jugador)) {
-					   return false;
-				   }
-				   if(args.length >= 2) {
-					   Partida partida = plugin.getPartida(args[1]);
-					   if(partida != null) {
-						   if(!partida.estaActivada()) {
-							   PartidaEditando p = plugin.getPartidaEditando();
-							   if(p == null) {
-								   
-								   InventarioAdmin.crearInventario(jugador,partida,plugin);
-							   }else {
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaModifyingError"))); 
-							   }
-						   }else {
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaMustBeDisabled")));  
-						   }
-					   }else {
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists"))); 
-					   }
-				   }else {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandAdminErrorUse"))); 
-				   }
-			   }else {
-				   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions"))); 
-			   }
-		   }else if(args[0].equalsIgnoreCase("createtophologram")) {
-			   // /paintball createtophologram <name> kills/wins <global/monthly/weekly>
-			   if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
-				   if (plugin.getServer().getPluginManager().getPlugin("DecentHolograms") == null) {
-					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', "&cYou need DecentHolograms plugin to use this feature."));
-				        return true;
-				   }
-				   if(args.length >= 3) {
-					   if(args[2].equalsIgnoreCase("kills") || args[2].equalsIgnoreCase("wins")) {
-						   TopHologram topHologram = plugin.getTopHologram(args[1]);
-						   if(topHologram == null) {
-							   String period = "global";
-							   if(args.length >= 4) {
-								   period = args[3];
-							   }
-							   if(period.equalsIgnoreCase("global") || period.equalsIgnoreCase("monthly") || period.equalsIgnoreCase("weekly")) {
-								   if(!MySQL.isEnabled(plugin.getConfig()) && (period.equalsIgnoreCase("monthly") || period.equalsIgnoreCase("weekly"))) {
-									   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramPeriodSQLError")));  
-									   return true;
-								   }
-								   TopHologram hologram = new TopHologram(args[1],args[2],jugador.getLocation(),plugin,period);
-								   plugin.agregarTopHolograma(hologram);
-								   hologram.spawnHologram(plugin);
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramCreated")));  
-							   }else {
-								   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse")));  
-							   }					    
-						   }else {
-							   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramAlreadyExists")));  
-						   }
-					   }else {
-						   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse")));   
-					   }  
+					}else {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandDisableErrorUse", "&cYou need to use &7/paintball disable <arena>")));
+					}
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("edit")) {
+				// /paintball edit <arena>
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					if(!Checks.checkTodo(plugin, jugador)) {
+						return false;
+					}
+					if(args.length >= 2) {
+						Partida partida = plugin.getPartida(args[1]);
+						if(partida != null) {
+							if(!partida.estaActivada()) {
+								PartidaEditando p = plugin.getPartidaEditando();
+								if(p == null) {
+
+									InventarioAdmin.crearInventario(jugador,partida,plugin);
+								}else {
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaModifyingError", "&cOnly one arena can be modified at a time.")));
+								}
+							}else {
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaMustBeDisabled", "&cThe arena must be disable to do that.")));
+							}
+						}else {
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("arenaDoesNotExists", "&cThat arena doesn't exists!")));
+						}
+					}else {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandAdminErrorUse", "&cYou need to use &7/paintball edit <arena>")));
+					}
+				}else {
+					jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("noPermissions", "&cYou don't have permissions to use that command!")));
+				}
+			}else if(args[0].equalsIgnoreCase("createtophologram")) {
+				// /paintball createtophologram <name> kills/wins <global/monthly/weekly>
+				if(jugador.isOp() || jugador.hasPermission("paintball.admin")) {
+					if (plugin.getServer().getPluginManager().getPlugin("DecentHolograms") == null) {
+						jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', "&cYou need DecentHolograms plugin to use this feature!")); // TODO add message key
+						return true;
+					}
+					if(args.length >= 3) {
+						if(args[2].equalsIgnoreCase("kills") || args[2].equalsIgnoreCase("wins")) {
+							TopHologram topHologram = plugin.getTopHologram(args[1]);
+							if(topHologram == null) {
+								String period = "global";
+								if(args.length >= 4) {
+									period = args[3];
+								}
+								if(period.equalsIgnoreCase("global") || period.equalsIgnoreCase("monthly") || period.equalsIgnoreCase("weekly")) {
+									if(!MySQL.isEnabled(plugin.getConfig()) && (period.equalsIgnoreCase("monthly") || period.equalsIgnoreCase("weekly"))) {
+										jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramPeriodSQLError", "&cTo create Weekly or Monthly Holograms you need to set up a MySQL database!")));
+										return true;
+									}
+									TopHologram hologram = new TopHologram(args[1],args[2],jugador.getLocation(),plugin,period);
+									plugin.agregarTopHolograma(hologram);
+									hologram.spawnHologram(plugin);
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramCreated", "&aTop Hologram created!")));
+								}else {
+									jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse", "&cYou need to use &7/paintball createtophologram <name> <kills/wins> <global/monthly/weekly>")));
+								}
+							}else {
+								jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("topHologramAlreadyExists", "&cThat hologram already exists! Use another name.")));
+							}
+						}else {
+							jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse", "&cYou need to use &7/paintball createtophologram <name> <kills/wins> <global/monthly/weekly>")));
+						}
 				   }else {
 					   jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("commandCreateHologramErrorUse")));
 				   }
