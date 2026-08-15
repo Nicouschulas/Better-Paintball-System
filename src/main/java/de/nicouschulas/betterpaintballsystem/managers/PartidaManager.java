@@ -597,25 +597,26 @@ public class PartidaManager {
 			}
 		}
 	}
-	
+
 	public static void iniciarFaseFinalizacion(Partida partida, BetterPaintballSystem plugin) {
 		partida.setEstado(EstadoPartida.TERMINANDO);
 		Equipo ganador = partida.getGanador();
 		FileConfiguration messages = plugin.getMessages();
 		FileConfiguration config = plugin.getConfig();
-		
-		String nameTeam1 = config.getString("teams."+partida.getTeam1().getTipo()+".name");
-		String nameTeam2 = config.getString("teams."+partida.getTeam2().getTipo()+".name");
-		
+
+		String nameTeam1 = config.getString("teams."+partida.getTeam1().getTipo()+".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
+		String nameTeam2 = config.getString("teams."+partida.getTeam2().getTipo()+".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
+
 		String status;
 		if(ganador == null) {
-			//empate
-			status = messages.getString("gameFinishedTieStatus");
+			//draw
+			status = messages.getString("gameFinishedTieStatus", "&e&lIt's a tie!");
 		}else {
-			String ganadorTexto = plugin.getConfig().getString("teams."+ganador.getTipo()+".name");
-			status = messages.getString("gameFinishedWinnerStatus").replace("%winner_team%", ganadorTexto);
-		}	
-				
+			String ganadorTexto = plugin.getConfig().getString("teams."+ganador.getTipo()+".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
+			String statusTemplate = messages.getString("gameFinishedWinnerStatus", "&a&l%winner_team% &eTeam have won!");
+			status = statusTemplate.replace("%winner_team%", ganadorTexto);
+		}
+
 		ArrayList<JugadorPaintball> jugadoresKillsOrd = partida.getJugadoresKills();
 		String top1;
 		String top2;
@@ -623,99 +624,114 @@ public class PartidaManager {
 		int top1Kills;
 		int top2Kills = 0;
 		int top3Kills = 0;
-		
+
 		if(jugadoresKillsOrd.size() == 2) {
 			top1 = jugadoresKillsOrd.get(0).getJugador().getName();
 			top1Kills = jugadoresKillsOrd.get(0).getAsesinatos();
 			top2 = jugadoresKillsOrd.get(1).getJugador().getName();
 			top2Kills = jugadoresKillsOrd.get(1).getAsesinatos();
-			top3 = messages.getString("topKillsNone");
+			top3 = messages.getString("topKillsNone", "&aNone");
 		}else if(jugadoresKillsOrd.size() == 1) {
 			top1 = jugadoresKillsOrd.getFirst().getJugador().getName();
 			top1Kills = jugadoresKillsOrd.getFirst().getAsesinatos();
-			top3 = messages.getString("topKillsNone");
-			top2 = messages.getString("topKillsNone");
-		}else {
+			top3 = messages.getString("topKillsNone", "&aNone");
+			top2 = messages.getString("topKillsNone", "&aNone");
+		}else if(jugadoresKillsOrd.size() >= 3) {
 			top1 = jugadoresKillsOrd.get(0).getJugador().getName();
 			top1Kills = jugadoresKillsOrd.get(0).getAsesinatos();
 			top2 = jugadoresKillsOrd.get(1).getJugador().getName();
 			top3 = jugadoresKillsOrd.get(2).getJugador().getName();
 			top2Kills = jugadoresKillsOrd.get(1).getAsesinatos();
 			top3Kills = jugadoresKillsOrd.get(2).getAsesinatos();
+		}else {
+			top1 = messages.getString("topKillsNone", "&aNone");
+			top2 = messages.getString("topKillsNone", "&aNone");
+			top3 = messages.getString("topKillsNone", "&aNone");
+			top1Kills = 0;
 		}
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		List<String> msg = messages.getStringList("gameFinished");
 		for(JugadorPaintball j : jugadores) {
-            for (String s : msg) {
-                j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', s.replace("%status_message%", status).replace("%team1%", nameTeam1)
-                        .replace("%team2%", nameTeam2).replace("%kills_team1%", partida.getTeam1().getAsesinatosTotales() + "")
-                        .replace("%kills_team2%", partida.getTeam2().getAsesinatosTotales() + "").replace("%player1%", top1).replace("%player2%", top2)
-                        .replace("%player3%", top3).replace("%kills_player1%", top1Kills + "").replace("%kills_player2%", top2Kills + "")
-                        .replace("%kills_player3%", top3Kills + "").replace("%kills_player%", j.getAsesinatos() + "")));
-            }
+			for (String s : msg) {
+				j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', s.replace("%status_message%", status)
+						.replace("%team1%", nameTeam1)
+						.replace("%team2%", nameTeam2)
+						.replace("%kills_team1%", partida.getTeam1().getAsesinatosTotales() + "")
+						.replace("%kills_team2%", partida.getTeam2().getAsesinatosTotales() + "")
+						.replace("%player1%", top1)
+						.replace("%player2%", top2)
+						.replace("%player3%", top3)
+						.replace("%kills_player1%", top1Kills + "")
+						.replace("%kills_player2%", top2Kills + "")
+						.replace("%kills_player3%", top3Kills + "")
+						.replace("%kills_player%", j.getAsesinatos() + "")));
+			}
 			Equipo equipoJugador = partida.getEquipoJugador(j.getJugador().getName());
 			if(MySQL.isEnabled(plugin.getConfig())) {
 				int win = 0;
 				int lose = 0;
 				int tie = 0;
-				if(equipoJugador.equals(ganador)) {
+				if(equipoJugador != null && equipoJugador.equals(ganador)) {
 					win = 1;
-					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("winnerTitleMessage"), "");
+					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("winnerTitleMessage", "&a&lYou've won!"), "");
 				}else if(ganador == null) {
 					tie = 1;
-					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("tieTitleMessage"), "");
+					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("tieTitleMessage", "&9&lIt's a tie!"), "");
 				}else {
 					lose = 1;
-					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("loserTitleMessage"), "");
+					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("loserTitleMessage", "&c&lYou've lost!"), "");
 				}
-				//Aqui se crea/modifica el registro global del jugador
+				//The player's global record is created/modified here.
 				if(!MySQL.jugadorExiste(plugin, j.getJugador().getName())) {
 					MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), "", win, tie, lose, j.getAsesinatos(),0, 1);
 				}else {
 					JugadorDatos player = MySQL.getJugador(plugin, j.getJugador().getName());
-					int kills = j.getAsesinatos()+player.getKills();
-					int wins = player.getWins()+win;
-					int loses = player.getLoses()+lose;
-					int ties = player.getTies()+tie;
+					int kills = j.getAsesinatos() + (player != null ? player.getKills() : 0);
+					int wins = (player != null ? player.getWins() : 0) + win;
+					int loses = (player != null ? player.getLoses() : 0) + lose;
+					int ties = (player != null ? player.getTies() : 0) + tie;
 					MySQL.actualizarJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), wins, loses, ties, kills);
-				}				
-				//Este registro es el que se crea para datos mensuales y semanales
-				MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), partida.getNombre(), win, tie, lose, j.getAsesinatos(),0,0);	
+				}
+				//This record is the one created for monthly and weekly data
+				MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), partida.getNombre(), win, tie, lose, j.getAsesinatos(),0,0);
 			}else {
 				plugin.registerPlayer(j.getJugador().getUniqueId() +".yml");
 				if(plugin.getJugador(j.getJugador().getName()) == null) {
 					plugin.agregarJugadorDatos(new JugadorDatos(j.getJugador().getName(),j.getJugador().getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
 				}
 				JugadorDatos jugador = plugin.getJugador(j.getJugador().getName());
-				if(partida.getEquipoJugador(j.getJugador().getName()).equals(ganador)) {
-					jugador.aumentarWins();
-					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("winnerTitleMessage"), "");
-				}else if(ganador == null) {
-					jugador.aumentarTies();
-					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("tieTitleMessage"), "");
-				}else {
-					jugador.aumentarLoses();
-					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("loserTitleMessage"), "");
+				Equipo eqJugador = partida.getEquipoJugador(j.getJugador().getName());
+				if(jugador != null) {
+					if(eqJugador != null && eqJugador.equals(ganador)) {
+						jugador.aumentarWins();
+						TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("winnerTitleMessage", "&a&lYou've won!"), "");
+					}else if(ganador == null) {
+						jugador.aumentarTies();
+						TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("tieTitleMessage", "&9&lIt's a tie!"), "");
+					}else {
+						jugador.aumentarLoses();
+						TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("loserTitleMessage", "&c&lYou've lost!"), "");
+					}
+
+					jugador.aumentarKills(j.getAsesinatos());
 				}
-				
-				jugador.aumentarKills(j.getAsesinatos());
 			}
 			j.getJugador().closeInventory();
 			j.getJugador().getInventory().clear();
-			
-			
-			if(config.getString("leave_item_enabled").equals("true")) {
+
+
+			if("true".equals(config.getString("leave_item_enabled"))) {
 				ItemStack item = UtilidadesItems.crearItem(config, "leave_item");
 				j.getJugador().getInventory().setItem(8, item);
 			}
-			if(config.getString("play_again_item_enabled").equals("true")) {
+			if("true".equals(config.getString("play_again_item_enabled"))) {
 				ItemStack item = UtilidadesItems.crearItem(config, "play_again_item");
 				j.getJugador().getInventory().setItem(7, item);
 			}
-			
-			if(config.getString("rewards_executed_after_teleport").equals("false")) {
+
+			if("false".equals(config.getString("rewards_executed_after_teleport"))) {
 				if(ganador != null) {
-					if(ganador.getTipo().equals(equipoJugador.getTipo())) {
+					if(equipoJugador != null && ganador.getTipo() != null && ganador.getTipo().equals(equipoJugador.getTipo())) {
 						List<String> commands = config.getStringList("winners_command_rewards");
 						ejecutarComandosRewards(commands,j);
 					}else {
@@ -728,47 +744,47 @@ public class PartidaManager {
 				}
 			}
 		}
-		
-		int time = Integer.parseInt(config.getString("arena_ending_phase_cooldown"));
+
+		int time = Integer.parseInt(config.getString("arena_ending_phase_cooldown", "0"));
 		CooldownManager c = new CooldownManager(plugin);
 		c.cooldownFaseFinalizacion(partida,time,ganador);
 	}
-	
+
 	public static void ejecutarComandosRewards(List<String> commands,JugadorPaintball j) {
 		CommandSender console = Bukkit.getServer().getConsoleSender();
-        for (String command : commands) {
-            if (command.startsWith("msg %player%")) {
-                String mensaje = command.replace("msg %player% ", "");
-                j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', mensaje));
-            } else {
-                String comandoAEnviar = command.replaceAll("%player%", j.getJugador().getName());
-                if (comandoAEnviar.contains("%random")) {
-                    int pos = comandoAEnviar.indexOf("%random");
-                    int nextPos = comandoAEnviar.indexOf("%", pos + 1);
-                    String variableCompleta = comandoAEnviar.substring(pos, nextPos + 1);
-                    String variable = variableCompleta.replace("%random_", "").replace("%", "");
-                    String[] sep = variable.split("-");
-                    int cantidadMinima = 0;
-                    int cantidadMaxima = 0;
+		for (String command : commands) {
+			if (command.startsWith("msg %player%")) {
+				String mensaje = command.replace("msg %player% ", "");
+				j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', mensaje));
+			} else {
+				String comandoAEnviar = command.replaceAll("%player%", j.getJugador().getName());
+				if (comandoAEnviar.contains("%random")) {
+					int pos = comandoAEnviar.indexOf("%random");
+					int nextPos = comandoAEnviar.indexOf("%", pos + 1);
+					String variableCompleta = comandoAEnviar.substring(pos, nextPos + 1);
+					String variable = variableCompleta.replace("%random_", "").replace("%", "");
+					String[] sep = variable.split("-");
+					int cantidadMinima = 0;
+					int cantidadMaxima = 0;
 
-                    try {
-                        cantidadMinima = (int) UtilidadesOtros.eval(sep[0].replace("kills", j.getAsesinatos() + ""));
-                        cantidadMaxima = (int) UtilidadesOtros.eval(sep[1].replace("kills", j.getAsesinatos() + ""));
-                    } catch (Exception _) {
+					try {
+						cantidadMinima = (int) UtilidadesOtros.eval(sep[0].replace("kills", j.getAsesinatos() + ""));
+						cantidadMaxima = (int) UtilidadesOtros.eval(sep[1].replace("kills", j.getAsesinatos() + ""));
+					} catch (Exception _) {
 
-                    }
-                    int num = UtilidadesOtros.getNumeroAleatorio(cantidadMinima, cantidadMaxima);
-                    comandoAEnviar = comandoAEnviar.replace(variableCompleta, num + "");
-                }
-                Bukkit.dispatchCommand(console, comandoAEnviar);
-            }
-        }
+					}
+					int num = UtilidadesOtros.getNumeroAleatorio(cantidadMinima, cantidadMaxima);
+					comandoAEnviar = comandoAEnviar.replace(variableCompleta, num + "");
+				}
+				Bukkit.dispatchCommand(console, comandoAEnviar);
+			}
+		}
 	}
 	
 	public static void finalizarPartida(Partida partida, BetterPaintballSystem plugin, boolean cerrandoServer, Equipo ganadorEquipo) {
 		FileConfiguration config = plugin.getConfig();
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
-		// Scoreboards für alle Spieler entfernen
+		//Remove scoreboards for all players
 	for(JugadorPaintball j : jugadores) {
 			String tipoFin;
 			if(ganadorEquipo != null) {
