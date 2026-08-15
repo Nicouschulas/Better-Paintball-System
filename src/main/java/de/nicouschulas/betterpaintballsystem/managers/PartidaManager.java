@@ -992,11 +992,7 @@ public class PartidaManager {
 		}
 
 		int invulnerability = Integer.parseInt(config.getString("respawn_invulnerability", "0"));
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			public void run() {
-				jugadorDanado.setAsesinadoRecientemente(false);
-			}
-		}, invulnerability * 20L);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> jugadorDanado.setAsesinadoRecientemente(false), invulnerability * 20L);
 	}
 
 	public static Partida getPartidaDisponible(BetterPaintballSystem plugin) {
