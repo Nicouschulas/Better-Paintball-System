@@ -307,47 +307,56 @@ public class PartidaManager {
 		FileConfiguration config = plugin.getConfig();
 		if(key.equalsIgnoreCase("3_lives")) {
 			Equipo equipo = partida.getEquipoJugador(jugador.getName());
-			equipo.aumentarVidas(3);
+			if (equipo != null) {
+				equipo.aumentarVidas(3);
+			}
 		}else if(key.equalsIgnoreCase("teleport")) {
 			JugadorPaintball j = partida.getJugador(jugador.getName());
-			if(j.getDeathLocation() != null) {
-				j.getJugador().teleport(j.getDeathLocation());
-			}else {
-				Equipo equipo = partida.getEquipoJugador(jugador.getName());
-				j.getJugador().teleport(equipo.getSpawn());
+			if (j != null) {
+				if(j.getDeathLocation() != null) {
+					j.getJugador().teleport(j.getDeathLocation());
+				}else {
+					Equipo equipo = partida.getEquipoJugador(jugador.getName());
+					if (equipo != null && equipo.getSpawn() != null) {
+						j.getJugador().teleport(equipo.getSpawn());
+					}
+				}
 			}
 		}else if(key.equalsIgnoreCase("more_snowballs")) {
 			JugadorPaintball j = partida.getJugador(jugador.getName());
-			int snowballs = Integer.parseInt(config.getString("killstreaks_items."+key+".snowballs"));
-			ItemStack item;
-			if(!UtilidadesOtros.isLegacy()) {
-				if(j.getSelectedHat().equals("chicken_hat")) {
-					item = new ItemStack(Material.EGG,1);
-				}else {
-					item = new ItemStack(Material.SNOWBALL,1);
-				}
+			if (j != null) {
+				int snowballs = Integer.parseInt(config.getString("killstreaks_items."+key+".snowballs", "0"));
+				ItemStack item;
+				String selectedHat = j.getSelectedHat();
+				if(!UtilidadesOtros.isLegacy()) {
+					if(selectedHat.equals("chicken_hat")) {
+						item = new ItemStack(Material.EGG,1);
+					}else {
+						item = new ItemStack(Material.SNOWBALL,1);
+					}
 
-			}else {
-				if(j.getSelectedHat().equals("chicken_hat")) {
-					item = new ItemStack(Material.EGG,1);
 				}else {
-					item = new ItemStack(Material.valueOf("SNOW_BALL"),1);
-				}
+					if(selectedHat.equals("chicken_hat")) {
+						item = new ItemStack(Material.EGG,1);
+					}else {
+						item = new ItemStack(Material.valueOf("SNOW_BALL"),1);
+					}
 
-			}
-			for(int i=0;i<snowballs;i++) {
-				jugador.getInventory().addItem(item);
+				}
+				for(int i=0;i<snowballs;i++) {
+					jugador.getInventory().addItem(item);
+				}
 			}
 		}else if(key.equalsIgnoreCase("lightning")) {
 			JugadorPaintball jugadorAtacante = partida.getJugador(jugador.getName());
-			int radio = Integer.parseInt(config.getString("killstreaks_items."+key+".radius"));
+			int radio = Integer.parseInt(config.getString("killstreaks_items."+key+".radius", "0"));
 			Collection<Entity> entidades = jugador.getWorld().getNearbyEntities(jugador.getLocation(), radio, radio, radio);
 			for(Entity e : entidades) {
 				if(e != null && e.getType().equals(EntityType.PLAYER)) {
 					Player player = (Player) e;
-					JugadorPaintball jugadorDañado = partida.getJugador(player.getName());
-					if(jugadorDañado != null) {
-						PartidaManager.muereJugador(partida, jugadorAtacante, jugadorDañado, plugin, true, false);
+					JugadorPaintball jugadorDanado = partida.getJugador(player.getName());
+					if(jugadorDanado != null) {
+						PartidaManager.muereJugador(partida, jugadorAtacante, jugadorDanado, plugin, true, false);
 					}
 				}
 			}
@@ -355,8 +364,10 @@ public class PartidaManager {
 			partida.setEnNuke(true);
 			JugadorPaintball jugadorAtacante = partida.getJugador(jugador.getName());
 			CooldownKillstreaks c = new CooldownKillstreaks(plugin);
-			String[] separados1 = config.getString("killstreaks_items."+key+".activateSound").split(";");
-			String[] separados2 = config.getString("killstreaks_items."+key+".finalSound").split(";");
+			String actSound = config.getString("killstreaks_items."+key+".activateSound", "");
+			String finSound = config.getString("killstreaks_items."+key+".finalSound", "");
+			String[] separados1 = actSound.split(";");
+			String[] separados2 = finSound.split(";");
 			c.cooldownNuke(jugadorAtacante, partida, separados1, separados2);
 		}
 	}
@@ -365,7 +376,7 @@ public class PartidaManager {
 	public static void setTeamsAleatorios(Partida partida) {
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		ArrayList<JugadorPaintball> jugadoresCopia = (ArrayList<JugadorPaintball>) partida.getJugadores().clone();
-		//Si son 4 se seleccionan 2, Si son 5 tambien 2, Si son 6, 3, Si son 7, tambien 3
+		//If there are 4, 2 are selected; if there are 5, also 2; if there are 6, 3; if there are 7, also 3.
 		Random r = new Random();
 		int num = jugadores.size()/2;
 		for(int i=0;i<num;i++) {
@@ -378,13 +389,16 @@ public class PartidaManager {
 	}
 
 	private static void setTeams(Partida partida) {
-		//Falta comprobar lo siguiente:
-		//Si 2 usuarios seleccionan team y uno se va, los 2 usuarios estaran en el mismo team al
-		//iniciar la partida y seran solo ellos 2.
+		//The following remains to be verified:
+		//If two users select a team and one leaves, both users will be in the same team.
+		//Start the game, and it will be just the two of them.
 
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		for(JugadorPaintball j : jugadores) {
-			partida.getEquipoJugador(j.getJugador().getName()).removerJugador(j.getJugador().getName());
+			Equipo eq = partida.getEquipoJugador(j.getJugador().getName());
+			if (eq != null) {
+				eq.removerJugador(j.getJugador().getName());
+			}
 			String preferenciaTeam = j.getPreferenciaTeam();
 			if(preferenciaTeam == null) {
 				if(partida.puedeSeleccionarEquipo(partida.getTeam1().getTipo())) {
@@ -394,29 +408,31 @@ public class PartidaManager {
 				}
 			}
 			preferenciaTeam = j.getPreferenciaTeam();
-			if(preferenciaTeam.equals(partida.getTeam2().getTipo())) {
+			if(preferenciaTeam != null && preferenciaTeam.equals(partida.getTeam2().getTipo())) {
 				partida.getTeam2().agregarJugador(j);
 			}else {
 				partida.getTeam1().agregarJugador(j);
 			}
 		}
 
-		//Balanceo final
+		//Final balancing
 		Equipo equipo1 = partida.getTeam1();
 		Equipo equipo2 = partida.getTeam2();
 		for(JugadorPaintball j : jugadores) {
 			Equipo equipo = partida.getEquipoJugador(j.getJugador().getName());
-			if(equipo1.getCantidadJugadores() > equipo2.getCantidadJugadores()+1) {
-				if(equipo.getTipo().equals(equipo1.getTipo())) {
-					//Mover al jugador del equipo1 al equipo2
-					equipo1.removerJugador(j.getJugador().getName());
-					equipo2.agregarJugador(j);
-				}
-			}else if(equipo2.getCantidadJugadores() > equipo1.getCantidadJugadores()+1) {
-				if(equipo.getTipo().equals(equipo2.getTipo())) {
-					//Mover al jugador del equipo2 al equipo1
-					equipo2.removerJugador(j.getJugador().getName());
-					equipo1.agregarJugador(j);
+			if (equipo != null && equipo.getTipo() != null) {
+				if(equipo1.getCantidadJugadores() > equipo2.getCantidadJugadores()+1) {
+					if(equipo.getTipo().equals(equipo1.getTipo())) {
+						//Move the player from Team 1 to Team 2
+						equipo1.removerJugador(j.getJugador().getName());
+						equipo2.agregarJugador(j);
+					}
+				}else if(equipo2.getCantidadJugadores() > equipo1.getCantidadJugadores()+1) {
+					if(equipo.getTipo().equals(equipo2.getTipo())) {
+						//Move the player from Team 2 to Team 1
+						equipo2.removerJugador(j.getJugador().getName());
+						equipo1.agregarJugador(j);
+					}
 				}
 			}
 		}
@@ -429,12 +445,12 @@ public class PartidaManager {
 			p.getInventory().setItem(8, null);
 
 			Equipo equipo = partida.getEquipoJugador(p.getName());
-			if(config.contains("teams."+equipo.getTipo())) {
-				darEquipamientoJugador(p,Integer.parseInt(config.getString("teams."+equipo.getTipo()+".color")));
+			if(equipo != null && equipo.getTipo() != null && config.contains("teams."+equipo.getTipo())) {
+				darEquipamientoJugador(p,Integer.parseInt(config.getString("teams."+equipo.getTipo()+".color", "0")));
 			}else {
 				darEquipamientoJugador(p,0);
 			}
-			//comprobar perk initial killcoins
+			//check perk initial killcoins
 			int nivelInitialKillcoins = PaintballAPI.getPerkLevel(j.getJugador(), "initial_killcoins");
 			if(nivelInitialKillcoins != 0) {
 				String linea = shop.getStringList("perks_upgrades.initial_killcoins").get(nivelInitialKillcoins-1);
@@ -456,8 +472,10 @@ public class PartidaManager {
 				jugador.setSelectedHat(h.getName());
 				ItemStack item = UtilidadesItems.crearItem(config, "hats_items."+h.getName());
 				ItemMeta meta = item.getItemMeta();
-				meta.setLore(null);
-				item.setItemMeta(meta);
+				if (meta != null) {
+					meta.setLore(null);
+					item.setItemMeta(meta);
+				}
 				if(config.contains("hats_items."+h.getName()+".skull_id")) {
 					String id = config.getString("hats_items."+h.getName()+".skull_id");
 					String textura = config.getString("hats_items."+h.getName()+".skull_texture");
@@ -469,16 +487,22 @@ public class PartidaManager {
 					jugador.getJugador().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,9999999,0,false,false));
 				}else if(h.getName().equals("present_hat")) {
 					Equipo equipo = partida.getEquipoJugador(jugador.getJugador().getName());
-					ArrayList<JugadorPaintball> jugadoresCopy = (ArrayList<JugadorPaintball>) equipo.getJugadores().clone();
-					jugadoresCopy.remove(jugador);
-					if(!jugadoresCopy.isEmpty()) {
-						Random r = new Random();
-						int pos = r.nextInt(jugadoresCopy.size());
-						String jName = jugadoresCopy.get(pos).getJugador().getName();
-						JugadorPaintball j = partida.getJugador(jName);
-						j.agregarCoins(3);
-						jugador.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("presentHatGive").replace("%player%", j.getJugador().getName())));
-						j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("presentHatReceive").replace("%player%", jugador.getJugador().getName())));
+					if (equipo != null && equipo.getJugadores() != null) {
+						ArrayList<JugadorPaintball> jugadoresCopy = (ArrayList<JugadorPaintball>) equipo.getJugadores().clone();
+						jugadoresCopy.remove(jugador);
+						if(!jugadoresCopy.isEmpty()) {
+							Random r = new Random();
+							int pos = r.nextInt(jugadoresCopy.size());
+							String jName = jugadoresCopy.get(pos).getJugador().getName();
+							JugadorPaintball j = partida.getJugador(jName);
+							if (j != null) {
+								j.agregarCoins(3);
+								String msgGive = messages.getString("presentHatGive", "");
+								String msgReceive = messages.getString("presentHatReceive", "");
+								jugador.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', msgGive.replace("%player%", j.getJugador().getName())));
+								j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', msgReceive.replace("%player%", jugador.getJugador().getName())));
+							}
+						}
 					}
 				}
 				return;
@@ -489,26 +513,34 @@ public class PartidaManager {
 	public static void darEquipamientoJugador(Player jugador,int color) {
 		ItemStack item = new ItemStack(Material.LEATHER_HELMET,1);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(Color.fromRGB(color));
-		item.setItemMeta(meta);
+		if (meta != null) {
+			meta.setColor(Color.fromRGB(color));
+			item.setItemMeta(meta);
+		}
 		jugador.getInventory().setHelmet(item);
 
 		item = new ItemStack(Material.LEATHER_CHESTPLATE,1);
 		meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(Color.fromRGB(color));
-		item.setItemMeta(meta);
+		if (meta != null) {
+			meta.setColor(Color.fromRGB(color));
+			item.setItemMeta(meta);
+		}
 		jugador.getInventory().setChestplate(item);
 
 		item = new ItemStack(Material.LEATHER_LEGGINGS,1);
 		meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(Color.fromRGB(color));
-		item.setItemMeta(meta);
+		if (meta != null) {
+			meta.setColor(Color.fromRGB(color));
+			item.setItemMeta(meta);
+		}
 		jugador.getInventory().setLeggings(item);
 
 		item = new ItemStack(Material.LEATHER_BOOTS,1);
 		meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(Color.fromRGB(color));
-		item.setItemMeta(meta);
+		if (meta != null) {
+			meta.setColor(Color.fromRGB(color));
+			item.setItemMeta(meta);
+		}
 		jugador.getInventory().setBoots(item);
 	}
 
@@ -519,16 +551,17 @@ public class PartidaManager {
 		for(int i=9;i<=35;i++) {
 			j.getJugador().getInventory().setItem(i, null);
 		}
-		int amount = Integer.parseInt(config.getString("initial_snowballs"));
+		int amount = Integer.parseInt(config.getString("initial_snowballs", "0"));
 		ItemStack item;
+		String selectedHat = j.getSelectedHat();
 		if(!UtilidadesOtros.isLegacy()) {
-			if(j.getSelectedHat().equals("chicken_hat")) {
+			if(selectedHat.equals("chicken_hat")) {
 				item = new ItemStack(Material.EGG,1);
 			}else {
 				item = new ItemStack(Material.SNOWBALL,1);
 			}
 		}else {
-			if(j.getSelectedHat().equals("chicken_hat")) {
+			if(selectedHat.equals("chicken_hat")) {
 				item = new ItemStack(Material.EGG,1);
 			}else {
 				item = new ItemStack(Material.valueOf("SNOW_BALL"),1);
@@ -543,23 +576,25 @@ public class PartidaManager {
 	public static void lanzarFuegos(ArrayList<JugadorPaintball> jugadores) {
 		for(JugadorPaintball j : jugadores) {
 			Firework fw = (Firework) j.getJugador().getWorld().spawnEntity(j.getJugador().getLocation(), EntityType.FIREWORK_ROCKET);
-	        FireworkMeta fwm = fw.getFireworkMeta();
-	        Type type = Type.BALL;
-	        Color c1 = Color.RED;
-	        Color c2 = Color.AQUA;
-	        FireworkEffect efecto = FireworkEffect.builder().withColor(c1).withFade(c2).with(type).build();
-	        fwm.addEffect(efecto);
-	        fwm.setPower(2);
-	        fw.setFireworkMeta(fwm);
-		}	
+			FireworkMeta fwm = fw.getFireworkMeta();
+            Type type = Type.BALL;
+            Color c1 = Color.RED;
+            Color c2 = Color.AQUA;
+            FireworkEffect efecto = FireworkEffect.builder().withColor(c1).withFade(c2).with(type).build();
+            fwm.addEffect(efecto);
+            fwm.setPower(2);
+            fw.setFireworkMeta(fwm);
+        }
 	}
-	
+
 	public static void teletransportarJugadores(Partida partida) {
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		for(JugadorPaintball j : jugadores) {
 			Player p = j.getJugador();
 			Equipo equipo = partida.getEquipoJugador(p.getName());
-			p.teleport(equipo.getSpawn());
+			if (equipo != null && equipo.getSpawn() != null) {
+				p.teleport(equipo.getSpawn());
+			}
 		}
 	}
 	
