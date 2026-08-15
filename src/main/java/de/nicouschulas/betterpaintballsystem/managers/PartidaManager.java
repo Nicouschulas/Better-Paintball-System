@@ -281,7 +281,7 @@ public class PartidaManager {
 
 		ArrayList<JugadorPaintball> jugadoresTeam1 = partida.getTeam1().getJugadores();
 		for(JugadorPaintball j : jugadoresTeam1) {
-			//comprobar perk extralives
+			//check perk extralives
 			int nivelExtraLives = PaintballAPI.getPerkLevel(j.getJugador(), "extra_lives");
 			if(nivelExtraLives != 0) {
 				String linea = shop.getStringList("perks_upgrades.extra_lives").get(nivelExtraLives-1);
@@ -292,7 +292,7 @@ public class PartidaManager {
 		}
 		ArrayList<JugadorPaintball> jugadoresTeam2 = partida.getTeam2().getJugadores();
 		for(JugadorPaintball j : jugadoresTeam2) {
-			//comprobar perk extralives
+			//check perk extralives
 			int nivelExtraLives = PaintballAPI.getPerkLevel(j.getJugador(), "extra_lives");
 			if(nivelExtraLives != 0) {
 				String linea = shop.getStringList("perks_upgrades.extra_lives").get(nivelExtraLives-1);
