@@ -61,14 +61,14 @@ public class PartidaManager {
 		}
 
 		jugador.getInventory().clear();
-        jugador.getEquipment();
-        jugador.getEquipment().clear();
+		jugador.getEquipment();
+		jugador.getEquipment().clear();
 		jugador.getInventory().clear();
-        jugador.getEquipment();
-        jugador.getEquipment().clear();
-        jugador.getEquipment().setArmorContents(new ItemStack[4]);
-        jugador.updateInventory();
-        jugador.updateInventory();
+		jugador.getEquipment();
+		jugador.getEquipment().clear();
+		jugador.getEquipment().setArmorContents(new ItemStack[4]);
+		jugador.updateInventory();
+		jugador.updateInventory();
 
 		jugador.setGameMode(GameMode.SURVIVAL);
 		jugador.setExp(0);
@@ -78,7 +78,7 @@ public class PartidaManager {
 		jugador.setHealth(20);
 		jugador.setFlying(false);
 		jugador.setAllowFlight(false);
-		for(PotionEffect p : jugador.getActivePotionEffects()) {
+		for (PotionEffect p : jugador.getActivePotionEffects()) {
 			jugador.removePotionEffect(p.getType());
 		}
 
@@ -87,29 +87,29 @@ public class PartidaManager {
 		}
 
 		FileConfiguration config = plugin.getConfig();
-		if("true".equals(config.getString("leave_item_enabled", "false"))) {
+		if ("true".equals(config.getString("leave_item_enabled", "false"))) {
 			ItemStack item = UtilidadesItems.crearItem(config, "leave_item");
-            jugador.getInventory().setItem(8, item);
+			jugador.getInventory().setItem(8, item);
 		}
-		if("true".equals(config.getString("hats_item_enabled", "false"))) {
+		if ("true".equals(config.getString("hats_item_enabled", "false"))) {
 			ItemStack item = UtilidadesItems.crearItem(config, "hats_item");
-            jugador.getInventory().setItem(7, item);
+			jugador.getInventory().setItem(7, item);
 		}
-		if("true".equals(config.getString("choose_team_system", "false"))) {
-			ItemStack item = UtilidadesItems.crearItem(config, "teams."+partida.getTeam1().getTipo());
+		if ("true".equals(config.getString("choose_team_system", "false"))) {
+			ItemStack item = UtilidadesItems.crearItem(config, "teams." + partida.getTeam1().getTipo());
 			if (item.getItemMeta() != null) {
 				ItemMeta meta = item.getItemMeta();
-				String t1Name = config.getString("teams."+partida.getTeam1().getTipo()+".name", partida.getTeam1().getTipo());
+				String t1Name = config.getString("teams." + partida.getTeam1().getTipo() + ".name", partida.getTeam1().getTipo());
 				String teamChooseMsg = messages.getString("teamChoose", "&aChoose %team%");
 				meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', teamChooseMsg.replace("%team%", t1Name)));
 				item.setItemMeta(meta);
 				jugador.getInventory().setItem(0, item);
 			}
 
-			item = UtilidadesItems.crearItem(config, "teams."+partida.getTeam2().getTipo());
+			item = UtilidadesItems.crearItem(config, "teams." + partida.getTeam2().getTipo());
 			if (item.getItemMeta() != null) {
 				ItemMeta meta = item.getItemMeta();
-				String t2Name = config.getString("teams."+partida.getTeam2().getTipo()+".name", partida.getTeam2().getTipo());
+				String t2Name = config.getString("teams." + partida.getTeam2().getTipo() + ".name", partida.getTeam2().getTipo());
 				String teamChooseMsg = messages.getString("teamChoose", "&aChoose %team%");
 				meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', teamChooseMsg.replace("%team%", t2Name)));
 				item.setItemMeta(meta);
@@ -117,14 +117,14 @@ public class PartidaManager {
 			}
 		}
 
-		if(partida.getCantidadActualJugadores() >= partida.getCantidadMinimaJugadores()
+		if (partida.getCantidadActualJugadores() >= partida.getCantidadMinimaJugadores()
 				&& EstadoPartida.ESPERANDO.equals(partida.getEstado())) {
 			cooldownIniciarPartida(partida, plugin);
 		}
 	}
 
 	public static void jugadorSale(Partida partida, Player jugador, boolean finalizaPartida,
-	                               BetterPaintballSystem plugin, boolean cerrandoServer) {
+								   BetterPaintballSystem plugin, boolean cerrandoServer) {
 		JugadorPaintball jugadorPaintball = partida.getJugador(jugador.getName());
 		FileConfiguration messages = plugin.getMessages();
 
@@ -142,7 +142,7 @@ public class PartidaManager {
 
 			partida.removerJugador(jugador.getName());
 
-			if(!finalizaPartida) {
+			if (!finalizaPartida) {
 				ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 				String leaveMsgFormat = messages.getString("playerLeave", "&c%player% left!");
 				for (JugadorPaintball jugadore : jugadores) {
@@ -168,15 +168,15 @@ public class PartidaManager {
 			}
 
 			jugador.getInventory().setContents(inventarioGuardado);
-            jugador.getEquipment();
-            jugador.getEquipment().setArmorContents(equipamientoGuardado);
-            jugador.setGameMode(gamemodeGuardado != null ? gamemodeGuardado : GameMode.SURVIVAL);
+			jugador.getEquipment();
+			jugador.getEquipment().setArmorContents(equipamientoGuardado);
+			jugador.setGameMode(gamemodeGuardado != null ? gamemodeGuardado : GameMode.SURVIVAL);
 			jugador.setLevel(levelGuardado);
 			jugador.setExp(xpGuardada);
 			jugador.setFoodLevel(hambreGuardada);
 			jugador.setMaxHealth(maxVidaGuardada);
 			jugador.setHealth(vidaGuardada);
-			for(PotionEffect p : jugador.getActivePotionEffects()) {
+			for (PotionEffect p : jugador.getActivePotionEffects()) {
 				jugador.removePotionEffect(p.getType());
 			}
 			jugador.updateInventory();
@@ -187,13 +187,13 @@ public class PartidaManager {
 			partida.removerJugador(jugador.getName());
 		}
 
-		if(!cerrandoServer) {
-			if(partida.getCantidadActualJugadores() < partida.getCantidadMinimaJugadores()
-					&& EstadoPartida.COMENZANDO.equals(partida.getEstado())){
+		if (!cerrandoServer) {
+			if (partida.getCantidadActualJugadores() < partida.getCantidadMinimaJugadores()
+					&& EstadoPartida.COMENZANDO.equals(partida.getEstado())) {
 				partida.setEstado(EstadoPartida.ESPERANDO);
-			} else if(partida.getCantidadActualJugadores() <= 1 && EstadoPartida.JUGANDO.equals(partida.getEstado())) {
+			} else if (partida.getCantidadActualJugadores() <= 1 && EstadoPartida.JUGANDO.equals(partida.getEstado())) {
 				PartidaManager.iniciarFaseFinalizacion(partida, plugin);
-			} else if((partida.getTeam1().getCantidadJugadores() == 0 || partida.getTeam2().getCantidadJugadores() == 0) && EstadoPartida.JUGANDO.equals(partida.getEstado())) {
+			} else if ((partida.getTeam1().getCantidadJugadores() == 0 || partida.getTeam2().getCantidadJugadores() == 0) && EstadoPartida.JUGANDO.equals(partida.getEstado())) {
 				PartidaManager.iniciarFaseFinalizacion(partida, plugin);
 			}
 		}
@@ -210,11 +210,11 @@ public class PartidaManager {
 
 		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix", "&7[&cPaintball&7]")) + " ";
 
-		if("true".equals(config.getString("broadcast_starting_arena.enabled", "false"))) {
+		if ("true".equals(config.getString("broadcast_starting_arena.enabled", "false"))) {
 			List<String> worlds = config.getStringList("broadcast_starting_arena.worlds");
-			for(String world : worlds) {
-				for(Player player : Bukkit.getOnlinePlayers()) {
-					if(player.getWorld().getName().equals(world)) {
+			for (String world : worlds) {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (player.getWorld().getName().equals(world)) {
 						String broadcastMsg = messages.getString("arenaStartingBroadcast", "&aArena %arena% is starting!");
 						player.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', broadcastMsg.replace("%arena%", partida.getNombre())));
 					}
@@ -229,7 +229,7 @@ public class PartidaManager {
 		FileConfiguration messages = plugin.getMessages();
 		FileConfiguration config = plugin.getConfig();
 
-		if("true".equals(plugin.getConfig().getString("choose_team_system", "false"))) {
+		if ("true".equals(plugin.getConfig().getString("choose_team_system", "false"))) {
 			setTeams(partida);
 		} else {
 			setTeamsAleatorios(partida);
@@ -251,8 +251,8 @@ public class PartidaManager {
 				sound = ValueOfPatch.valueOf(separados[0]);
 				volume = Float.parseFloat(separados[1]);
 				pitch = Float.parseFloat(separados[2]);
-			} catch(Exception ex) {
-				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
+			} catch (Exception ex) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix + "&7Sound Name: &c" + separados[0] + " &7is not valid."));
 			}
 		}
 
@@ -274,28 +274,27 @@ public class PartidaManager {
 	}
 
 
-
-	public static void setVidas(Partida partida,FileConfiguration shop) {
+	public static void setVidas(Partida partida, FileConfiguration shop) {
 		partida.getTeam1().setVidas(partida.getVidasIniciales());
 		partida.getTeam2().setVidas(partida.getVidasIniciales());
 
 		ArrayList<JugadorPaintball> jugadoresTeam1 = partida.getTeam1().getJugadores();
-		for(JugadorPaintball j : jugadoresTeam1) {
+		for (JugadorPaintball j : jugadoresTeam1) {
 			//check perk extralives
 			int nivelExtraLives = PaintballAPI.getPerkLevel(j.getJugador(), "extra_lives");
-			if(nivelExtraLives != 0) {
-				String linea = shop.getStringList("perks_upgrades.extra_lives").get(nivelExtraLives-1);
+			if (nivelExtraLives != 0) {
+				String linea = shop.getStringList("perks_upgrades.extra_lives").get(nivelExtraLives - 1);
 				String[] sep = linea.split(";");
 				int cantidad = Integer.parseInt(sep[0]);
 				partida.getTeam1().aumentarVidas(cantidad);
 			}
 		}
 		ArrayList<JugadorPaintball> jugadoresTeam2 = partida.getTeam2().getJugadores();
-		for(JugadorPaintball j : jugadoresTeam2) {
+		for (JugadorPaintball j : jugadoresTeam2) {
 			//check perk extralives
 			int nivelExtraLives = PaintballAPI.getPerkLevel(j.getJugador(), "extra_lives");
-			if(nivelExtraLives != 0) {
-				String linea = shop.getStringList("perks_upgrades.extra_lives").get(nivelExtraLives-1);
+			if (nivelExtraLives != 0) {
+				String linea = shop.getStringList("perks_upgrades.extra_lives").get(nivelExtraLives - 1);
 				String[] sep = linea.split(";");
 				int cantidad = Integer.parseInt(sep[0]);
 				partida.getTeam2().aumentarVidas(cantidad);
@@ -305,67 +304,67 @@ public class PartidaManager {
 
 	public static void killstreakInstantanea(String key, Player jugador, Partida partida, BetterPaintballSystem plugin) {
 		FileConfiguration config = plugin.getConfig();
-		if(key.equalsIgnoreCase("3_lives")) {
+		if (key.equalsIgnoreCase("3_lives")) {
 			Equipo equipo = partida.getEquipoJugador(jugador.getName());
 			if (equipo != null) {
 				equipo.aumentarVidas(3);
 			}
-		}else if(key.equalsIgnoreCase("teleport")) {
+		} else if (key.equalsIgnoreCase("teleport")) {
 			JugadorPaintball j = partida.getJugador(jugador.getName());
 			if (j != null) {
-				if(j.getDeathLocation() != null) {
+				if (j.getDeathLocation() != null) {
 					j.getJugador().teleport(j.getDeathLocation());
-				}else {
+				} else {
 					Equipo equipo = partida.getEquipoJugador(jugador.getName());
 					if (equipo != null && equipo.getSpawn() != null) {
 						j.getJugador().teleport(equipo.getSpawn());
 					}
 				}
 			}
-		}else if(key.equalsIgnoreCase("more_snowballs")) {
+		} else if (key.equalsIgnoreCase("more_snowballs")) {
 			JugadorPaintball j = partida.getJugador(jugador.getName());
 			if (j != null) {
-				int snowballs = Integer.parseInt(config.getString("killstreaks_items."+key+".snowballs", "0"));
+				int snowballs = Integer.parseInt(config.getString("killstreaks_items." + key + ".snowballs", "0"));
 				ItemStack item;
 				String selectedHat = j.getSelectedHat();
-				if(!UtilidadesOtros.isLegacy()) {
-					if(selectedHat.equals("chicken_hat")) {
-						item = new ItemStack(Material.EGG,1);
-					}else {
-						item = new ItemStack(Material.SNOWBALL,1);
+				if (!UtilidadesOtros.isLegacy()) {
+					if (selectedHat.equals("chicken_hat")) {
+						item = new ItemStack(Material.EGG, 1);
+					} else {
+						item = new ItemStack(Material.SNOWBALL, 1);
 					}
 
-				}else {
-					if(selectedHat.equals("chicken_hat")) {
-						item = new ItemStack(Material.EGG,1);
-					}else {
-						item = new ItemStack(Material.valueOf("SNOW_BALL"),1);
+				} else {
+					if (selectedHat.equals("chicken_hat")) {
+						item = new ItemStack(Material.EGG, 1);
+					} else {
+						item = new ItemStack(Material.valueOf("SNOW_BALL"), 1);
 					}
 
 				}
-				for(int i=0;i<snowballs;i++) {
+				for (int i = 0; i < snowballs; i++) {
 					jugador.getInventory().addItem(item);
 				}
 			}
-		}else if(key.equalsIgnoreCase("lightning")) {
+		} else if (key.equalsIgnoreCase("lightning")) {
 			JugadorPaintball jugadorAtacante = partida.getJugador(jugador.getName());
-			int radio = Integer.parseInt(config.getString("killstreaks_items."+key+".radius", "0"));
+			int radio = Integer.parseInt(config.getString("killstreaks_items." + key + ".radius", "0"));
 			Collection<Entity> entidades = jugador.getWorld().getNearbyEntities(jugador.getLocation(), radio, radio, radio);
-			for(Entity e : entidades) {
-				if(e != null && e.getType().equals(EntityType.PLAYER)) {
+			for (Entity e : entidades) {
+				if (e != null && e.getType().equals(EntityType.PLAYER)) {
 					Player player = (Player) e;
 					JugadorPaintball jugadorDanado = partida.getJugador(player.getName());
-					if(jugadorDanado != null) {
+					if (jugadorDanado != null) {
 						PartidaManager.muereJugador(partida, jugadorAtacante, jugadorDanado, plugin, true, false);
 					}
 				}
 			}
-		}else if(key.equalsIgnoreCase("nuke")) {
+		} else if (key.equalsIgnoreCase("nuke")) {
 			partida.setEnNuke(true);
 			JugadorPaintball jugadorAtacante = partida.getJugador(jugador.getName());
 			CooldownKillstreaks c = new CooldownKillstreaks(plugin);
-			String actSound = config.getString("killstreaks_items."+key+".activateSound", "");
-			String finSound = config.getString("killstreaks_items."+key+".finalSound", "");
+			String actSound = config.getString("killstreaks_items." + key + ".activateSound", "");
+			String finSound = config.getString("killstreaks_items." + key + ".finalSound", "");
 			String[] separados1 = actSound.split(";");
 			String[] separados2 = finSound.split(";");
 			c.cooldownNuke(jugadorAtacante, partida, separados1, separados2);
@@ -378,8 +377,8 @@ public class PartidaManager {
 		ArrayList<JugadorPaintball> jugadoresCopia = (ArrayList<JugadorPaintball>) partida.getJugadores().clone();
 		//If there are 4, 2 are selected; if there are 5, also 2; if there are 6, 3; if there are 7, also 3.
 		Random r = new Random();
-		int num = jugadores.size()/2;
-		for(int i=0;i<num;i++) {
+		int num = jugadores.size() / 2;
+		for (int i = 0; i < num; i++) {
 			int pos = r.nextInt(jugadoresCopia.size());
 			JugadorPaintball jugadorSelect = jugadoresCopia.get(pos);
 			jugadoresCopia.remove(pos);
@@ -394,23 +393,23 @@ public class PartidaManager {
 		//Start the game, and it will be just the two of them.
 
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
-		for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			Equipo eq = partida.getEquipoJugador(j.getJugador().getName());
 			if (eq != null) {
 				eq.removerJugador(j.getJugador().getName());
 			}
 			String preferenciaTeam = j.getPreferenciaTeam();
-			if(preferenciaTeam == null) {
-				if(partida.puedeSeleccionarEquipo(partida.getTeam1().getTipo())) {
+			if (preferenciaTeam == null) {
+				if (partida.puedeSeleccionarEquipo(partida.getTeam1().getTipo())) {
 					j.setPreferenciaTeam(partida.getTeam1().getTipo());
-				}else {
+				} else {
 					j.setPreferenciaTeam(partida.getTeam2().getTipo());
 				}
 			}
 			preferenciaTeam = j.getPreferenciaTeam();
-			if(preferenciaTeam != null && preferenciaTeam.equals(partida.getTeam2().getTipo())) {
+			if (preferenciaTeam != null && preferenciaTeam.equals(partida.getTeam2().getTipo())) {
 				partida.getTeam2().agregarJugador(j);
-			}else {
+			} else {
 				partida.getTeam1().agregarJugador(j);
 			}
 		}
@@ -418,17 +417,17 @@ public class PartidaManager {
 		//Final balancing
 		Equipo equipo1 = partida.getTeam1();
 		Equipo equipo2 = partida.getTeam2();
-		for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			Equipo equipo = partida.getEquipoJugador(j.getJugador().getName());
 			if (equipo != null && equipo.getTipo() != null) {
-				if(equipo1.getCantidadJugadores() > equipo2.getCantidadJugadores()+1) {
-					if(equipo.getTipo().equals(equipo1.getTipo())) {
+				if (equipo1.getCantidadJugadores() > equipo2.getCantidadJugadores() + 1) {
+					if (equipo.getTipo().equals(equipo1.getTipo())) {
 						//Move the player from Team 1 to Team 2
 						equipo1.removerJugador(j.getJugador().getName());
 						equipo2.agregarJugador(j);
 					}
-				}else if(equipo2.getCantidadJugadores() > equipo1.getCantidadJugadores()+1) {
-					if(equipo.getTipo().equals(equipo2.getTipo())) {
+				} else if (equipo2.getCantidadJugadores() > equipo1.getCantidadJugadores() + 1) {
+					if (equipo.getTipo().equals(equipo2.getTipo())) {
 						//Move the player from Team 2 to Team 1
 						equipo2.removerJugador(j.getJugador().getName());
 						equipo1.agregarJugador(j);
@@ -438,59 +437,59 @@ public class PartidaManager {
 		}
 	}
 
-	public static void darItems(Partida partida,FileConfiguration config,FileConfiguration shop,FileConfiguration messages) {
+	public static void darItems(Partida partida, FileConfiguration config, FileConfiguration shop, FileConfiguration messages) {
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
-		for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			Player p = j.getJugador();
 			p.getInventory().setItem(8, null);
 
 			Equipo equipo = partida.getEquipoJugador(p.getName());
-			if(equipo != null && equipo.getTipo() != null && config.contains("teams."+equipo.getTipo())) {
-				darEquipamientoJugador(p,Integer.parseInt(config.getString("teams."+equipo.getTipo()+".color", "0")));
-			}else {
-				darEquipamientoJugador(p,0);
+			if (equipo != null && equipo.getTipo() != null && config.contains("teams." + equipo.getTipo())) {
+				darEquipamientoJugador(p, Integer.parseInt(config.getString("teams." + equipo.getTipo() + ".color", "0")));
+			} else {
+				darEquipamientoJugador(p, 0);
 			}
 			//check perk initial killcoins
 			int nivelInitialKillcoins = PaintballAPI.getPerkLevel(j.getJugador(), "initial_killcoins");
-			if(nivelInitialKillcoins != 0) {
-				String linea = shop.getStringList("perks_upgrades.initial_killcoins").get(nivelInitialKillcoins-1);
+			if (nivelInitialKillcoins != 0) {
+				String linea = shop.getStringList("perks_upgrades.initial_killcoins").get(nivelInitialKillcoins - 1);
 				String[] sep = linea.split(";");
 				int cantidad = Integer.parseInt(sep[0]);
 				j.agregarCoins(cantidad);
 			}
-			UtilidadesItems.crearItemKillstreaks(j,config);
-			ponerHat(partida,j,config,messages);
-			setBolasDeNieve(j,config);
+			UtilidadesItems.crearItemKillstreaks(j, config);
+			ponerHat(partida, j, config, messages);
+			setBolasDeNieve(j, config);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void ponerHat(Partida partida,JugadorPaintball jugador,FileConfiguration config,FileConfiguration messages) {
+	public static void ponerHat(Partida partida, JugadorPaintball jugador, FileConfiguration config, FileConfiguration messages) {
 		ArrayList<Hat> hats = PaintballAPI.getHats(jugador.getJugador());
-		for(Hat h : hats) {
-			if(h.isSelected()) {
+		for (Hat h : hats) {
+			if (h.isSelected()) {
 				jugador.setSelectedHat(h.getName());
-				ItemStack item = UtilidadesItems.crearItem(config, "hats_items."+h.getName());
+				ItemStack item = UtilidadesItems.crearItem(config, "hats_items." + h.getName());
 				ItemMeta meta = item.getItemMeta();
 				if (meta != null) {
 					meta.setLore(null);
 					item.setItemMeta(meta);
 				}
-				if(config.contains("hats_items."+h.getName()+".skull_id")) {
-					String id = config.getString("hats_items."+h.getName()+".skull_id");
-					String textura = config.getString("hats_items."+h.getName()+".skull_texture");
+				if (config.contains("hats_items." + h.getName() + ".skull_id")) {
+					String id = config.getString("hats_items." + h.getName() + ".skull_id");
+					String textura = config.getString("hats_items." + h.getName() + ".skull_texture");
 					item = UtilidadesItems.getCabeza(item, id, textura);
 				}
 				jugador.getJugador().getEquipment().setHelmet(item);
 
-				if(h.getName().equals("speed_hat")) {
-					jugador.getJugador().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,9999999,0,false,false));
-				}else if(h.getName().equals("present_hat")) {
+				if (h.getName().equals("speed_hat")) {
+					jugador.getJugador().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 9999999, 0, false, false));
+				} else if (h.getName().equals("present_hat")) {
 					Equipo equipo = partida.getEquipoJugador(jugador.getJugador().getName());
 					if (equipo != null && equipo.getJugadores() != null) {
 						ArrayList<JugadorPaintball> jugadoresCopy = (ArrayList<JugadorPaintball>) equipo.getJugadores().clone();
 						jugadoresCopy.remove(jugador);
-						if(!jugadoresCopy.isEmpty()) {
+						if (!jugadoresCopy.isEmpty()) {
 							Random r = new Random();
 							int pos = r.nextInt(jugadoresCopy.size());
 							String jName = jugadoresCopy.get(pos).getJugador().getName();
@@ -510,8 +509,8 @@ public class PartidaManager {
 		}
 	}
 
-	public static void darEquipamientoJugador(Player jugador,int color) {
-		ItemStack item = new ItemStack(Material.LEATHER_HELMET,1);
+	public static void darEquipamientoJugador(Player jugador, int color) {
+		ItemStack item = new ItemStack(Material.LEATHER_HELMET, 1);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 		if (meta != null) {
 			meta.setColor(Color.fromRGB(color));
@@ -519,7 +518,7 @@ public class PartidaManager {
 		}
 		jugador.getInventory().setHelmet(item);
 
-		item = new ItemStack(Material.LEATHER_CHESTPLATE,1);
+		item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
 		meta = (LeatherArmorMeta) item.getItemMeta();
 		if (meta != null) {
 			meta.setColor(Color.fromRGB(color));
@@ -527,7 +526,7 @@ public class PartidaManager {
 		}
 		jugador.getInventory().setChestplate(item);
 
-		item = new ItemStack(Material.LEATHER_LEGGINGS,1);
+		item = new ItemStack(Material.LEATHER_LEGGINGS, 1);
 		meta = (LeatherArmorMeta) item.getItemMeta();
 		if (meta != null) {
 			meta.setColor(Color.fromRGB(color));
@@ -535,7 +534,7 @@ public class PartidaManager {
 		}
 		jugador.getInventory().setLeggings(item);
 
-		item = new ItemStack(Material.LEATHER_BOOTS,1);
+		item = new ItemStack(Material.LEATHER_BOOTS, 1);
 		meta = (LeatherArmorMeta) item.getItemMeta();
 		if (meta != null) {
 			meta.setColor(Color.fromRGB(color));
@@ -544,52 +543,52 @@ public class PartidaManager {
 		jugador.getInventory().setBoots(item);
 	}
 
-	public static void setBolasDeNieve(JugadorPaintball j,FileConfiguration config) {
-		for(int i=0;i<=7;i++) {
+	public static void setBolasDeNieve(JugadorPaintball j, FileConfiguration config) {
+		for (int i = 0; i <= 7; i++) {
 			j.getJugador().getInventory().setItem(i, null);
 		}
-		for(int i=9;i<=35;i++) {
+		for (int i = 9; i <= 35; i++) {
 			j.getJugador().getInventory().setItem(i, null);
 		}
 		int amount = Integer.parseInt(config.getString("initial_snowballs", "0"));
 		ItemStack item;
 		String selectedHat = j.getSelectedHat();
-		if(!UtilidadesOtros.isLegacy()) {
-			if(selectedHat.equals("chicken_hat")) {
-				item = new ItemStack(Material.EGG,1);
-			}else {
-				item = new ItemStack(Material.SNOWBALL,1);
+		if (!UtilidadesOtros.isLegacy()) {
+			if (selectedHat.equals("chicken_hat")) {
+				item = new ItemStack(Material.EGG, 1);
+			} else {
+				item = new ItemStack(Material.SNOWBALL, 1);
 			}
-		}else {
-			if(selectedHat.equals("chicken_hat")) {
-				item = new ItemStack(Material.EGG,1);
-			}else {
-				item = new ItemStack(Material.valueOf("SNOW_BALL"),1);
+		} else {
+			if (selectedHat.equals("chicken_hat")) {
+				item = new ItemStack(Material.EGG, 1);
+			} else {
+				item = new ItemStack(Material.valueOf("SNOW_BALL"), 1);
 			}
 		}
 
-		for(int i=0;i<amount;i++) {
+		for (int i = 0; i < amount; i++) {
 			j.getJugador().getInventory().addItem(item);
 		}
 	}
 
 	public static void lanzarFuegos(ArrayList<JugadorPaintball> jugadores) {
-		for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			Firework fw = (Firework) j.getJugador().getWorld().spawnEntity(j.getJugador().getLocation(), EntityType.FIREWORK_ROCKET);
 			FireworkMeta fwm = fw.getFireworkMeta();
-            Type type = Type.BALL;
-            Color c1 = Color.RED;
-            Color c2 = Color.AQUA;
-            FireworkEffect efecto = FireworkEffect.builder().withColor(c1).withFade(c2).with(type).build();
-            fwm.addEffect(efecto);
-            fwm.setPower(2);
-            fw.setFireworkMeta(fwm);
-        }
+			Type type = Type.BALL;
+			Color c1 = Color.RED;
+			Color c2 = Color.AQUA;
+			FireworkEffect efecto = FireworkEffect.builder().withColor(c1).withFade(c2).with(type).build();
+			fwm.addEffect(efecto);
+			fwm.setPower(2);
+			fw.setFireworkMeta(fwm);
+		}
 	}
 
 	public static void teletransportarJugadores(Partida partida) {
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
-		for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			Player p = j.getJugador();
 			Equipo equipo = partida.getEquipoJugador(p.getName());
 			if (equipo != null && equipo.getSpawn() != null) {
@@ -604,15 +603,15 @@ public class PartidaManager {
 		FileConfiguration messages = plugin.getMessages();
 		FileConfiguration config = plugin.getConfig();
 
-		String nameTeam1 = config.getString("teams."+partida.getTeam1().getTipo()+".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
-		String nameTeam2 = config.getString("teams."+partida.getTeam2().getTipo()+".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
+		String nameTeam1 = config.getString("teams." + partida.getTeam1().getTipo() + ".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
+		String nameTeam2 = config.getString("teams." + partida.getTeam2().getTipo() + ".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
 
 		String status;
-		if(ganador == null) {
+		if (ganador == null) {
 			//draw
 			status = messages.getString("gameFinishedTieStatus", "&e&lIt's a tie!");
-		}else {
-			String ganadorTexto = plugin.getConfig().getString("teams."+ganador.getTipo()+".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
+		} else {
+			String ganadorTexto = plugin.getConfig().getString("teams." + ganador.getTipo() + ".name", "&cERROR! CHECK YOUR TEAM CONFIG!");
 			String statusTemplate = messages.getString("gameFinishedWinnerStatus", "&a&l%winner_team% &eTeam have won!");
 			status = statusTemplate.replace("%winner_team%", ganadorTexto);
 		}
@@ -625,25 +624,25 @@ public class PartidaManager {
 		int top2Kills = 0;
 		int top3Kills = 0;
 
-		if(jugadoresKillsOrd.size() == 2) {
+		if (jugadoresKillsOrd.size() == 2) {
 			top1 = jugadoresKillsOrd.get(0).getJugador().getName();
 			top1Kills = jugadoresKillsOrd.get(0).getAsesinatos();
 			top2 = jugadoresKillsOrd.get(1).getJugador().getName();
 			top2Kills = jugadoresKillsOrd.get(1).getAsesinatos();
 			top3 = messages.getString("topKillsNone", "&aNone");
-		}else if(jugadoresKillsOrd.size() == 1) {
+		} else if (jugadoresKillsOrd.size() == 1) {
 			top1 = jugadoresKillsOrd.getFirst().getJugador().getName();
 			top1Kills = jugadoresKillsOrd.getFirst().getAsesinatos();
 			top3 = messages.getString("topKillsNone", "&aNone");
 			top2 = messages.getString("topKillsNone", "&aNone");
-		}else if(jugadoresKillsOrd.size() >= 3) {
+		} else if (jugadoresKillsOrd.size() >= 3) {
 			top1 = jugadoresKillsOrd.get(0).getJugador().getName();
 			top1Kills = jugadoresKillsOrd.get(0).getAsesinatos();
 			top2 = jugadoresKillsOrd.get(1).getJugador().getName();
 			top3 = jugadoresKillsOrd.get(2).getJugador().getName();
 			top2Kills = jugadoresKillsOrd.get(1).getAsesinatos();
 			top3Kills = jugadoresKillsOrd.get(2).getAsesinatos();
-		}else {
+		} else {
 			top1 = messages.getString("topKillsNone", "&aNone");
 			top2 = messages.getString("topKillsNone", "&aNone");
 			top3 = messages.getString("topKillsNone", "&aNone");
@@ -651,7 +650,7 @@ public class PartidaManager {
 		}
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		List<String> msg = messages.getStringList("gameFinished");
-		for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			for (String s : msg) {
 				j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', s.replace("%status_message%", status)
 						.replace("%team1%", nameTeam1)
@@ -667,24 +666,24 @@ public class PartidaManager {
 						.replace("%kills_player%", j.getAsesinatos() + "")));
 			}
 			Equipo equipoJugador = partida.getEquipoJugador(j.getJugador().getName());
-			if(MySQL.isEnabled(plugin.getConfig())) {
+			if (MySQL.isEnabled(plugin.getConfig())) {
 				int win = 0;
 				int lose = 0;
 				int tie = 0;
-				if(equipoJugador != null && equipoJugador.equals(ganador)) {
+				if (equipoJugador != null && equipoJugador.equals(ganador)) {
 					win = 1;
 					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("winnerTitleMessage", "&a&lYou've won!"), "");
-				}else if(ganador == null) {
+				} else if (ganador == null) {
 					tie = 1;
 					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("tieTitleMessage", "&9&lIt's a tie!"), "");
-				}else {
+				} else {
 					lose = 1;
 					TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("loserTitleMessage", "&c&lYou've lost!"), "");
 				}
 				//The player's global record is created/modified here.
-				if(!MySQL.jugadorExiste(plugin, j.getJugador().getName())) {
-					MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), "", win, tie, lose, j.getAsesinatos(),0, 1);
-				}else {
+				if (!MySQL.jugadorExiste(plugin, j.getJugador().getName())) {
+					MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), "", win, tie, lose, j.getAsesinatos(), 0, 1);
+				} else {
 					JugadorDatos player = MySQL.getJugador(plugin, j.getJugador().getName());
 					int kills = j.getAsesinatos() + (player != null ? player.getKills() : 0);
 					int wins = (player != null ? player.getWins() : 0) + win;
@@ -693,22 +692,22 @@ public class PartidaManager {
 					MySQL.actualizarJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), wins, loses, ties, kills);
 				}
 				//This record is the one created for monthly and weekly data
-				MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), partida.getNombre(), win, tie, lose, j.getAsesinatos(),0,0);
-			}else {
-				plugin.registerPlayer(j.getJugador().getUniqueId() +".yml");
-				if(plugin.getJugador(j.getJugador().getName()) == null) {
-					plugin.agregarJugadorDatos(new JugadorDatos(j.getJugador().getName(),j.getJugador().getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
+				MySQL.crearJugadorPartidaAsync(plugin, j.getJugador().getUniqueId().toString(), j.getJugador().getName(), partida.getNombre(), win, tie, lose, j.getAsesinatos(), 0, 0);
+			} else {
+				plugin.registerPlayer(j.getJugador().getUniqueId() + ".yml");
+				if (plugin.getJugador(j.getJugador().getName()) == null) {
+					plugin.agregarJugadorDatos(new JugadorDatos(j.getJugador().getName(), j.getJugador().getUniqueId().toString(), 0, 0, 0, 0, 0, new ArrayList<>(), new ArrayList<>()));
 				}
 				JugadorDatos jugador = plugin.getJugador(j.getJugador().getName());
 				Equipo eqJugador = partida.getEquipoJugador(j.getJugador().getName());
-				if(jugador != null) {
-					if(eqJugador != null && eqJugador.equals(ganador)) {
+				if (jugador != null) {
+					if (eqJugador != null && eqJugador.equals(ganador)) {
 						jugador.aumentarWins();
 						TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("winnerTitleMessage", "&a&lYou've won!"), "");
-					}else if(ganador == null) {
+					} else if (ganador == null) {
 						jugador.aumentarTies();
 						TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("tieTitleMessage", "&9&lIt's a tie!"), "");
-					}else {
+					} else {
 						jugador.aumentarLoses();
 						TitleAPI.sendTitle(j.getJugador(), 10, 40, 10, messages.getString("loserTitleMessage", "&c&lYou've lost!"), "");
 					}
@@ -720,37 +719,37 @@ public class PartidaManager {
 			j.getJugador().getInventory().clear();
 
 
-			if("true".equals(config.getString("leave_item_enabled"))) {
+			if ("true".equals(config.getString("leave_item_enabled"))) {
 				ItemStack item = UtilidadesItems.crearItem(config, "leave_item");
 				j.getJugador().getInventory().setItem(8, item);
 			}
-			if("true".equals(config.getString("play_again_item_enabled"))) {
+			if ("true".equals(config.getString("play_again_item_enabled"))) {
 				ItemStack item = UtilidadesItems.crearItem(config, "play_again_item");
 				j.getJugador().getInventory().setItem(7, item);
 			}
 
-			if("false".equals(config.getString("rewards_executed_after_teleport"))) {
-				if(ganador != null) {
-					if(equipoJugador != null && ganador.getTipo() != null && ganador.getTipo().equals(equipoJugador.getTipo())) {
+			if ("false".equals(config.getString("rewards_executed_after_teleport"))) {
+				if (ganador != null) {
+					if (equipoJugador != null && ganador.getTipo() != null && ganador.getTipo().equals(equipoJugador.getTipo())) {
 						List<String> commands = config.getStringList("winners_command_rewards");
-						ejecutarComandosRewards(commands,j);
-					}else {
+						ejecutarComandosRewards(commands, j);
+					} else {
 						List<String> commands = config.getStringList("losers_command_rewards");
-						ejecutarComandosRewards(commands,j);
+						ejecutarComandosRewards(commands, j);
 					}
-				}else {
+				} else {
 					List<String> commands = config.getStringList("tie_command_rewards");
-					ejecutarComandosRewards(commands,j);
+					ejecutarComandosRewards(commands, j);
 				}
 			}
 		}
 
 		int time = Integer.parseInt(config.getString("arena_ending_phase_cooldown", "0"));
 		CooldownManager c = new CooldownManager(plugin);
-		c.cooldownFaseFinalizacion(partida,time,ganador);
+		c.cooldownFaseFinalizacion(partida, time, ganador);
 	}
 
-	public static void ejecutarComandosRewards(List<String> commands,JugadorPaintball j) {
+	public static void ejecutarComandosRewards(List<String> commands, JugadorPaintball j) {
 		CommandSender console = Bukkit.getServer().getConsoleSender();
 		for (String command : commands) {
 			if (command.startsWith("msg %player%")) {
@@ -780,34 +779,34 @@ public class PartidaManager {
 			}
 		}
 	}
-	
+
 	public static void finalizarPartida(Partida partida, BetterPaintballSystem plugin, boolean cerrandoServer, Equipo ganadorEquipo) {
 		FileConfiguration config = plugin.getConfig();
 		ArrayList<JugadorPaintball> jugadores = partida.getJugadores();
 		//Remove scoreboards for all players
-	for(JugadorPaintball j : jugadores) {
+		for (JugadorPaintball j : jugadores) {
 			String tipoFin;
-			if(ganadorEquipo != null) {
+			if (ganadorEquipo != null) {
 				Equipo equipoJugador = partida.getEquipoJugador(j.getJugador().getName());
-				if(ganadorEquipo.getTipo().equals(equipoJugador.getTipo())) {
+				if (equipoJugador != null && ganadorEquipo.getTipo() != null && ganadorEquipo.getTipo().equals(equipoJugador.getTipo())) {
 					tipoFin = "ganador";
-				}else {
+				} else {
 					tipoFin = "perdedor";
 				}
-			}else {
+			} else {
 				tipoFin = "empate";
 			}
-			jugadorSale(partida, j.getJugador(),true,plugin,cerrandoServer);
-			if(config.getString("rewards_executed_after_teleport").equals("true") && !cerrandoServer) {
-				if(tipoFin.equals("ganador")) {
+			jugadorSale(partida, j.getJugador(), true, plugin, cerrandoServer);
+			if ("true".equals(config.getString("rewards_executed_after_teleport")) && !cerrandoServer) {
+				if (tipoFin.equals("ganador")) {
 					List<String> commands = config.getStringList("winners_command_rewards");
-					ejecutarComandosRewards(commands,j);
-				}else if(tipoFin.equals("perdedor")) {
+					ejecutarComandosRewards(commands, j);
+				} else if (tipoFin.equals("perdedor")) {
 					List<String> commands = config.getStringList("losers_command_rewards");
-					ejecutarComandosRewards(commands,j);
-				}else {
+					ejecutarComandosRewards(commands, j);
+				} else {
 					List<String> commands = config.getStringList("tie_command_rewards");
-					ejecutarComandosRewards(commands,j);
+					ejecutarComandosRewards(commands, j);
 				}
 			}
 		}
@@ -815,185 +814,211 @@ public class PartidaManager {
 		partida.getTeam2().setVidas(0);
 		partida.setEnNuke(false);
 		partida.modificarTeams(config);
-		
+
 		partida.setEstado(EstadoPartida.ESPERANDO);
 	}
-	
-	public static void muereJugador(Partida partida, JugadorPaintball jugadorAtacante, final JugadorPaintball jugadorDañado, BetterPaintballSystem plugin, boolean lightning, boolean nuke) {
-		if(jugadorDañado.haSidoAsesinadoRecientemente()) {
+
+	public static void muereJugador(Partida partida, JugadorPaintball jugadorAtacante, final JugadorPaintball jugadorDanado, BetterPaintballSystem plugin, boolean lightning, boolean nuke) {
+		if (jugadorDanado.haSidoAsesinadoRecientemente()) {
 			return;
 		}
-		if(jugadorDañado.getSelectedHat().equals("guardian_hat") && jugadorDañado.isEfectoHatActivado()) {
+		String selectedHatDanado = jugadorDanado.getSelectedHat();
+		if (selectedHatDanado.equals("guardian_hat") && jugadorDanado.isEfectoHatActivado()) {
 			return;
 		}
-		if(jugadorDañado.getSelectedHat().equals("protector_hat")) {
+		if (selectedHatDanado.equals("protector_hat")) {
 			Random r = new Random();
 			int num = r.nextInt(100);
-			if(num >= 80) {
+			if (num >= 80) {
 				return;
 			}
 		}
-		
-		Equipo equipoDañado = partida.getEquipoJugador(jugadorDañado.getJugador().getName());
+
+		Equipo equipoDanado = partida.getEquipoJugador(jugadorDanado.getJugador().getName());
 		Equipo equipoAtacante = partida.getEquipoJugador(jugadorAtacante.getJugador().getName());
-		if(equipoDañado.equals(equipoAtacante)) {
+		if (equipoDanado != null && equipoDanado.equals(equipoAtacante)) {
 			return;
 		}
-		
-		if(lightning) {
-			jugadorDañado.getJugador().getWorld().strikeLightningEffect(jugadorDañado.getJugador().getLocation());
+
+		if (lightning) {
+			jugadorDanado.getJugador().getWorld().strikeLightningEffect(jugadorDanado.getJugador().getLocation());
 		}
 		FileConfiguration messages = plugin.getMessages();
 		FileConfiguration config = plugin.getConfig();
-		jugadorDañado.aumentarMuertes();
-		jugadorDañado.setDeathLocation(jugadorDañado.getJugador().getLocation().clone());
-		jugadorDañado.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("killedBy").replace("%player%", jugadorAtacante.getJugador().getName())));
-		String[] separados = config.getString("killedBySound").split(";");
-		try {
-			Sound sound = ValueOfPatch.valueOf(separados[0]);
-			jugadorDañado.getJugador().playSound(jugadorDañado.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
-		}catch(Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
+		jugadorDanado.aumentarMuertes();
+		jugadorDanado.setDeathLocation(jugadorDanado.getJugador().getLocation().clone());
+		String killedByMsg = messages.getString("killedBy", "&cYou have been killed by &6%player%&c.");
+		jugadorDanado.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', killedByMsg.replace("%player%", jugadorAtacante.getJugador().getName())));
+
+		String soundKilledBy = config.getString("killedBySound", "block.note_block.pling;10;0.1");
+		String[] separados = soundKilledBy.split(";");
+		if (separados.length >= 3) {
+			try {
+				Sound sound = ValueOfPatch.valueOf(separados[0]);
+				jugadorDanado.getJugador().playSound(jugadorDanado.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
+			} catch (Exception ex) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix + "&7Sound Name: &c" + separados[0] + " &7is not valid."));
+			}
 		}
-		jugadorDañado.setAsesinadoRecientemente(true);
-		jugadorDañado.setLastKilledBy(jugadorAtacante.getJugador().getName());
-		equipoDañado.disminuirVidas(1);
-		
-		Equipo equipo = partida.getEquipoJugador(jugadorDañado.getJugador().getName());
-		if(jugadorDañado.getSelectedHat().equals("explosive_hat")) {
+		jugadorDanado.setAsesinadoRecientemente(true);
+		jugadorDanado.setLastKilledBy(jugadorAtacante.getJugador().getName());
+		if (equipoDanado != null) {
+			equipoDanado.disminuirVidas(1);
+		}
+
+		Equipo equipo = partida.getEquipoJugador(jugadorDanado.getJugador().getName());
+		if (selectedHatDanado.equals("explosive_hat")) {
 			Random r = new Random();
 			int num = r.nextInt(100);
-			if(num >= 80) {
-				if(Bukkit.getVersion().contains("1.8")) {
-					jugadorDañado.getJugador().getWorld().playEffect(jugadorDañado.getJugador().getLocation(), Effect.valueOf("EXPLOSION_LARGE"), 2);
-				}else {
-					jugadorDañado.getJugador().getWorld().spawnParticle(Particle.EXPLOSION,jugadorDañado.getJugador().getLocation(),2);
+			if (num >= 80) {
+				if (Bukkit.getVersion().contains("1.8")) {
+					jugadorDanado.getJugador().getWorld().playEffect(jugadorDanado.getJugador().getLocation(), Effect.valueOf("EXPLOSION_LARGE"), 2);
+				} else {
+					jugadorDanado.getJugador().getWorld().spawnParticle(Particle.EXPLOSION, jugadorDanado.getJugador().getLocation(), 2);
 				}
-				separados = config.getString("explosiveHatSound").split(";");
-				try {
-					Sound sound = ValueOfPatch.valueOf(separados[0]);
-					jugadorDañado.getJugador().getWorld().playSound(jugadorDañado.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
-				}catch(Exception ex) {
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
+				String soundExplosive = config.getString("explosiveHatSound", "entity.generic.explode;10;1");
+				separados = soundExplosive.split(";");
+				if (separados.length >= 3) {
+					try {
+						Sound sound = ValueOfPatch.valueOf(separados[0]);
+						jugadorDanado.getJugador().getWorld().playSound(jugadorDanado.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
+					} catch (Exception ex) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix + "&7Sound Name: &c" + separados[0] + " &7is not valid."));
+					}
 				}
-				Collection<Entity> entidades = jugadorDañado.getJugador().getWorld().getNearbyEntities(jugadorDañado.getJugador().getLocation(), 5, 5, 5);
-				for(Entity e : entidades) {
-					if(e != null && e.getType().equals(EntityType.PLAYER)) {
+				Collection<Entity> entidades = jugadorDanado.getJugador().getWorld().getNearbyEntities(jugadorDanado.getJugador().getLocation(), 5, 5, 5);
+				for (Entity e : entidades) {
+					if (e != null && e.getType().equals(EntityType.PLAYER)) {
 						Player player = (Player) e;
-						JugadorPaintball jugadorDañado2 = partida.getJugador(player.getName());
-						if(jugadorDañado2 != null) {
-							PartidaManager.muereJugador(partida, jugadorDañado, jugadorDañado2, plugin, false, false);
+						JugadorPaintball jugadorDanado2 = partida.getJugador(player.getName());
+						if (jugadorDanado2 != null) {
+							PartidaManager.muereJugador(partida, jugadorDanado, jugadorDanado2, plugin, false, false);
 						}
 					}
 				}
 			}
 		}
-		jugadorDañado.getJugador().teleport(equipo.getSpawn());
-		if(!UtilidadesOtros.isLegacy()) {
-			if(jugadorDañado.getSelectedHat().equals("chicken_hat")) {
-				jugadorDañado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
-			}else {
-				jugadorDañado.getJugador().getInventory().removeItem(new ItemStack(Material.SNOWBALL));
+		if (equipo != null && equipo.getSpawn() != null) {
+			jugadorDanado.getJugador().teleport(equipo.getSpawn());
+		}
+		if (!UtilidadesOtros.isLegacy()) {
+			if (selectedHatDanado.equals("chicken_hat")) {
+				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
+			} else {
+				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.SNOWBALL));
 			}
-		}else {
-			if(jugadorDañado.getSelectedHat().equals("chicken_hat")) {
-				jugadorDañado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
-			}else {
-				jugadorDañado.getJugador().getInventory().removeItem(new ItemStack(Material.valueOf("SNOW_BALL")));
+		} else {
+			if (selectedHatDanado.equals("chicken_hat")) {
+				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
+			} else {
+				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.valueOf("SNOW_BALL")));
 			}
 		}
-		PartidaManager.setBolasDeNieve(jugadorDañado,config);
-			
+		PartidaManager.setBolasDeNieve(jugadorDanado, config);
+
 		jugadorAtacante.aumentarAsesinatos();
 		int cantidadCoinsGanados = UtilidadesOtros.coinsGanados(jugadorAtacante.getJugador(), config);
 		int nivelExtraKillCoins = PaintballAPI.getPerkLevel(jugadorAtacante.getJugador(), "extra_killcoins");
-		if(nivelExtraKillCoins != 0) {
-			String linea = plugin.getShop().getStringList("perks_upgrades.extra_killcoins").get(nivelExtraKillCoins-1);
-			String[] sep = linea.split(";");
-			int cantidad = Integer.parseInt(sep[0]);
-			cantidadCoinsGanados = cantidadCoinsGanados+cantidad;
+		if (nivelExtraKillCoins != 0) {
+			List<String> perks = plugin.getShop().getStringList("perks_upgrades.extra_killcoins");
+			if (nivelExtraKillCoins - 1 < perks.size()) {
+				String linea = perks.get(nivelExtraKillCoins - 1);
+				String[] sep = linea.split(";");
+				if (sep.length > 0) {
+					int cantidad = Integer.parseInt(sep[0]);
+					cantidadCoinsGanados = cantidadCoinsGanados + cantidad;
+				}
+			}
 		}
 		String lastKilledBy = jugadorAtacante.getLastKilledBy();
-		if(lastKilledBy != null && lastKilledBy.equals(jugadorDañado.getJugador().getName())) {
-			cantidadCoinsGanados = cantidadCoinsGanados+1;
+		if (lastKilledBy != null && lastKilledBy.equals(jugadorDanado.getJugador().getName())) {
+			cantidadCoinsGanados = cantidadCoinsGanados + 1;
 		}
 		jugadorAtacante.agregarCoins(cantidadCoinsGanados);
-		UtilidadesItems.crearItemKillstreaks(jugadorAtacante,config);
-		
-		if(nuke) {
-			String equipoAtacanteName = config.getString("teams."+equipoAtacante.getTipo()+".name");
-			String equipoDañadoName = config.getString("teams."+equipoDañado.getTipo()+".name");
-			for(JugadorPaintball j : partida.getJugadores()) {
-				if(!j.getJugador().getName().equals(jugadorAtacante.getJugador().getName())) {
-					j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("nukeKillMessage").replace("%team_player1%", equipoDañadoName)
-							.replace("%player1%", jugadorDañado.getJugador().getName()).replace("%team_player2%", equipoAtacanteName)
+		UtilidadesItems.crearItemKillstreaks(jugadorAtacante, config);
+
+		if (nuke) {
+			String tipoAtacante = equipoAtacante != null ? equipoAtacante.getTipo() : "";
+			String tipoDanado = equipoDanado != null ? equipoDanado.getTipo() : "";
+			String equipoAtacanteName = config.getString("teams." + tipoAtacante + ".name", "ERROR! CHECK YOUR TEAM CONFIG!");
+			String equipoDanadoName = config.getString("teams." + tipoDanado + ".name", "ERROR! CHECK YOUR TEAM CONFIG!");
+			String nukeMsg = messages.getString("nukeKillMessage", "&8[&7%team_player1%&8] &a%player1% &ewas nuked by &8[&7%team_player2%&8] &a%player2%");
+			for (JugadorPaintball j : partida.getJugadores()) {
+				if (!j.getJugador().getName().equals(jugadorAtacante.getJugador().getName())) {
+					j.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', nukeMsg.replace("%team_player1%", equipoDanadoName)
+							.replace("%player1%", jugadorDanado.getJugador().getName()).replace("%team_player2%", equipoAtacanteName)
 							.replace("%player2%", jugadorAtacante.getJugador().getName())));
-				}	
+				}
 			}
 		}
-		jugadorAtacante.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', messages.getString("kill").replace("%player%", jugadorDañado.getJugador().getName())));
-		if(!nuke) {
-			separados = config.getString("killSound").split(";");
-			try {
-				Sound sound = ValueOfPatch.valueOf(separados[0]);
-				jugadorAtacante.getJugador().playSound(jugadorAtacante.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
-			}catch(Exception ex) {
-				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix+"&7Sound Name: &c"+separados[0]+" &7is not valid."));
+		String killMsg = messages.getString("kill", "&aYou have killed &6%player%&a.");
+		jugadorAtacante.getJugador().sendMessage(ChatColor.translateAlternateColorCodes('&', killMsg.replace("%player%", jugadorDanado.getJugador().getName())));
+		if (!nuke) {
+			String soundKill = config.getString("killSound", "entity.firework_rocket.blast;10;2");
+			separados = soundKill.split(";");
+			if (separados.length >= 3) {
+				try {
+					Sound sound = ValueOfPatch.valueOf(separados[0]);
+					jugadorAtacante.getJugador().playSound(jugadorAtacante.getJugador().getLocation(), sound, Float.parseFloat(separados[1]), Float.parseFloat(separados[2]));
+				} catch (Exception ex) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix + "&7Sound Name: &c" + separados[0] + " &7is not valid."));
+				}
 			}
 		}
-		
-		
-		int snowballs = Integer.parseInt(config.getString("snowballs_per_kill"));
-		if(!UtilidadesOtros.isLegacy()) {
-			if(jugadorAtacante.getSelectedHat().equals("chicken_hat")) {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG,snowballs));
-			}else {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.SNOWBALL,snowballs));
+
+
+		int snowballs = Integer.parseInt(config.getString("snowballs_per_kill", "0"));
+		String selectedHatAtacante = jugadorAtacante.getSelectedHat();
+		if (!UtilidadesOtros.isLegacy()) {
+			if (selectedHatAtacante.equals("chicken_hat")) {
+				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG, snowballs));
+			} else {
+				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.SNOWBALL, snowballs));
 			}
-			
-		}else {
-			if(jugadorAtacante.getSelectedHat().equals("chicken_hat")) {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG,snowballs));
-			}else {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.valueOf("SNOW_BALL"),snowballs));
+
+		} else {
+			if (selectedHatAtacante.equals("chicken_hat")) {
+				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG, snowballs));
+			} else {
+				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.valueOf("SNOW_BALL"), snowballs));
 			}
-			
+
 		}
-		
-		if(equipoDañado.getVidas() <= 0) {
-			//terminar partida
+
+		if (equipoDanado != null && equipoDanado.getVidas() <= 0) {
+			//end game
 			PartidaManager.iniciarFaseFinalizacion(partida, plugin);
 			return;
 		}
-			
-		int invulnerability = Integer.parseInt(config.getString("respawn_invulnerability"));
+
+		int invulnerability = Integer.parseInt(config.getString("respawn_invulnerability", "0"));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				jugadorDañado.setAsesinadoRecientemente(false);
+				jugadorDanado.setAsesinadoRecientemente(false);
 			}
-		}, invulnerability*20L);
+		}, invulnerability * 20L);
 	}
-	
+
 	public static Partida getPartidaDisponible(BetterPaintballSystem plugin) {
 		ArrayList<Partida> partidas = plugin.getPartidas();
 		ArrayList<Partida> disponibles = new ArrayList<>();
-        for (Partida partida : partidas) {
-            if (partida.getEstado().equals(EstadoPartida.ESPERANDO) ||
-                    partida.getEstado().equals(EstadoPartida.COMENZANDO)) {
-                if (!partida.estaLlena()) {
-                    disponibles.add(partida);
-                }
-            }
-        }
-		
-		if(disponibles.isEmpty()) {
+		for (Partida partida : partidas) {
+			if (partida.getEstado().equals(EstadoPartida.ESPERANDO) ||
+					partida.getEstado().equals(EstadoPartida.COMENZANDO)) {
+				if (!partida.estaLlena()) {
+					disponibles.add(partida);
+				}
+			}
+		}
+
+		if (disponibles.isEmpty()) {
 			return null;
 		}
-		
-		//Ordenar
-		for(int i=0;i<disponibles.size();i++) {
-			for(int c=i+1;c<disponibles.size();c++) {
-				if(disponibles.get(i).getCantidadActualJugadores() < disponibles.get(c).getCantidadActualJugadores()) {
+
+		//sort
+		for (int i = 0; i < disponibles.size(); i++) {
+			for (int c = i + 1; c < disponibles.size(); c++) {
+				if (disponibles.get(i).getCantidadActualJugadores() < disponibles.get(c).getCantidadActualJugadores()) {
 					Partida p = disponibles.get(i);
 					disponibles.set(i, disponibles.get(c));
 					disponibles.set(c, p);
