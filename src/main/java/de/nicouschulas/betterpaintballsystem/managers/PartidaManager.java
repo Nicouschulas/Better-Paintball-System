@@ -730,14 +730,14 @@ public class PartidaManager {
 
 			if ("false".equals(config.getString("rewards_executed_after_teleport"))) {
 				if (ganador != null) {
-					if (equipoJugador != null && ganador.getTipo() != null && ganador.getTipo().equals(equipoJugador.getTipo())) {
-						List<String> commands = config.getStringList("winners_command_rewards");
-						ejecutarComandosRewards(commands, j);
-					} else {
-						List<String> commands = config.getStringList("losers_command_rewards");
-						ejecutarComandosRewards(commands, j);
-					}
-				} else {
+                    List<String> commands;
+                    if (equipoJugador != null && ganador.getTipo() != null && ganador.getTipo().equals(equipoJugador.getTipo())) {
+                        commands = config.getStringList("winners_command_rewards");
+                    } else {
+                        commands = config.getStringList("losers_command_rewards");
+                    }
+                    ejecutarComandosRewards(commands, j);
+                } else {
 					List<String> commands = config.getStringList("tie_command_rewards");
 					ejecutarComandosRewards(commands, j);
 				}
