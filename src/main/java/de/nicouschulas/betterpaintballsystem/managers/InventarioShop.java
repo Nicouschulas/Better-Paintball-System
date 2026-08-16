@@ -83,36 +83,47 @@ public class InventarioShop implements Listener{
 			}
 		}
 	}
-	
+
 	public static void crearInventarioPerks(Player jugador, BetterPaintballSystem plugin) {
 		FileConfiguration shop = plugin.getShop();
 		FileConfiguration config = plugin.getConfig();
-		Inventory inv = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', shop.getString("shopPerksInventoryTitle")));
-		for(String key : shop.getConfigurationSection("perks_items").getKeys(false)) {
-			ItemStack item = UtilidadesItems.crearItem(shop, "perks_items."+key);
-			if(key.equals("coins_info")) {
-				ItemMeta meta = item.getItemMeta();
-				if(config.getString("economy_used").equals("vault")) {
-					Economy econ = plugin.getEconomy();
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) econ.getBalance(jugador)+"")));
-				}else if(config.getString("economy_used").equals("token_manager")) {
-					TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", tokenManager.getTokens(jugador).orElse(0)+"")));
-				}
-				else {
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) PaintballAPI.getCoins(jugador)+"")));
-				}
+		String title = shop.getString("shopPerksInventoryTitle", "");
+		Inventory inv = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
 
-				item.setItemMeta(meta);
-			}
-			if(shop.contains("perks_items."+key+".slot")) {
-				int slot = Integer.parseInt(shop.getString("perks_items."+key+".slot"));
-				if(slot != - 1) {
-					inv.setItem(slot, item);
+		ConfigurationSection perksItems = shop.getConfigurationSection("perks_items");
+		if (perksItems != null) {
+			for(String key : perksItems.getKeys(false)) {
+				ItemStack item = UtilidadesItems.crearItem(shop, "perks_items."+key);
+				if(key.equals("coins_info")) {
+					ItemMeta meta = item.getItemMeta();
+					if (meta != null) {
+						String ecoUsed = config.getString("economy_used", "");
+                        meta.getDisplayName();
+                        String displayName = meta.getDisplayName();
+						if("vault".equals(ecoUsed)) {
+							Economy econ = plugin.getEconomy();
+							int coins = econ != null ? (int) econ.getBalance(jugador) : 0;
+							meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%coins%", coins + "")));
+						}else if("token_manager".equals(ecoUsed)) {
+							TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
+							int tokens = Math.toIntExact(tokenManager != null ? tokenManager.getTokens(jugador).orElse(0) : 0);
+							meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%coins%", tokens + "")));
+						}else {
+							meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%coins%", PaintballAPI.getCoins(jugador) + "")));
+						}
+
+						item.setItemMeta(meta);
+					}
+				}
+				if(shop.contains("perks_items."+key+".slot")) {
+					int slot = Integer.parseInt(shop.getString("perks_items."+key+".slot", "-1"));
+					if(slot != -1) {
+						inv.setItem(slot, item);
+					}
 				}
 			}
-				
 		}
+
 		ItemStack item = UtilidadesItems.crearItem(shop, "perks_items.decorative_item");
 		for(int i=0;i<=8;i++) {
 			inv.setItem(i, item);
@@ -120,7 +131,7 @@ public class InventarioShop implements Listener{
 		for(int i=36;i<=44;i++) {
 			inv.setItem(i, item);
 		}
-		
+
 		int levelExtraLives = PaintballAPI.getPerkLevel(jugador, "extra_lives");
 		List<String> lista = shop.getStringList("perks_upgrades.extra_lives");
 		for(int i=0;i<lista.size();i++) {
@@ -130,19 +141,27 @@ public class InventarioShop implements Listener{
 				item = UtilidadesItems.crearItem(shop, "perks_items.extra_lives_bought_perk_item");
 			}
 			ItemMeta meta = item.getItemMeta();
-			String[] separados = lista.get(i).split(";");
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%name%", separados[2])));
-			List<String> lore = meta.getLore();
-            lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
-			meta.setLore(lore);
-			item.setItemMeta(meta);
+			if (meta != null) {
+				String[] separados = lista.get(i).split(";");
+				if (separados.length >= 3) {
+                    meta.getDisplayName();
+                    String displayName = meta.getDisplayName();
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%name%", separados[2])));
+					List<String> lore = meta.getLore();
+					if (lore != null) {
+						lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
+						meta.setLore(lore);
+					}
+					item.setItemMeta(meta);
+				}
+			}
 			inv.setItem(9+i, item);
-			
+
 			if(i==8) {
 				break;
 			}
 		}
-		
+
 		int levelInitialKillcoins = PaintballAPI.getPerkLevel(jugador, "initial_killcoins");
 		lista = shop.getStringList("perks_upgrades.initial_killcoins");
 		for(int i=0;i<lista.size();i++) {
@@ -152,19 +171,27 @@ public class InventarioShop implements Listener{
 				item = UtilidadesItems.crearItem(shop, "perks_items.initial_killcoins_bought_perk_item");
 			}
 			ItemMeta meta = item.getItemMeta();
-			String[] separados = lista.get(i).split(";");
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%name%", separados[2])));
-			List<String> lore = meta.getLore();
-            lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
-			meta.setLore(lore);
-			item.setItemMeta(meta);
+			if (meta != null) {
+				String[] separados = lista.get(i).split(";");
+				if (separados.length >= 3) {
+                    meta.getDisplayName();
+                    String displayName = meta.getDisplayName();
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%name%", separados[2])));
+					List<String> lore = meta.getLore();
+					if (lore != null) {
+						lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
+						meta.setLore(lore);
+					}
+					item.setItemMeta(meta);
+				}
+			}
 			inv.setItem(18+i, item);
-			
+
 			if(i==8) {
 				break;
 			}
 		}
-		
+
 		int levelExtraKillcoins = PaintballAPI.getPerkLevel(jugador, "extra_killcoins");
 		lista = shop.getStringList("perks_upgrades.extra_killcoins");
 		for(int i=0;i<lista.size();i++) {
@@ -172,21 +199,28 @@ public class InventarioShop implements Listener{
 				item = UtilidadesItems.crearItem(shop, "perks_items.extra_killcoins_perk_item");
 			}else {
 				item = UtilidadesItems.crearItem(shop, "perks_items.extra_killcoins_bought_perk_item");
-			}	
+			}
 			ItemMeta meta = item.getItemMeta();
-			String[] separados = lista.get(i).split(";");
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%name%", separados[2])));
-			List<String> lore = meta.getLore();
-            lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
-			meta.setLore(lore);
-			item.setItemMeta(meta);
+			if (meta != null) {
+				String[] separados = lista.get(i).split(";");
+				if (separados.length >= 3) {
+					String displayName = meta.getDisplayName() != null ? meta.getDisplayName() : "";
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%name%", separados[2])));
+					List<String> lore = meta.getLore();
+					if (lore != null) {
+						lore.replaceAll(s -> s.replace("%amount%", separados[0]).replace("%cost%", separados[1]));
+						meta.setLore(lore);
+					}
+					item.setItemMeta(meta);
+				}
+			}
 			inv.setItem(27+i, item);
-			
+
 			if(i==8) {
 				break;
 			}
 		}
-		
+
 		jugador.openInventory(inv);
 	}
 	
