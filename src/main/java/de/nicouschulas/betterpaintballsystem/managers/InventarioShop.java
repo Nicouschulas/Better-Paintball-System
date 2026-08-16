@@ -97,7 +97,7 @@ public class InventarioShop implements Listener{
 				item.setItemMeta(meta);
 			}
 			if(shop.contains("perks_items."+key+".slot")) {
-				int slot = Integer.valueOf(shop.getString("perks_items."+key+".slot"));
+				int slot = Integer.parseInt(shop.getString("perks_items."+key+".slot"));
 				if(slot != - 1) {
 					inv.setItem(slot, item);
 				}
@@ -309,7 +309,7 @@ public class InventarioShop implements Listener{
 					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", tokenManager.getTokens(jugador).orElse(0)+"")));
 				}
 				else {
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) PaintballAPI.getCoins(jugador)+"")));
+					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", PaintballAPI.getCoins(jugador) +"")));
 				}
 
 				item.setItemMeta(meta);
@@ -373,7 +373,7 @@ public class InventarioShop implements Listener{
                                     jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatErrorBought")));
                                     return;
                                 }
-                                int cost = Integer.valueOf(shop.getString("hats_items."+key+".cost"));
+                                int cost = Integer.parseInt(shop.getString("hats_items."+key+".cost"));
                                 double dinero;
                                 if(config.getString("economy_used").equals("vault")) {
                                     Economy econ = plugin.getEconomy();
