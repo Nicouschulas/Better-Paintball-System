@@ -422,94 +422,130 @@ public class InventarioShop implements Listener{
 
 		jugador.openInventory(inv);
 	}
-	
+
 	@EventHandler
 	public void clickInventarioHats(InventoryClickEvent event){
 		FileConfiguration shop = plugin.getShop();
-		String pathInventory = ChatColor.translateAlternateColorCodes('&', shop.getString("shopHatsInventoryTitle"));
+		String rawTitle = shop.getString("shopHatsInventoryTitle", "&9Paintball Shop &7- &9Hats");
+		String pathInventory = ChatColor.translateAlternateColorCodes('&', rawTitle);
 		String pathInventoryM = ChatColor.stripColor(pathInventory);
+
 		FileConfiguration messages = plugin.getMessages();
-		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix"))+" ";
-		if(ChatColor.stripColor(event.getView().getTitle()).equals(pathInventoryM)){
+		String rawPrefix = messages.getString("prefix", "&7[&cPaintball&7]");
+		String prefix = ChatColor.translateAlternateColorCodes('&', rawPrefix) + " ";
+
+		String viewTitle = event.getView().getTitle();
+		String strippedViewTitle = ChatColor.stripColor(viewTitle);
+
+		if(pathInventoryM != null && pathInventoryM.equals(strippedViewTitle)){
 			if(event.getCurrentItem() == null){
 				event.setCancelled(true);
 				return;
 			}
-            final Player jugador = (Player) event.getWhoClicked();
-            event.setCancelled(true);
-            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-                FileConfiguration config = plugin.getConfig();
-                if(!event.getCurrentItem().getType().equals(Material.AIR)) {
-                    int slot = event.getSlot();
-                    for(String key : shop.getConfigurationSection("hats_items").getKeys(false)) {
-                        if(key.equals("go_to_menu")) {
-                            if(slot == Integer.parseInt(shop.getString("hats_items."+key+".slot"))) {
-                                InventarioShop.crearInventarioPrincipal(jugador, plugin);
-                                return;
-                            }
-                        }else if(!key.equals("coins_info")) {
-                            if(slot == Integer.parseInt(shop.getString("hats_items."+key+".slot"))) {
-                                if(PaintballAPI.hasHat(jugador, key)) {
-                                    jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatErrorBought")));
-                                    return;
-                                }
-                                int cost = Integer.parseInt(shop.getString("hats_items."+key+".cost"));
-                                double dinero;
-                                if(config.getString("economy_used").equals("vault")) {
-                                    Economy econ = plugin.getEconomy();
-                                    dinero = econ.getBalance(jugador);
-                                    if(dinero < cost) {
-                                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
-                                        return;
-                                    }
-                                    econ.withdrawPlayer(jugador, cost);
-                                }else if(config.getString("economy_used").equals("token_manager")) {
-                                    TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
-                                    float dineroF = tokenManager.getTokens(jugador).orElse(0);
-                                    if(dineroF < cost) {
-                                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
-                                        return;
-                                    }
-                                    tokenManager.removeTokens(jugador, cost);
-                                }
-                                else {
-                                    dinero = PaintballAPI.getCoins(jugador);
-                                    if(dinero < cost) {
-                                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("buyNoSufficientCoins")));
-                                        return;
-                                    }
-                                    PaintballAPI.removeCoins(jugador, cost);
-                                }
+			final Player jugador = (Player) event.getWhoClicked();
+			event.setCancelled(true);
 
-                                if(MySQL.isEnabled(config)) {
-                                    MySQL.agregarJugadorHatAsync(plugin, jugador.getUniqueId().toString(), jugador.getName(), key);
-                                }else {
-                                    plugin.registerPlayer(jugador.getUniqueId() +".yml");
-                                    if(plugin.getJugador(jugador.getName()) == null) {
-                                        plugin.agregarJugadorDatos(new JugadorDatos(jugador.getName(),jugador.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
-                                    }
-                                    JugadorDatos jDatos = plugin.getJugador(jugador.getName());
-                                    jDatos.agregarHat(key);
-                                }
-                                jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("hatBought").replace("%name%", shop.getString("hats_items."+key+".name"))));
-                                String[] separadosSound = config.getString("shopUnlockSound").split(";");
-                                try {
-                                    Sound sound = ValueOfPatch.valueOf(separadosSound[0]);
-                                    jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separadosSound[1]), Float.parseFloat(separadosSound[2]));
-                                }catch(Exception ex) {
-                                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix+"&7Sound Name: &c"+separadosSound[0]+" &7is not valid."));
-                                }
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                    public void run() {
-                                        InventarioShop.crearInventarioHats(jugador, plugin);
-                                    }
-                                }, 5L);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+			if(event.getClickedInventory() != null && event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+				FileConfiguration config = plugin.getConfig();
+				if(!event.getCurrentItem().getType().equals(Material.AIR)) {
+					int slot = event.getSlot();
+					ConfigurationSection hatsSection = shop.getConfigurationSection("hats_items");
+					if (hatsSection != null) {
+						for(String key : hatsSection.getKeys(false)) {
+							String slotStr = shop.getString("hats_items."+key+".slot");
+							if (slotStr == null) continue;
+							int itemSlot = Integer.parseInt(slotStr);
+
+							if("go_to_menu".equals(key)) {
+								if(slot == itemSlot) {
+									InventarioShop.crearInventarioPrincipal(jugador, plugin);
+									return;
+								}
+							}else if(!"coins_info".equals(key)) {
+								if(slot == itemSlot) {
+									if(PaintballAPI.hasHat(jugador, key)) {
+										String hatErrBought = messages.getString("hatErrorBought", "&cYou've already bought that hat!");
+										jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', hatErrBought));
+										return;
+									}
+
+									String costStr = shop.getString("hats_items."+key+".cost", "0");
+									int cost = Integer.parseInt(costStr);
+									double dinero;
+
+									String ecoUsed = config.getString("economy_used", "");
+									String noCoinsMsg = messages.getString("buyNoSufficientCoins", "&cYou don't have enough coins to buy that.");
+									String noCoinsFormatted = ChatColor.translateAlternateColorCodes('&', noCoinsMsg);
+
+									if("vault".equals(ecoUsed)) {
+										Economy econ = plugin.getEconomy();
+										dinero = econ != null ? econ.getBalance(jugador) : 0;
+										if(dinero < cost) {
+											jugador.sendMessage(prefix + noCoinsFormatted);
+											return;
+										}
+										if (econ != null) {
+											econ.withdrawPlayer(jugador, cost);
+										}
+									}else if("token_manager".equals(ecoUsed)) {
+										TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
+										float dineroF = tokenManager != null ? tokenManager.getTokens(jugador).orElse(0) : 0;
+										if(dineroF < cost) {
+											jugador.sendMessage(prefix + noCoinsFormatted);
+											return;
+										}
+										if (tokenManager != null) {
+											tokenManager.removeTokens(jugador, cost);
+										}
+									}
+									else {
+										dinero = PaintballAPI.getCoins(jugador);
+										if(dinero < cost) {
+											jugador.sendMessage(prefix + noCoinsFormatted);
+											return;
+										}
+										PaintballAPI.removeCoins(jugador, cost);
+									}
+
+									if(MySQL.isEnabled(config)) {
+										MySQL.agregarJugadorHatAsync(plugin, jugador.getUniqueId().toString(), jugador.getName(), key);
+									}else {
+										plugin.registerPlayer(jugador.getUniqueId() +".yml");
+										if(plugin.getJugador(jugador.getName()) == null) {
+											plugin.agregarJugadorDatos(new JugadorDatos(jugador.getName(),jugador.getUniqueId().toString(),0,0,0,0,0, new ArrayList<>(), new ArrayList<>()));
+										}
+										JugadorDatos jDatos = plugin.getJugador(jugador.getName());
+										if (jDatos != null) {
+											jDatos.agregarHat(key);
+										}
+									}
+
+									String hatBoughtMsg = messages.getString("hatBought", "&aHat %name% &abought!");
+									String hatName = shop.getString("hats_items."+key+".name", "ERROR! CHECK YOUR HATS CONFIG!");
+									String hatBoughtFormatted = ChatColor.translateAlternateColorCodes('&', hatBoughtMsg.replace("%name%", hatName));
+									jugador.sendMessage(prefix + hatBoughtFormatted);
+
+									String shopSound = config.getString("shopUnlockSound");
+									if (shopSound != null) {
+										String[] separadosSound = shopSound.split(";");
+										if (separadosSound.length >= 3) {
+											try {
+												Sound sound = ValueOfPatch.valueOf(separadosSound[0]);
+												jugador.playSound(jugador.getLocation(), sound, Float.parseFloat(separadosSound[1]), Float.parseFloat(separadosSound[2]));
+											}catch(Exception ex) {
+												Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', BetterPaintballSystem.prefix+"&7Sound Name: &c"+separadosSound[0]+" &7is not valid."));
+											}
+										}
+									}
+
+									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioShop.crearInventarioHats(jugador, plugin), 5L);
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
