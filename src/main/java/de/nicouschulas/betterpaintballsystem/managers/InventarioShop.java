@@ -319,7 +319,7 @@ public class InventarioShop implements Listener{
 										}
 									}
 									String unlockedMsg = messages.getString("perkUnlocked", "&aPerk %name% &aUnlocked!");
-									String unlockedFormatted = ChatColor.translateAlternateColorCodes('&', unlockedMsg != null ? unlockedMsg : "").replace("%name%", separados[2]);
+									String unlockedFormatted = ChatColor.translateAlternateColorCodes('&', unlockedMsg).replace("%name%", separados[2]);
 									jugador.sendMessage(prefix + unlockedFormatted);
 
 									String shopSound = config.getString("shopUnlockSound");
@@ -337,11 +337,11 @@ public class InventarioShop implements Listener{
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioShop.crearInventarioPerks(jugador, plugin), 5L);
 								}else if(slot > slotADesbloquear) {
 									String errPrevMsg = messages.getString("perkErrorPrevious", "");
-									jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', errPrevMsg != null ? errPrevMsg : ""));
+									jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', errPrevMsg));
 									return;
 								}else {
 									String errUnlMsg = messages.getString("perkErrorUnlocked", "");
-									jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', errUnlMsg != null ? errUnlMsg : ""));
+									jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', errUnlMsg));
 									return;
 								}
 
@@ -358,54 +358,68 @@ public class InventarioShop implements Listener{
 			}
 		}
 	}
-	
+
 	public static void crearInventarioHats(Player jugador, BetterPaintballSystem plugin) {
 		FileConfiguration shop = plugin.getShop();
 		FileConfiguration config = plugin.getConfig();
-		Inventory inv = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', shop.getString("shopHatsInventoryTitle")));
-		for(String key : shop.getConfigurationSection("hats_items").getKeys(false)) {
-			ItemStack item = UtilidadesItems.crearItem(shop, "hats_items."+key);
-			if(key.equals("coins_info")) {
-				ItemMeta meta = item.getItemMeta();
-				if(config.getString("economy_used").equals("vault")) {
-					Economy econ = plugin.getEconomy();
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", (int) econ.getBalance(jugador)+"")));
-				}else if(config.getString("economy_used").equals("token_manager")) {
-					TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", tokenManager.getTokens(jugador).orElse(0)+"")));
-				}
-				else {
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName().replace("%coins%", PaintballAPI.getCoins(jugador) +"")));
-				}
+		String title = shop.getString("shopHatsInventoryTitle", "&9Paintball Shop &7- &9Hats");
+		Inventory inv = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
 
-				item.setItemMeta(meta);
-			}else {
-				if(!key.equals("go_to_menu")) {
-					if(PaintballAPI.hasHat(jugador, key)) {
-						ItemMeta meta = item.getItemMeta();
-						List<String> lore = shop.getStringList("hats_items."+key+".bought_lore");
-                        lore.replaceAll(textToTranslate -> ChatColor.translateAlternateColorCodes('&', textToTranslate));
-						meta.setLore(lore);
+		ConfigurationSection hatsItems = shop.getConfigurationSection("hats_items");
+		if (hatsItems != null) {
+			for(String key : hatsItems.getKeys(false)) {
+				ItemStack item = UtilidadesItems.crearItem(shop, "hats_items."+key);
+				if(key.equals("coins_info")) {
+					ItemMeta meta = item.getItemMeta();
+					if (meta != null) {
+						String ecoUsed = config.getString("economy_used", "");
+                        meta.getDisplayName();
+                        String displayName = meta.getDisplayName();
+						if("vault".equals(ecoUsed)) {
+							Economy econ = plugin.getEconomy();
+							int coins = econ != null ? (int) econ.getBalance(jugador) : 0;
+							meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%coins%", coins + "")));
+						}else if("token_manager".equals(ecoUsed)) {
+							TokenManager tokenManager = (TokenManager) Bukkit.getPluginManager().getPlugin("TokenManager");
+							int tokens = Math.toIntExact(tokenManager != null ? tokenManager.getTokens(jugador).orElse(0) : 0);
+							meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%coins%", tokens + "")));
+						}
+						else {
+							meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName.replace("%coins%", PaintballAPI.getCoins(jugador) + "")));
+						}
+
 						item.setItemMeta(meta);
 					}
+				}else {
+					if(!key.equals("go_to_menu")) {
+						if(PaintballAPI.hasHat(jugador, key)) {
+							ItemMeta meta = item.getItemMeta();
+							if (meta != null) {
+								List<String> lore = shop.getStringList("hats_items."+key+".bought_lore");
+								lore.replaceAll(textToTranslate -> ChatColor.translateAlternateColorCodes('&', textToTranslate));
+								meta.setLore(lore);
+								item.setItemMeta(meta);
+							}
+						}
+					}
 				}
-			}
-			
-			if(shop.contains("hats_items."+key+".skull_id")) {
-				String id = shop.getString("hats_items."+key+".skull_id");
-				String textura = shop.getString("hats_items."+key+".skull_texture");
-				item = UtilidadesItems.getCabeza(item, id, textura);
-			}
-			
-			if(shop.contains("hats_items."+key+".slot")) {
-				int slot = Integer.parseInt(shop.getString("hats_items."+key+".slot"));
-				if(slot != - 1) {
-					inv.setItem(slot, item);
+
+				if(shop.contains("hats_items."+key+".skull_id")) {
+					String id = shop.getString("hats_items."+key+".skull_id");
+					String textura = shop.getString("hats_items."+key+".skull_texture");
+					item = UtilidadesItems.getCabeza(item, id, textura);
 				}
+
+				if(shop.contains("hats_items."+key+".slot")) {
+					int slot = Integer.parseInt(shop.getString("hats_items."+key+".slot", "-1"));
+					if(slot != -1) {
+						inv.setItem(slot, item);
+					}
+				}
+
 			}
-				
 		}
-		
+
 		jugador.openInventory(inv);
 	}
 	
