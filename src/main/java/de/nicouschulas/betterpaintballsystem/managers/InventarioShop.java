@@ -7,6 +7,7 @@ import de.nicouschulas.betterpaintballsystem.BetterPaintballSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,47 +33,55 @@ public class InventarioShop implements Listener{
 	public InventarioShop(BetterPaintballSystem plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	public static void crearInventarioPrincipal(Player jugador, BetterPaintballSystem plugin) {
 		FileConfiguration shop = plugin.getShop();
-		Inventory inv = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', shop.getString("shopInventoryTitle")));
-		for(String key : shop.getConfigurationSection("shop_items").getKeys(false)) {
-			ItemStack item = UtilidadesItems.crearItem(shop, "shop_items."+key);
-			int slot = Integer.parseInt(shop.getString("shop_items."+key+".slot"));
-			if(slot != - 1) {
-				inv.setItem(slot, item);
-			}	
+		String title = shop.getString("shopInventoryTitle", "");
+		Inventory inv = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', title));
+		ConfigurationSection shopItems = shop.getConfigurationSection("shop_items");
+		if (shopItems != null) {
+			for(String key : shopItems.getKeys(false)) {
+				ItemStack item = UtilidadesItems.crearItem(shop, "shop_items."+key);
+				int slot = Integer.parseInt(shop.getString("shop_items."+key+".slot", "-1"));
+				if(slot != - 1) {
+					inv.setItem(slot, item);
+				}
+			}
 		}
-		
+
 		jugador.openInventory(inv);
 	}
-	
+
 	@EventHandler
 	public void clickInventarioPrincipal(InventoryClickEvent event){
 		FileConfiguration shop = plugin.getShop();
-		String pathInventory = ChatColor.translateAlternateColorCodes('&', shop.getString("shopInventoryTitle"));
+		String title = shop.getString("shopInventoryTitle", "");
+		String pathInventory = ChatColor.translateAlternateColorCodes('&', title);
 		String pathInventoryM = ChatColor.stripColor(pathInventory);
 		if(ChatColor.stripColor(event.getView().getTitle()).equals(pathInventoryM)){
 			if(event.getCurrentItem() == null){
 				event.setCancelled(true);
 				return;
 			}
-            Player jugador = (Player) event.getWhoClicked();
-            event.setCancelled(true);
-            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-                int slot = event.getSlot();
-                for(String key : shop.getConfigurationSection("shop_items").getKeys(false)) {
-                    if(slot == Integer.parseInt(shop.getString("shop_items."+key+".slot"))) {
-                        if(key.equals("perks_items")) {
-                            crearInventarioPerks(jugador,plugin);
-                        }else if(key.equals("hats_items")) {
-                            crearInventarioHats(jugador,plugin);
-                        }
-                        return;
-                    }
-                }
-            }
-        }
+			Player jugador = (Player) event.getWhoClicked();
+			event.setCancelled(true);
+			if(event.getClickedInventory() != null && event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+				int slot = event.getSlot();
+				ConfigurationSection shopItems = shop.getConfigurationSection("shop_items");
+				if (shopItems != null) {
+					for(String key : shopItems.getKeys(false)) {
+						if(slot == Integer.parseInt(shop.getString("shop_items."+key+".slot", "-1"))) {
+							if(key.equals("perks_items")) {
+								crearInventarioPerks(jugador,plugin);
+							}else if(key.equals("hats_items")) {
+								crearInventarioHats(jugador,plugin);
+							}
+							return;
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	public static void crearInventarioPerks(Player jugador, BetterPaintballSystem plugin) {
