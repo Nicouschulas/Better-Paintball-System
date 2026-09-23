@@ -213,86 +213,92 @@ public class InventarioAdmin implements Listener{
 			plugin.removerPartidaEditando();
 		}
 	}
-	
+
 	@EventHandler
-	public void clickInventario(InventoryClickEvent event){
+	public void clickInventario(InventoryClickEvent event) {
+		if (event.getClickedInventory() == null) {
+			return;
+		}
+
 		String pathInventory = ChatColor.translateAlternateColorCodes('&', "&2Editing Arena:");
 		String pathInventoryM = ChatColor.stripColor(pathInventory);
+
 		FileConfiguration messages = plugin.getMessages();
-		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix"))+" ";
-		if(ChatColor.stripColor(event.getView().getTitle()).contains(pathInventoryM)){
-			if(event.getCurrentItem() == null){
+		String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix", "")) + " ";
+
+		if (ChatColor.stripColor(event.getView().getTitle()).contains(pathInventoryM)) {
+			if (event.getCurrentItem() == null) {
 				event.setCancelled(true);
 				return;
 			}
-            Player jugador = (Player) event.getWhoClicked();
-            event.setCancelled(true);
-            if(event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
-                PartidaEditando partida = plugin.getPartidaEditando();
-                if(partida != null && partida.getJugador().getName().equals(jugador.getName())) {
-                    int slot = event.getSlot();
-                    FileConfiguration config = plugin.getConfig();
-                    if(slot == 10) {
-                        partida.getPartida().setLobby(jugador.getLocation().clone());
-                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("lobbyDefined").replace("%name%", partida.getPartida().getNombre())));
-                        InventarioAdmin.crearInventario(jugador, partida.getPartida(),plugin);
-                    }else if(slot == 11) {
-                        partida.getPartida().getTeam1().setSpawn(jugador.getLocation().clone());
-                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("spawnTeamDefined").replace("%number%", "1").replace("%name%", partida.getPartida().getNombre())));
-                        InventarioAdmin.crearInventario(jugador, partida.getPartida(),plugin);
-                    }else if(slot == 12) {
-                        partida.getPartida().getTeam2().setSpawn(jugador.getLocation().clone());
-                        jugador.sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', messages.getString("spawnTeamDefined").replace("%number%", "2").replace("%name%", partida.getPartida().getNombre())));
-                        InventarioAdmin.crearInventario(jugador, partida.getPartida(),plugin);
-                    }else if(slot == 13) {
-                        jugador.closeInventory();
-                        PartidaEditando p = new PartidaEditando(jugador,partida.getPartida());
-                        p.setPaso("min");
-                        plugin.setPartidaEditando(p);
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite an even number."));
-                    }else if(slot == 14) {
-                        jugador.closeInventory();
-                        PartidaEditando p = new PartidaEditando(jugador,partida.getPartida());
-                        p.setPaso("max");
-                        plugin.setPartidaEditando(p);
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite an even number."));
-                    }else if(slot == 15) {
-                        jugador.closeInventory();
-                        PartidaEditando p = new PartidaEditando(jugador,partida.getPartida());
-                        p.setPaso("team1name");
-                        plugin.setPartidaEditando(p);
-                        String lista = "";
-                        for(String key : config.getConfigurationSection("teams").getKeys(false)) {
-                            lista=lista+key+" ";
-                        }
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite one of these team names: &7random "+lista));
-                    }else if(slot == 16) {
-                        jugador.closeInventory();
-                        PartidaEditando p = new PartidaEditando(jugador,partida.getPartida());
-                        p.setPaso("team2name");
-                        plugin.setPartidaEditando(p);
-                        String lista = "";
-                        for(String key : config.getConfigurationSection("teams").getKeys(false)) {
-                            lista=lista+key+" ";
-                        }
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite one of these team names: &7random "+lista));
-                    }else if(slot == 21) {
-                        jugador.closeInventory();
-                        PartidaEditando p = new PartidaEditando(jugador,partida.getPartida());
-                        p.setPaso("time");
-                        plugin.setPartidaEditando(p);
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite a number. This will be the arena time in seconds."));
-                    }else if(slot == 23) {
-                        jugador.closeInventory();
-                        PartidaEditando p = new PartidaEditando(jugador,partida.getPartida());
-                        p.setPaso("lives");
-                        plugin.setPartidaEditando(p);
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite a number. This will be the amount of starting lives for each team."));
-                    }
-                }
 
-            }
-        }
+			Player jugador = (Player) event.getWhoClicked();
+			event.setCancelled(true);
+
+			if (event.getClickedInventory().equals(jugador.getOpenInventory().getTopInventory())) {
+				PartidaEditando partida = plugin.getPartidaEditando();
+				if (partida != null && partida.getJugador().getName().equals(jugador.getName())) {
+					int slot = event.getSlot();
+					FileConfiguration config = plugin.getConfig();
+
+					if (slot == 10) {
+						partida.getPartida().setLobby(jugador.getLocation().clone());
+						String msg = messages.getString("lobbyDefined", "");
+						jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', msg.replace("%name%", partida.getPartida().getNombre())));
+						InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
+					} else if (slot == 11) {
+						partida.getPartida().getTeam1().setSpawn(jugador.getLocation().clone());
+						String msg = messages.getString("spawnTeamDefined", "");
+						jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', msg.replace("%number%", "1").replace("%name%", partida.getPartida().getNombre())));
+						InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
+					} else if (slot == 12) {
+						partida.getPartida().getTeam2().setSpawn(jugador.getLocation().clone());
+						String msg = messages.getString("spawnTeamDefined", "");
+						jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', msg.replace("%number%", "2").replace("%name%", partida.getPartida().getNombre())));
+						InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
+					} else if (slot == 13) {
+						jugador.closeInventory();
+						PartidaEditando p = new PartidaEditando(jugador, partida.getPartida());
+						p.setPaso("min");
+						plugin.setPartidaEditando(p);
+						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite an even number."));
+					} else if (slot == 14) {
+						jugador.closeInventory();
+						PartidaEditando p = new PartidaEditando(jugador, partida.getPartida());
+						p.setPaso("max");
+						plugin.setPartidaEditando(p);
+						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite an even number."));
+					} else if (slot == 15 || slot == 16) {
+						jugador.closeInventory();
+						PartidaEditando p = new PartidaEditando(jugador, partida.getPartida());
+						p.setPaso(slot == 15 ? "team1name" : "team2name");
+						plugin.setPartidaEditando(p);
+
+						StringBuilder lista = new StringBuilder();
+						org.bukkit.configuration.ConfigurationSection teamsSection = config.getConfigurationSection("teams");
+						if (teamsSection != null) {
+							for (String key : teamsSection.getKeys(false)) {
+								lista.append(key).append(" ");
+							}
+						}
+
+						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite one of these team names: &7random " + lista));
+					} else if (slot == 21) {
+						jugador.closeInventory();
+						PartidaEditando p = new PartidaEditando(jugador, partida.getPartida());
+						p.setPaso("time");
+						plugin.setPartidaEditando(p);
+						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite a number. This will be the arena time in seconds."));
+					} else if (slot == 23) {
+						jugador.closeInventory();
+						PartidaEditando p = new PartidaEditando(jugador, partida.getPartida());
+						p.setPaso("lives");
+						plugin.setPartidaEditando(p);
+						jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aWrite a number. This will be the amount of starting lives for each team."));
+					}
+				}
+			}
+		}
 	}
 	
 	@EventHandler
