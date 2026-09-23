@@ -45,7 +45,6 @@ import de.nicouschulas.betterpaintballsystem.managers.PartidaManager;
 import de.nicouschulas.betterpaintballsystem.managers.ScoreboardAdmin;
 import de.nicouschulas.betterpaintballsystem.managers.TopHologram;
 import de.nicouschulas.betterpaintballsystem.managers.TopHologramAdmin;
-import de.nicouschulas.betterpaintballsystem.utils.ServerVersion;
 
 public class BetterPaintballSystem extends JavaPlugin {
   
@@ -77,15 +76,12 @@ public class BetterPaintballSystem extends JavaPlugin {
 
 	private ConexionDatabase conexionDatabase;
 
-	public static ServerVersion serverVersion;
-
 	public String latestVersion = null;
 	
 	
 	@SuppressWarnings("unused")
 	public void onEnable(){
 	   getLogger().info("BetterPaintballSystem is starting...");
-	   setVersion();
 	   configPlayers = new ArrayList<>();
 	   jugadoresDatos = new ArrayList<>();
 	   topHologramas = new ArrayList<>();
@@ -149,24 +145,6 @@ public class BetterPaintballSystem extends JavaPlugin {
 		}
 
 		getLogger().info("BetterPaintballSystem shutdown successfully!");
-	}
-	
-	public void setVersion(){
-		String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
-		switch(bukkitVersion){
-			case "1.20.5":
-			case "1.20.6":
-				serverVersion = ServerVersion.v1_20_R4;
-				break;
-			case "1.21":
-			case "1.21.1":
-			case "1.21.4":
-			case "1.21.5":	
-				serverVersion = ServerVersion.v1_21_R1;
-				break;
-			default:
-				serverVersion = ServerVersion.detect();
-		}
 	}
 	
 	public void recargarScoreboard() {

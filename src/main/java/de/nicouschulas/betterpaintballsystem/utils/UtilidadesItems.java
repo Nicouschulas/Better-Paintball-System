@@ -1,15 +1,10 @@
 package de.nicouschulas.betterpaintballsystem.utils;
 
-import de.nicouschulas.betterpaintballsystem.BetterPaintballSystem;
-
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,12 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.profile.PlayerTextures;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
@@ -69,7 +59,7 @@ public class UtilidadesItems {
 		} else if (meta != null) {
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
 		}
-		if(meta != null && (Bukkit.getVersion().contains("1.15") || UtilidadesOtros.isNew())) {
+		if(meta != null) {
 			meta.setUnbreakable(true);
 		}
 		stack.setItemMeta(meta);
@@ -101,47 +91,20 @@ public class UtilidadesItems {
 		SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
 		if (skullMeta == null) return item;
 
-		ServerVersion serverVersion = BetterPaintballSystem.serverVersion;
-		if(serverVersion.serverVersionGreaterEqualThan(serverVersion,ServerVersion.v1_20_R2)){
-			UUID uuid = id != null ? UUID.fromString(id) : UUID.randomUUID();
-			PlayerProfile profile = Bukkit.createPlayerProfile(uuid);
-			PlayerTextures textures = profile.getTextures();
-			URL url;
-			try {
-				String decoded = new String(Base64.getDecoder().decode(textura));
-				String decodedFormatted = decoded.replaceAll("\\s", "");
-				JsonObject jsonObject = new Gson().fromJson(decodedFormatted, JsonObject.class);
-				String urlText = jsonObject.get("textures").getAsJsonObject().get("SKIN")
-						.getAsJsonObject().get("url").getAsString();
+		GameProfile profile;
+		if(id == null) {
+			profile = new GameProfile(UUID.randomUUID(), "");
+		}else {
+			profile = new GameProfile(UUID.fromString(id), "");
+		}
+		profile.getProperties().put("textures", new Property("textures", textura));
 
-				url = new URL(urlText);
-			} catch (Exception error) {
-				Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
-				Logger logger = plugin != null ? plugin.getLogger() : Bukkit.getLogger();
-				logger.log(Level.SEVERE, "Could not load skull texture profile", error);
-				return null;
-			}
-			textures.setSkin(url);
-			profile.setTextures(textures);
-			skullMeta.setOwnerProfile(profile);
-		}else{
-			GameProfile profile;
-			if(id == null) {
-				profile = new GameProfile(UUID.randomUUID(), "");
-			}else {
-				profile = new GameProfile(UUID.fromString(id), "");
-			}
-			profile.getProperties().put("textures", new Property("textures", textura));
-
-			try {
-				Field profileField = skullMeta.getClass().getDeclaredField("profile");
-				profileField.setAccessible(true);
-				profileField.set(skullMeta, profile);
-			} catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-				Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
-				Logger logger = plugin != null ? plugin.getLogger() : Bukkit.getLogger();
-				logger.log(Level.SEVERE, "Could not set skull profile field via reflection", error);
-			}
+		try {
+			Field profileField = skullMeta.getClass().getDeclaredField("profile");
+			profileField.setAccessible(true);
+			profileField.set(skullMeta, profile);
+		} catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
+			Bukkit.getLogger().log(Level.SEVERE, "Could not set skull profile field via reflection", error);
 		}
 
 		item.setItemMeta(skullMeta);

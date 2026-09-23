@@ -1,15 +1,7 @@
 package de.nicouschulas.betterpaintballsystem.utils;
 
-import de.nicouschulas.betterpaintballsystem.BetterPaintballSystem;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -19,21 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class UtilidadesOtros {
-
-	public static boolean isChatNew() {
-		ServerVersion serverVersion = BetterPaintballSystem.serverVersion;
-		return serverVersion.serverVersionGreaterEqualThan(serverVersion, ServerVersion.v1_19_R1);
-	}
-
-	public static boolean isNew() {
-		ServerVersion serverVersion = BetterPaintballSystem.serverVersion;
-		return serverVersion.serverVersionGreaterEqualThan(serverVersion, ServerVersion.v1_16_R1);
-	}
-
-	public static boolean isLegacy() {
-		ServerVersion serverVersion = BetterPaintballSystem.serverVersion;
-		return !serverVersion.serverVersionGreaterEqualThan(serverVersion, ServerVersion.v1_13_R1);
-	}
 
 	public static String getTiempo(int tiempo) {
 		int minutos = tiempo/60;
@@ -74,68 +51,9 @@ public class UtilidadesOtros {
 	}
 
 	public static void generarParticula(String particle, Location l, float xOffset, float yOffset, float zOffset, float speed, int count) {
-		if(UtilidadesOtros.isLegacy()) {
-			float red = 0;
-			float green = 0;
-			float blue = 0;
-			boolean redstone = false;
-			if(particle.startsWith("REDSTONE;")) {
-				redstone = true;
-				String[] sep = particle.split(";");
-				int rgb = Integer.parseInt(sep[1]);
-				particle = sep[0];
-				Color color = Color.fromRGB(rgb);
-				red = (float) color.getRed()/255;
-				green = (float) color.getGreen()/255;
-				blue = (float) color.getBlue()/255;
-			}
-			try {
-				Class<?> packetEnumParticle = getNMSClass("EnumParticle");
-				Method packetEnumMethod = packetEnumParticle.getMethod("valueOf", String.class);
-				Object enumParticle = packetEnumMethod.invoke(null,particle);
-				Class<?> packetClass = getNMSClass("PacketPlayOutWorldParticles");
-
-				Constructor<?> packetConstructor = null;
-				for(Constructor<?> c : packetClass.getConstructors()) {
-					if(c.toGenericString().contains("EnumParticle")) {
-						packetConstructor = c;
-					}
-				}
-
-				if (packetConstructor != null) {
-					Object packet;
-					if(redstone) {
-						packet = packetConstructor.newInstance(enumParticle, true, (float)l.getX(), (float)l.getY(), (float)l.getZ(), red, green, blue, count, 0, null);
-					}else {
-						packet = packetConstructor.newInstance(enumParticle, false, (float)l.getX(), (float)l.getY(), (float)l.getZ(), xOffset, yOffset, yOffset, speed, count, null);
-					}
-					Method sendPacket = getNMSClass("PlayerConnection").getMethod("sendPacket", getNMSClass("Packet"));
-					for(Player player : Bukkit.getOnlinePlayers()) {
-						sendPacket.invoke(getConnection(player), packet);
-					}
-				}
-
-			} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-			         | SecurityException | NoSuchMethodException | NoSuchFieldException | InstantiationException _) {
-			}
-		}else {
-			if (l.getWorld() != null) {
-				l.getWorld().spawnParticle(Particle.valueOf(particle),l,count,xOffset,yOffset,zOffset,speed);
-			}
+		if (l != null && l.getWorld() != null) {
+			l.getWorld().spawnParticle(Particle.valueOf(particle), l, count, xOffset, yOffset, zOffset, speed);
 		}
-	}
-
-	private static Class<?> getNMSClass(String nmsClassString) throws ClassNotFoundException {
-		String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
-		String name = "net.minecraft.server." + version + nmsClassString;
-		return Class.forName(name);
-	}
-
-	private static Object getConnection(Player player) throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		Method getHandle = player.getClass().getMethod("getHandle");
-		Object nmsPlayer = getHandle.invoke(player);
-		Field conField = nmsPlayer.getClass().getField("playerConnection");
-		return conField.get(nmsPlayer);
 	}
 
 	public static boolean pasaConfigInventario(Player jugador,FileConfiguration config) {
