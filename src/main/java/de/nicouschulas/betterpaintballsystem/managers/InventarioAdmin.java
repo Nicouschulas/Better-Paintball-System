@@ -24,16 +24,17 @@ import de.nicouschulas.betterpaintballsystem.juego.Partida;
 import de.nicouschulas.betterpaintballsystem.juego.PartidaEditando;
 import de.nicouschulas.betterpaintballsystem.utils.UtilidadesOtros;
 
-public class InventarioAdmin implements Listener{
+public class InventarioAdmin implements Listener {
 
 	private final BetterPaintballSystem plugin;
+
 	public InventarioAdmin(BetterPaintballSystem plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	public static void crearInventario(Player jugador, Partida partida, BetterPaintballSystem plugin) {
-		Inventory inv = Bukkit.createInventory(null, 36, ChatColor.translateAlternateColorCodes('&', "&2Editing Arena: &7"+partida.getNombre()));
-		ItemStack item = new ItemStack(Material.BEACON,1);
+		Inventory inv = Bukkit.createInventory(null, 36, ChatColor.translateAlternateColorCodes('&', "&2Editing Arena: &7" + partida.getNombre()));
+		ItemStack item = new ItemStack(Material.BEACON, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Lobby"));
 		List<String> lore = new ArrayList<>();
@@ -41,22 +42,22 @@ public class InventarioAdmin implements Listener{
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7current position."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
 		Location lobby = partida.getLobby();
-		if(lobby == null) {
+		if (lobby == null) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Position: &7NONE"));
-		}else {
+		} else {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Position:"));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eX: &7"+lobby.getX()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eY: &7"+lobby.getY()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eZ: &7"+lobby.getZ()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eWorld: &7"+lobby.getWorld().getName()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eYaw: &7"+lobby.getYaw()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&ePitch: &7"+lobby.getPitch()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eX: &7" + lobby.getX()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eY: &7" + lobby.getY()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eZ: &7" + lobby.getZ()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eWorld: &7" + lobby.getWorld().getName()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eYaw: &7" + lobby.getYaw()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&ePitch: &7" + lobby.getPitch()));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(10, item);
-		
-		item = new ItemStack(Material.QUARTZ_BLOCK,1);
+
+		item = new ItemStack(Material.QUARTZ_BLOCK, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Team 1 Spawn"));
 		lore = new ArrayList<>();
@@ -64,22 +65,22 @@ public class InventarioAdmin implements Listener{
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7in your current position."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
 		Location spawn = partida.getTeam1().getSpawn();
-		if(spawn == null) {
+		if (spawn == null) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Position: &7NONE"));
-		}else {
+		} else {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Position:"));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eX: &7"+spawn.getX()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eY: &7"+spawn.getY()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eZ: &7"+spawn.getZ()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eWorld: &7"+spawn.getWorld().getName()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eYaw: &7"+spawn.getYaw()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&ePitch: &7"+spawn.getPitch()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eX: &7" + spawn.getX()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eY: &7" + spawn.getY()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eZ: &7" + spawn.getZ()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eWorld: &7" + spawn.getWorld().getName()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eYaw: &7" + spawn.getYaw()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&ePitch: &7" + spawn.getPitch()));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(11, item);
-		
-		item = new ItemStack(Material.QUARTZ_BLOCK,1);
+
+		item = new ItemStack(Material.QUARTZ_BLOCK, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Team 2 Spawn"));
 		lore = new ArrayList<>();
@@ -87,129 +88,129 @@ public class InventarioAdmin implements Listener{
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7in your current position."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
 		spawn = partida.getTeam2().getSpawn();
-		if(spawn == null) {
+		if (spawn == null) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Position: &7NONE"));
-		}else {
+		} else {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Position:"));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eX: &7"+spawn.getX()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eY: &7"+spawn.getY()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eZ: &7"+spawn.getZ()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eWorld: &7"+spawn.getWorld().getName()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&eYaw: &7"+spawn.getYaw()));
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&ePitch: &7"+spawn.getPitch()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eX: &7" + spawn.getX()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eY: &7" + spawn.getY()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eZ: &7" + spawn.getZ()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eWorld: &7" + spawn.getWorld().getName()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&eYaw: &7" + spawn.getYaw()));
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&ePitch: &7" + spawn.getPitch()));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(12, item);
-		
-		item = new ItemStack(Material.GHAST_TEAR,partida.getCantidadMinimaJugadores());
+
+		item = new ItemStack(Material.GHAST_TEAR, partida.getCantidadMinimaJugadores());
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Min Players"));
 		lore = new ArrayList<>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7Click to define the arena minimum number"));
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7of players."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7"+partida.getCantidadMinimaJugadores()));
+		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7" + partida.getCantidadMinimaJugadores()));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(13, item);
-		
-		item = new ItemStack(Material.GHAST_TEAR,partida.getCantidadMaximaJugadores());
+
+		item = new ItemStack(Material.GHAST_TEAR, partida.getCantidadMaximaJugadores());
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Max Players"));
 		lore = new ArrayList<>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7Click to define the arena maximum number"));
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7of players."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7"+partida.getCantidadMaximaJugadores()));
+		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7" + partida.getCantidadMaximaJugadores()));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(14, item);
-		
-		item = new ItemStack(Material.NAME_TAG,1);
+
+		item = new ItemStack(Material.NAME_TAG, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Team 1 Color"));
 		lore = new ArrayList<>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7Click to define the arena team 1 Color."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-		if(partida.getTeam1().esRandom()) {
+		if (partida.getTeam1().esRandom()) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7random"));
-		}else {
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7"+partida.getTeam1().getTipo()));
+		} else {
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7" + partida.getTeam1().getTipo()));
 		}
-			
-		
+
+
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(15, item);
-		
-		item = new ItemStack(Material.NAME_TAG,1);
+
+		item = new ItemStack(Material.NAME_TAG, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Team 2 Color"));
 		lore = new ArrayList<>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7Click to define the arena team 2 Color."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-		if(partida.getTeam2().esRandom()) {
+		if (partida.getTeam2().esRandom()) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7random"));
-		}else {
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7"+partida.getTeam2().getTipo()));
+		} else {
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7" + partida.getTeam2().getTipo()));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(16, item);
-		
-		if(!UtilidadesOtros.isLegacy()) {
-			item = new ItemStack(Material.CLOCK,1);
-		}else {
-			item = new ItemStack(Material.valueOf("WATCH"),1);
+
+		if (!UtilidadesOtros.isLegacy()) {
+			item = new ItemStack(Material.CLOCK, 1);
+		} else {
+			item = new ItemStack(Material.valueOf("WATCH"), 1);
 		}
-		
+
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Time"));
 		lore = new ArrayList<>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7Click to define the arena time in seconds."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7"+partida.getTiempoMaximo()));
+		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7" + partida.getTiempoMaximo()));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(21, item);
-		
-		item = new ItemStack(Material.REDSTONE_BLOCK,1);
+
+		item = new ItemStack(Material.REDSTONE_BLOCK, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Starting Lives"));
 		lore = new ArrayList<>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7Click to define the starting amount of lives"));
 		lore.add(ChatColor.translateAlternateColorCodes('&', "&7for both teams."));
 		lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7"+partida.getVidasIniciales()));
+		lore.add(ChatColor.translateAlternateColorCodes('&', "&9Current Value: &7" + partida.getVidasIniciales()));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		inv.setItem(23, item);
-		
+
 		jugador.openInventory(inv);
-		
-		PartidaEditando p = new PartidaEditando(jugador,partida);
+
+		PartidaEditando p = new PartidaEditando(jugador, partida);
 		plugin.setPartidaEditando(p);
 	}
-	
+
 	@EventHandler
 	public void alCerrarInventario(InventoryCloseEvent event) {
 		Player jugador = (Player) event.getPlayer();
 		String pathInventory = ChatColor.translateAlternateColorCodes('&', "&2Editing Arena:");
 		String pathInventoryM = ChatColor.stripColor(pathInventory);
 		PartidaEditando partida = plugin.getPartidaEditando();
-		if(partida != null && partida.getJugador().getName().equals(jugador.getName())) {
-			if(ChatColor.stripColor(event.getView().getTitle()).contains(pathInventoryM)){
+		if (partida != null && partida.getJugador().getName().equals(jugador.getName())) {
+			if (ChatColor.stripColor(event.getView().getTitle()).contains(pathInventoryM)) {
 				plugin.removerPartidaEditando();
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void alSalir(PlayerQuitEvent event) {
 		PartidaEditando partida = plugin.getPartidaEditando();
 		Player jugador = event.getPlayer();
-		if(partida != null && partida.getJugador().getName().equals(jugador.getName())) {
+		if (partida != null && partida.getJugador().getName().equals(jugador.getName())) {
 			plugin.removerPartidaEditando();
 		}
 	}
@@ -300,131 +301,124 @@ public class InventarioAdmin implements Listener{
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void capturarChat(AsyncPlayerChatEvent event) {
 		final PartidaEditando partida = plugin.getPartidaEditando();
 		final Player jugador = event.getPlayer();
 		String message = ChatColor.stripColor(event.getMessage());
-		if(partida != null && partida.getJugador().getName().equals(jugador.getName())) {
+		if (partida != null && partida.getJugador().getName().equals(jugador.getName())) {
 			event.setCancelled(true);
 			FileConfiguration messages = plugin.getMessages();
-			String prefix = ChatColor.translateAlternateColorCodes('&', messages.getString("prefix"))+" ";
+			String rawPrefix = messages.getString("prefix", "");
+			String prefix = ChatColor.translateAlternateColorCodes('&', rawPrefix) + " ";
 			String paso = partida.getPaso();
-            switch (paso) {
-                case "min" -> {
-                    try {
-                        int num = Integer.parseInt(message);
-                        if (num >= 2 && num % 2 == 0) {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("minPlayersDefined").replace("%name%", partida.getPartida().getNombre())));
-                            partida.getPartida().setCantidadMinimaJugadores(num);
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                @Override
-                                public void run() {
-                                    InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
-                                }
-                            }, 3L);
-                        } else {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                        }
-                    } catch (NumberFormatException e) {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                    }
-                }
-                case "max" -> {
-                    try {
-                        int num = Integer.parseInt(message);
-                        if (num >= 2 && num % 2 == 0) {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("maxPlayersDefined").replace("%name%", partida.getPartida().getNombre())));
-                            partida.getPartida().setCantidadMaximaJugadores(num);
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                @Override
-                                public void run() {
-                                    InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
-                                }
-                            }, 3L);
-                        } else {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                        }
-                    } catch (NumberFormatException e) {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                    }
-                }
-                case "team1name" -> {
-                    FileConfiguration config = plugin.getConfig();
+			if (paso != null) {
+				switch (paso) {
+					case "min" -> {
+						try {
+							int num = Integer.parseInt(message);
+							if (num >= 2 && num % 2 == 0) {
+								String msg = messages.getString("minPlayersDefined", "");
+								String formatted = msg.replace("%name%", partida.getPartida().getNombre());
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', formatted));
+								partida.getPartida().setCantidadMinimaJugadores(num);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin), 3L);
+							} else {
+								String err = messages.getString("validNumberError", "");
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+							}
+						} catch (NumberFormatException e) {
+							String err = messages.getString("validNumberError", "");
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+						}
+					}
+					case "max" -> {
+						try {
+							int num = Integer.parseInt(message);
+							if (num >= 2 && num % 2 == 0) {
+								String msg = messages.getString("maxPlayersDefined", "");
+								String formatted = msg.replace("%name%", partida.getPartida().getNombre());
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', formatted));
+								partida.getPartida().setCantidadMaximaJugadores(num);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin), 3L);
+							} else {
+								String err = messages.getString("validNumberError", "");
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+							}
+						} catch (NumberFormatException e) {
+							String err = messages.getString("validNumberError", "");
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+						}
+					}
+					case "team1name" -> {
+						FileConfiguration config = plugin.getConfig();
 
-                    if (config.contains("teams." + message) || message.equalsIgnoreCase("random")) {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("typeDefined").replace("%number%", "1").replace("%name%", partida.getPartida().getNombre())));
-                        partida.getPartida().getTeam1().setTipo(message);
-                        partida.getPartida().getTeam1().setRandom(message.equalsIgnoreCase("random"));
-                        partida.getPartida().modificarTeams(config);
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
-                            }
-                        }, 3L);
-                    } else {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', "&cThat team name doesn't exists."));
-                    }
-                }
-                case "team2name" -> {
-                    FileConfiguration config = plugin.getConfig();
+						if (config.contains("teams." + message) || message.equalsIgnoreCase("random")) {
+							String msg = messages.getString("typeDefined", "");
+							String formatted = msg.replace("%number%", "1").replace("%name%", partida.getPartida().getNombre());
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', formatted));
+							partida.getPartida().getTeam1().setTipo(message);
+							partida.getPartida().getTeam1().setRandom(message.equalsIgnoreCase("random"));
+							partida.getPartida().modificarTeams(config);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin), 3L);
+						} else {
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', "&cThat team name doesn't exists."));
+						}
+					}
+					case "team2name" -> {
+						FileConfiguration config = plugin.getConfig();
 
-                    if (config.contains("teams." + message) || message.equalsIgnoreCase("random")) {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("typeDefined").replace("%number%", "2").replace("%name%", partida.getPartida().getNombre())));
-                        partida.getPartida().getTeam2().setTipo(message);
-                        partida.getPartida().getTeam2().setRandom(message.equalsIgnoreCase("random"));
-                        partida.getPartida().modificarTeams(config);
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
-                            }
-                        }, 3L);
-                    } else {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', "&cThat team name doesn't exists."));
-                    }
-                }
-                case "time" -> {
-                    try {
-                        int num = Integer.parseInt(message);
-                        if (num > 0) {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("timeDefined").replace("%name%", partida.getPartida().getNombre())));
-                            partida.getPartida().setTiempoMaximo(num);
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                @Override
-                                public void run() {
-                                    InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
-                                }
-                            }, 3L);
-                        } else {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                        }
-                    } catch (NumberFormatException e) {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                    }
-                }
-                case "lives" -> {
-                    try {
-                        int num = Integer.parseInt(message);
-                        if (num > 0) {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("livesDefined").replace("%name%", partida.getPartida().getNombre())));
-                            partida.getPartida().setVidasIniciales(num);
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                @Override
-                                public void run() {
-                                    InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin);
-                                }
-                            }, 3L);
-                        } else {
-                            jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                        }
-                    } catch (NumberFormatException e) {
-                        jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', messages.getString("validNumberError")));
-                    }
-                }
-            }
+						if (config.contains("teams." + message) || message.equalsIgnoreCase("random")) {
+							String msg = messages.getString("typeDefined", "");
+							String formatted = msg.replace("%number%", "2").replace("%name%", partida.getPartida().getNombre());
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', formatted));
+							partida.getPartida().getTeam2().setTipo(message);
+							partida.getPartida().getTeam2().setRandom(message.equalsIgnoreCase("random"));
+							partida.getPartida().modificarTeams(config);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin), 3L);
+						} else {
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', "&cThat team name doesn't exists."));
+						}
+					}
+					case "time" -> {
+						try {
+							int num = Integer.parseInt(message);
+							if (num > 0) {
+								String msg = messages.getString("timeDefined", "");
+								String formatted = msg.replace("%name%", partida.getPartida().getNombre());
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', formatted));
+								partida.getPartida().setTiempoMaximo(num);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin), 3L);
+							} else {
+								String err = messages.getString("validNumberError", "");
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+							}
+						} catch (NumberFormatException e) {
+							String err = messages.getString("validNumberError", "");
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+						}
+					}
+					case "lives" -> {
+						try {
+							int num = Integer.parseInt(message);
+							if (num > 0) {
+								String msg = messages.getString("livesDefined", "");
+								String formatted = msg.replace("%name%", partida.getPartida().getNombre());
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', formatted));
+								partida.getPartida().setVidasIniciales(num);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> InventarioAdmin.crearInventario(jugador, partida.getPartida(), plugin), 3L);
+							} else {
+								String err = messages.getString("validNumberError", "");
+								jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+							}
+						} catch (NumberFormatException e) {
+							String err = messages.getString("validNumberError", "");
+							jugador.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', err));
+						}
+					}
+				}
+			}
 		}
 	}
 }
