@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.ChatColor;
 import de.nicouschulas.betterpaintballsystem.juego.Partida;
 import de.nicouschulas.betterpaintballsystem.juego.PartidaEditando;
-import de.nicouschulas.betterpaintballsystem.utils.UtilidadesOtros;
 
 public class InventarioAdmin implements Listener {
 
@@ -159,11 +158,7 @@ public class InventarioAdmin implements Listener {
 		item.setItemMeta(meta);
 		inv.setItem(16, item);
 
-		if (!UtilidadesOtros.isLegacy()) {
-			item = new ItemStack(Material.CLOCK, 1);
-		} else {
-			item = new ItemStack(Material.valueOf("WATCH"), 1);
-		}
+		item = new ItemStack(Material.CLOCK, 1);
 
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lSet Time"));

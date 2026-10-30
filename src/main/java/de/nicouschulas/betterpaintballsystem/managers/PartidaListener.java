@@ -51,7 +51,6 @@ import de.nicouschulas.betterpaintballsystem.juego.JugadorPaintball;
 import de.nicouschulas.betterpaintballsystem.juego.Killstreak;
 import de.nicouschulas.betterpaintballsystem.juego.Partida;
 import de.nicouschulas.betterpaintballsystem.utils.UtilidadesItems;
-import de.nicouschulas.betterpaintballsystem.utils.UtilidadesOtros;
 import de.nicouschulas.betterpaintballsystem.utils.ValueOfPatch;
 
 public class PartidaListener implements Listener {
@@ -620,18 +619,10 @@ public class PartidaListener implements Listener {
 					if(player == null) return;
 
 					if(player.getKillstreak("fury") == null) {
-						if(!UtilidadesOtros.isLegacy()) {
-							if("chicken_hat".equals(player.getSelectedHat())) {
-								jugador.getInventory().removeItem(new ItemStack(Material.EGG, 1));
-							} else {
-								jugador.getInventory().removeItem(new ItemStack(Material.SNOWBALL, 1));
-							}
+						if("chicken_hat".equals(player.getSelectedHat())) {
+							jugador.getInventory().removeItem(new ItemStack(Material.EGG, 1));
 						} else {
-							if("chicken_hat".equals(player.getSelectedHat())) {
-								jugador.getInventory().removeItem(new ItemStack(Material.EGG, 1));
-							} else {
-								jugador.getInventory().removeItem(new ItemStack(Material.valueOf("SNOW_BALL"), 1));
-							}
+							jugador.getInventory().removeItem(new ItemStack(Material.SNOWBALL, 1));
 						}
 					}
 

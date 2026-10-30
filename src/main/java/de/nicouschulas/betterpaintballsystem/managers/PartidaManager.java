@@ -327,20 +327,10 @@ public class PartidaManager {
 				int snowballs = Integer.parseInt(config.getString("killstreaks_items." + key + ".snowballs", "0"));
 				ItemStack item;
 				String selectedHat = j.getSelectedHat();
-				if (!UtilidadesOtros.isLegacy()) {
-					if (selectedHat.equals("chicken_hat")) {
-						item = new ItemStack(Material.EGG, 1);
-					} else {
-						item = new ItemStack(Material.SNOWBALL, 1);
-					}
-
+				if ("chicken_hat".equals(selectedHat)) {
+					item = new ItemStack(Material.EGG, 1);
 				} else {
-					if (selectedHat.equals("chicken_hat")) {
-						item = new ItemStack(Material.EGG, 1);
-					} else {
-						item = new ItemStack(Material.valueOf("SNOW_BALL"), 1);
-					}
-
+					item = new ItemStack(Material.SNOWBALL, 1);
 				}
 				for (int i = 0; i < snowballs; i++) {
 					jugador.getInventory().addItem(item);
@@ -478,8 +468,8 @@ public class PartidaManager {
 				if (config.contains("hats_items." + h.getName() + ".skull_id")) {
 					String id = config.getString("hats_items." + h.getName() + ".skull_id");
 					String textura = config.getString("hats_items." + h.getName() + ".skull_texture");
-					item = UtilidadesItems.getCabeza(item, id, textura);
-				}
+                    UtilidadesItems.getCabeza(item, id, textura);
+                }
 				jugador.getJugador().getEquipment().setHelmet(item);
 
 				if (h.getName().equals("speed_hat")) {
@@ -553,18 +543,10 @@ public class PartidaManager {
 		int amount = Integer.parseInt(config.getString("initial_snowballs", "0"));
 		ItemStack item;
 		String selectedHat = j.getSelectedHat();
-		if (!UtilidadesOtros.isLegacy()) {
-			if (selectedHat.equals("chicken_hat")) {
-				item = new ItemStack(Material.EGG, 1);
-			} else {
-				item = new ItemStack(Material.SNOWBALL, 1);
-			}
+		if ("chicken_hat".equals(selectedHat)) {
+			item = new ItemStack(Material.EGG, 1);
 		} else {
-			if (selectedHat.equals("chicken_hat")) {
-				item = new ItemStack(Material.EGG, 1);
-			} else {
-				item = new ItemStack(Material.valueOf("SNOW_BALL"), 1);
-			}
+			item = new ItemStack(Material.SNOWBALL, 1);
 		}
 
 		for (int i = 0; i < amount; i++) {
@@ -901,19 +883,13 @@ public class PartidaManager {
 		if (equipo != null && equipo.getSpawn() != null) {
 			jugadorDanado.getJugador().teleport(equipo.getSpawn());
 		}
-		if (!UtilidadesOtros.isLegacy()) {
-			if (selectedHatDanado.equals("chicken_hat")) {
-				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
-			} else {
-				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.SNOWBALL));
-			}
+
+		if (selectedHatDanado.equals("chicken_hat")) {
+			jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
 		} else {
-			if (selectedHatDanado.equals("chicken_hat")) {
-				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.EGG));
-			} else {
-				jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.valueOf("SNOW_BALL")));
-			}
+			jugadorDanado.getJugador().getInventory().removeItem(new ItemStack(Material.SNOWBALL));
 		}
+
 		PartidaManager.setBolasDeNieve(jugadorDanado, config);
 
 		jugadorAtacante.aumentarAsesinatos();
@@ -966,23 +942,12 @@ public class PartidaManager {
 			}
 		}
 
-
 		int snowballs = Integer.parseInt(config.getString("snowballs_per_kill", "0"));
 		String selectedHatAtacante = jugadorAtacante.getSelectedHat();
-		if (!UtilidadesOtros.isLegacy()) {
-			if (selectedHatAtacante.equals("chicken_hat")) {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG, snowballs));
-			} else {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.SNOWBALL, snowballs));
-			}
-
+		if (selectedHatAtacante.equals("chicken_hat")) {
+			jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG, snowballs));
 		} else {
-			if (selectedHatAtacante.equals("chicken_hat")) {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.EGG, snowballs));
-			} else {
-				jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.valueOf("SNOW_BALL"), snowballs));
-			}
-
+			jugadorAtacante.getJugador().getInventory().addItem(new ItemStack(Material.SNOWBALL, snowballs));
 		}
 
 		if (equipoDanado != null && equipoDanado.getVidas() <= 0) {
