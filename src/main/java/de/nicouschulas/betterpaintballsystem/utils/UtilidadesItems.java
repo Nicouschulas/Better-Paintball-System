@@ -1,10 +1,8 @@
 package de.nicouschulas.betterpaintballsystem.utils;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,14 +13,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 
 import de.nicouschulas.betterpaintballsystem.juego.JugadorPaintball;
 
 public class UtilidadesItems {
 
-	@SuppressWarnings("deprecation")
 	public static ItemStack crearItem(FileConfiguration config,String path){
 		String id = config.getString(path+".item");
 		if (id == null) {
@@ -87,25 +84,25 @@ public class UtilidadesItems {
 		}
 	}
 
-	public static ItemStack getCabeza(ItemStack item, String id,String textura){
-		SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
-		if (skullMeta == null) return item;
+	public static ItemStack getCabeza(ItemStack item, String id, String textura){
+		if (item == null) return null;
+		ItemMeta meta = item.getItemMeta();
+		if (!(meta instanceof SkullMeta skullMeta)) return item;
 
-		GameProfile profile;
-		if(id == null) {
-			profile = new GameProfile(UUID.randomUUID(), "");
-		}else {
-			profile = new GameProfile(UUID.fromString(id), "");
+		UUID uuid;
+		if (id != null && !id.isEmpty()) {
+			try {
+				uuid = UUID.fromString(id);
+			} catch (IllegalArgumentException e) {
+				uuid = UUID.nameUUIDFromBytes(textura.getBytes());
+			}
+		} else {
+			uuid = UUID.nameUUIDFromBytes(textura.getBytes());
 		}
-		profile.getProperties().put("textures", new Property("textures", textura));
 
-		try {
-			Field profileField = skullMeta.getClass().getDeclaredField("profile");
-			profileField.setAccessible(true);
-			profileField.set(skullMeta, profile);
-		} catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-			Bukkit.getLogger().log(Level.SEVERE, "Could not set skull profile field via reflection", error);
-		}
+		PlayerProfile profile = Bukkit.createProfile(uuid, "");
+		profile.setProperty(new ProfileProperty("textures", textura));
+		skullMeta.setPlayerProfile(profile);
 
 		item.setItemMeta(skullMeta);
 

@@ -468,7 +468,7 @@ public class PartidaManager {
 				if (config.contains("hats_items." + h.getName() + ".skull_id")) {
 					String id = config.getString("hats_items." + h.getName() + ".skull_id");
 					String textura = config.getString("hats_items." + h.getName() + ".skull_texture");
-                    UtilidadesItems.getCabeza(item, id, textura);
+                    item = UtilidadesItems.getCabeza(item, id, textura);
                 }
 				jugador.getJugador().getEquipment().setHelmet(item);
 
