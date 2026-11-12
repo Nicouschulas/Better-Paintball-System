@@ -7,7 +7,7 @@
 This plugin is **fully configurable**, easy to set up, and packed with gameplay features like KillStreaks, unique Hats, and permanent Perks to keep your players hooked!
 
 ## **🌟 Key Features:**
-💣 **KillStreaks, Hats & Perks**:
+**KillStreaks, Hats & Perks**:
 <details>
 <summary>8 different KillStreaks</summary>
 - More Snowballs (You will receive extra snowballs)
@@ -40,17 +40,15 @@ This plugin is **fully configurable**, easy to set up, and packed with gameplay 
 - Extra Killcoins (Allows you to receive additional killcoins when doing a kill)
 </details>
 
-📊 **Top Leaderboard Holograms**: Display global, monthly, or weekly leaderboards for top wins and kills using DecentHolograms integration
+**Top Leaderboard Holograms**: Display global, monthly, or weekly leaderboards for top wins and kills using DecentHolograms integration
 
-💰 **Flexible Economy & Storage**: Supports 3 types of economies (Internal Paintball Coins, Vault, or TokenManager) and comes with MySQL database support to save player statistics (wins, losses, ties, kills)
+**Flexible Economy & Storage**: Supports 3 types of economies (Internal Paintball Coins, Vault, or TokenManager) and comes with MySQL database support to save player statistics (wins, losses, ties, kills)
 
-💬 **Customizable Messages**: Tailor nearly all plugin messages to match your server's style
+**Customizable Messages**: Tailor nearly all plugin messages to match your server's style
 
-⚙️ **Fully Configurable**: Customize cooldowns, game timers, and team lives. Personalize team names, colors, and display items to fit your server's theme
+**Fully Configurable**: Customize cooldowns, game timers, and team lives. Personalize team names, colors, and display items to fit your server's theme
 
-🧩 **Even more feuatures!**: Features built-in PlaceholderAPI support for custom scoreboards/chat, a per-arena chat system, play-again items, a command whitelist and an API
-
-**So what are you waiting for? Get Better Painbtall System now and bring a new layer of excitement to your server!**
+**Even more feuatures!**: Features built-in PlaceholderAPI support for custom scoreboards/chat, a per-arena chat system, play-again items, a command whitelist and an API
 
 ## **📥 Downloads:**
 Modrinth: https://modrinth.com/plugin/better-paintball-system/
