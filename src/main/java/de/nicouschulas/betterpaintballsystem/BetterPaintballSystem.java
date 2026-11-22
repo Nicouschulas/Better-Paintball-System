@@ -76,7 +76,7 @@ public class BetterPaintballSystem extends JavaPlugin {
 
 	private ConexionDatabase conexionDatabase;
 
-	public String latestVersion = null;
+	public volatile String latestVersion = null;
 	
 	
 	@SuppressWarnings("unused")

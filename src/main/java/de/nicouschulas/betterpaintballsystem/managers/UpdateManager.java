@@ -1,5 +1,9 @@
 package de.nicouschulas.betterpaintballsystem.managers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.nicouschulas.betterpaintballsystem.BetterPaintballSystem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -17,7 +21,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.logging.Level;
 
 public class UpdateManager implements Listener {
 
@@ -40,28 +43,34 @@ public class UpdateManager implements Listener {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
 				URL url = new URI("https://api.modrinth.com/v2/project/c7PiXtN1/version").toURL();
-				try (InputStream inputStream = url.openStream(); Scanner scanner = new Scanner(inputStream)){
+				try (InputStream inputStream = url.openStream(); Scanner scanner = new Scanner(inputStream)) {
 					String json = scanner.useDelimiter("\\A").next();
 
-					if (json.contains("\"version_number\":\"")) {
-						String fetchedLatestVersion = json.split("\"version_number\":\"")[1].split("\"")[0];
+					String fetchedLatestVersion = null;
+					JsonArray versions = JsonParser.parseString(json).getAsJsonArray();
+					for (JsonElement element : versions) {
+						JsonObject version = element.getAsJsonObject();
+						if ("release".equals(version.get("version_type").getAsString())) {
+							fetchedLatestVersion = version.get("version_number").getAsString();
+							break;
+						}
+					}
 
-						if (!currentVersion.equals(fetchedLatestVersion)) {
-							plugin.latestVersion = fetchedLatestVersion;
+					if (fetchedLatestVersion != null && !currentVersion.equals(fetchedLatestVersion)) {
+						plugin.latestVersion = fetchedLatestVersion;
 
-							if ("console".equalsIgnoreCase(notifyMethod) || "both".equalsIgnoreCase(notifyMethod)) {
-								plugin.getLogger().warning("-----------------------------------------------------");
-								plugin.getLogger().warning("A new version of BetterPaintballSystem is available!");
-								plugin.getLogger().warning("Current version: " + currentVersion);
-								plugin.getLogger().warning("Latest version: " + plugin.latestVersion);
-								plugin.getLogger().warning("Download it here: https://modrinth.com/project/better-paintball-system/versions");
-								plugin.getLogger().warning("-----------------------------------------------------");
-							}
+						if (notifyMethod.equalsIgnoreCase("console") || notifyMethod.equalsIgnoreCase("both")) {
+							plugin.getLogger().warning("-----------------------------------------------------");
+							plugin.getLogger().warning("A new version of BetterPaintballSystem is available!");
+							plugin.getLogger().warning("Current version: " + currentVersion);
+							plugin.getLogger().warning("Latest version: " + plugin.latestVersion);
+							plugin.getLogger().warning("Download it here: https://modrinth.com/project/better-paintball-system/versions");
+							plugin.getLogger().warning("-----------------------------------------------------");
 						}
 					}
 				}
 			} catch (Exception e) {
-				plugin.getLogger().log(Level.FINER, "Update checker failed to process the response!", e);
+				plugin.getLogger().warning("Update checker failed to process the response: " + e.getMessage());
 			}
 		});
 	}
