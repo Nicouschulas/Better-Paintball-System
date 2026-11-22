@@ -168,6 +168,7 @@ ArrayList<Perk> perks = PaintballAPI.getPerks(Player player)
 - make paper plugin
 - optmise version support
 - drop old versions and unused stuff
+- drop TokenManager support
 - add bstats
 - more permissions
 - config updater
